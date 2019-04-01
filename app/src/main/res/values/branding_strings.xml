@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">HJT</string>
+
+    <string name="company">Beijing ZhongChuang</string>
+    <string name="copyright1">Copyright © 2019 Beijing Zhong Chuang Shi Xun Technology Co., Ltd.</string>
+
+    <string name="need_float_window_permission">Please open floating window permission for HJT</string>
+
+
+</resources>

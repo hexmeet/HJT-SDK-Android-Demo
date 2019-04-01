@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:whatever="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/hexmeet_bg"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_marginTop="140dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/invite_gif"
+            android:src="@drawable/invite_loading"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            />
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center"
+            android:id="@+id/invite_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="@color/sub_title_bar"
+            android:text="@string/enter_join_meeting"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/invite_number"
+        android:text=""
+        android:textSize="20sp"
+        android:layout_gravity="center"
+        android:textColor="@color/title_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        />
+
+    <LinearLayout
+        android:id="@+id/invite_join"
+        android:elevation="10dp"
+        android:background="@drawable/invite_border_shadow"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:layout_margin="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="260dp">
+        <com.andreabaccega.widget.FormEditText
+            android:id="@+id/display_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/bg_input_box"
+            android:gravity="center"
+            android:hint="@string/join_meeting_name"
+            android:maxLines="1"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="@color/font_color_313131"
+            android:textColorHint="@color/hexmeet_light_gray"
+            android:textSize="15sp"
+            whatever:emptyErrorString="@string/error_empty"
+            whatever:testErrorString="@string/error_form"
+            whatever:testType="personName" />
+        <Button
+            android:id="@+id/ok_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/btn_private_login"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/join"
+            android:textColor="@color/White"
+            android:textSize="15sp" />
+        <Button
+            android:id="@+id/no_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/btn_private_login"
+            android:state_pressed="false"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/cancel"
+            android:textColor="@color/White"
+            android:textSize="15sp" />
+
+        <CheckBox
+            android:id="@+id/invite_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp"
+            android:button="@drawable/checkbox_selector"
+            android:text="@string/close_camera"
+            android:textColor="@color/font_color_313131"
+            android:textSize="14sp" />
+
+        <CheckBox
+            android:id="@+id/invite_mic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp"
+            android:layout_marginBottom="20dp"
+            android:button="@drawable/checkbox_selector"
+            android:text="@string/close_mic"
+            android:textColor="@color/font_color_313131"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+
+</LinearLayout>

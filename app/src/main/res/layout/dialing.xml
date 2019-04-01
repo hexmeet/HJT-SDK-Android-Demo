@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/dial_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/join_meeting"
+        android:textColor="@color/title_bar"
+        android:padding="15dp"
+        android:textSize="@dimen/title_bar_font_size" />
+
+    <TextView
+        android:id="@+id/call_number"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_below="@id/dial_title"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/bg_card_border"
+        android:gravity="center"
+        android:hint="@string/input_call_number_tips"
+        android:singleLine="true"
+        android:maxLength="24"
+        android:textColor="@color/font_color_313131"
+        android:textColorHint="#e1e1e1"
+        android:textSize="15sp" />
+
+    <ImageView
+        android:id="@+id/btn_recent"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_alignTop="@id/call_number"
+        android:layout_alignRight="@id/call_number"
+        android:padding="22dp"
+        android:src="@drawable/select_drop_down"/>
+
+    <Button
+        android:id="@+id/dial_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/call_number"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/btn_private_login"
+        android:gravity="center"
+        android:padding="12dp"
+        android:text="@string/join"
+        android:textColor="@color/White"
+        android:textSize="18sp" />
+
+    <RelativeLayout
+        android:id="@+id/close_camera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dial_btn"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/bg_card_border">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:padding="16dp"
+            android:layout_marginLeft="8dp"
+            android:text="@string/close_camera"
+            android:textColor="@color/font_color_313131"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dp"
+            android:src="@drawable/checkbox_selector" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/close_mic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/close_camera"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/bg_card_border">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:padding="16dp"
+            android:layout_marginLeft="8dp"
+            android:text="@string/close_mic"
+            android:textColor="@color/font_color_313131"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dp"
+            android:src="@drawable/checkbox_selector" />
+
+    </RelativeLayout>
+
+    <include
+        android:id="@+id/number_keyboard"
+        layout="@layout/number_keyboard" />
+
+    <LinearLayout
+        android:id="@+id/recent_list_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_card_style"
+        android:layout_below="@id/call_number"
+        android:visibility="gone"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"/>
+</RelativeLayout>

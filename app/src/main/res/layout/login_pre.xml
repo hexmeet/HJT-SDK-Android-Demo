@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="32dp"
+    android:background="@color/White">
+
+    <ImageView
+        android:id="@+id/logo_pic"
+        android:layout_width="140dp"
+        android:layout_height="40dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:src="@drawable/text_logo"/>
+
+    <TextView
+        android:id="@+id/sub_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logo_pic"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="6dp"
+        android:text="@string/user_private"
+        android:textColor="@color/transparent"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:id="@+id/login_back"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="10dp"
+        android:src="@drawable/icon_back_black" />
+
+    <Button
+        android:id="@+id/login_join_meeting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="300dp"
+        android:background="@drawable/btn_join_meeting"
+        android:gravity="center"
+        android:padding="15dp"
+        android:text="@string/join_meeting"
+        android:textColor="@color/White"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/login_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/login_join_meeting"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/btn_private_login"
+        android:gravity="center"
+        android:padding="15dp"
+        android:text="@string/login"
+        android:textColor="@color/White"
+        android:textSize="18sp" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="25dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/apply_use"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/apply_use"
+            android:textColor="@color/Blue"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <View
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/app_view"
+            android:layout_width="1dp"
+            android:layout_height="@dimen/setting_padding"
+            android:background="@color/appset"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/app_setup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="@string/app_setup"
+            android:textColor="@color/Blue"
+            android:textSize="14sp" />
+    </LinearLayout>
+</RelativeLayout>

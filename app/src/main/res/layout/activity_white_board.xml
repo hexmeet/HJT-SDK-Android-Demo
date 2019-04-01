@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_white_board"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <org.xwalk.core.XWalkView
+        android:id="@+id/wv_white_board"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/packup_white_board"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_gravity="left"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:alpha="0.4"
+            android:background="#313131"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/packup_image"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginLeft="4dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/icon_shou"
+                android:clickable="false"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="4dp"
+                android:layout_marginRight="6dp"
+                android:text="@string/packup_white_board"
+                android:textColor="#ffffff"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/white_board_toolbar"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:alpha="0.6"
+            android:background="#000000"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/pen_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/pen_line"
+                    android:layout_width="3dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/long_focus" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <Button
+                        android:id="@+id/pen_setting"
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
+                        android:layout_marginTop="6dp"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/icon_black_default" />
+                    <TextView
+                        android:id="@+id/pen_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/pencil"
+                        android:textColor="#ffffff"
+                        android:textSize="10sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lite_pen_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/lite_pen_line"
+                    android:layout_width="3dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/long_focus"
+                    android:visibility="invisible" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <Button
+                        android:id="@+id/lite_pen_setting"
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
+                        android:layout_marginTop="6dp"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/icon_lite_green_default" />
+                    <TextView
+                        android:id="@+id/lite_pen_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/highlighter"
+                        android:textColor="#919191"
+                        android:textSize="10sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/erase_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/erase_line"
+                    android:layout_width="3dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/long_focus"
+                    android:visibility="invisible" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <Button
+                        android:id="@+id/erase"
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
+                        android:layout_marginTop="6dp"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/btn_eraser_bg" />
+                    <TextView
+                        android:id="@+id/erase_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/erase"
+                        android:textColor="#919191"
+                        android:textSize="10sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/undo_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+                <Button
+                    android:id="@+id/undo"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/btn_undo_bg" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/rescind"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/bg_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/change_background"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/btn_background_bg" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/background"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </org.xwalk.core.XWalkView>
+
+    <ImageView
+        android:id="@+id/dummyview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:visibility="gone"/>
+
+</FrameLayout>

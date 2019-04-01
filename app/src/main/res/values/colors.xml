@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="transparent">#66000000</color>
+    <color name="translucent">#e0000000</color>
+    <color name="title_bar">#313131</color>
+    <color name="sub_title_bar">#919191</color>
+    <color name="font_color_313131">#313131</color>
+    <color name="font_color_AB313131">#AB313131</color>
+
+    <color name="call_toolbar_bg">#AB000000</color>
+    <color name="call_menu_press">#DD878b93</color>
+    <color name="deep_transparent">#00000000</color>
+    <color name="White">#FFFFFF</color>
+    <color name="Yellow">#FFAE00</color>
+    <color name="Red">#DFFF0000</color>
+    <color name="Blue">#4381ff</color>
+    <color name="Green">#31b541</color>
+
+    <color name="content_switch_unselected">#BB000000</color>
+    <color name="content_switch_selected">#BBFFFFFF</color>
+
+    <color name="call_statistics_divider">#99313131</color>
+    <color name="call_statistics_window_bg">#CCFFFFFF</color>
+    <color name="call_statistics_title_bg">#5000FA9A</color>
+    <color name="call_statistics_item_bg_1">#80696969</color>
+    <color name="call_statistics_item_bg_2">#00000000</color>
+
+    <color name="text_hang_up">#C3252E</color>
+
+    <color name="hexmeet_blue">#904369f5</color>
+    <color name="hexmeet_light_gray">#90313131</color>
+    <color name="hexmeet_bg">#f1f1f1</color>
+    <color name="appset">#c1c1c1</color>
+</resources>

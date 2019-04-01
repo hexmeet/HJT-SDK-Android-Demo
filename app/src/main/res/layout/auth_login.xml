@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:whatever="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="32dp"
+    android:background="@color/White">
+
+    <TextView
+        android:id="@+id/login_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/login_private"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:text="@string/login_cloud"
+        android:textColor="@color/title_bar"
+        android:textSize="32sp" />
+
+    <TextView
+        android:id="@+id/sub_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/login_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="6dp"
+        android:text="@string/user_cloud"
+        android:textColor="@color/transparent"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/login_back"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="10dp"
+        android:src="@drawable/icon_back_black" />
+
+    <LinearLayout
+        android:id="@+id/input_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp">
+
+        <com.andreabaccega.widget.FormEditText
+            android:id="@+id/login_server"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_input_box"
+            android:gravity="center"
+            android:hint="@string/server"
+            android:padding="10dp"
+            android:textColor="@color/font_color_313131"
+            android:textColorHint="@color/hexmeet_light_gray"
+            android:textSize="18sp"
+            android:ellipsize="start"
+            android:singleLine="true"
+            whatever:emptyErrorString="@string/error_empty"
+            whatever:testErrorString="@string/error_form"
+            whatever:testType="webUrl" />
+
+        <com.andreabaccega.widget.FormEditText
+            android:id="@+id/login_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/bg_input_box"
+            android:gravity="center"
+            android:hint="@string/login_user"
+            android:padding="10dp"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/font_color_313131"
+            android:textColorHint="@color/hexmeet_light_gray"
+            android:textSize="18sp"
+            whatever:emptyErrorString="@string/error_empty"
+            whatever:testErrorString="@string/error_form" />
+
+        <com.andreabaccega.widget.FormEditText
+            android:id="@+id/login_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/bg_input_box"
+            android:gravity="center"
+            android:hint="@string/password"
+            android:padding="10dp"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/font_color_313131"
+            android:textColorHint="@color/hexmeet_light_gray"
+            android:textSize="18sp"
+            whatever:emptyErrorString="@string/error_empty"
+            whatever:testErrorString="@string/error_form"
+            android:inputType="textPassword" />
+
+        <com.andreabaccega.widget.FormEditText
+            android:id="@+id/login_conf_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/bg_input_box"
+            android:gravity="center"
+            android:maxLines="1"
+            android:maxLength="24"
+            android:singleLine="true"
+            android:hint="@string/join_meeting_id"
+            android:padding="10dp"
+            android:textColor="@color/font_color_313131"
+            android:textColorHint="@color/hexmeet_light_gray"
+            android:textSize="18sp"
+            android:visibility="gone"
+            whatever:emptyErrorString="@string/error_empty"
+            whatever:testErrorString="@string/error_form"
+            whatever:testType="alphaNumeric" />
+
+        <com.andreabaccega.widget.FormEditText
+            android:id="@+id/login_conf_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/bg_input_box"
+            android:gravity="center"
+            android:hint="@string/join_meeting_name"
+            android:padding="10dp"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/font_color_313131"
+            android:textColorHint="@color/hexmeet_light_gray"
+            android:textSize="18sp"
+            android:visibility="gone"
+            whatever:emptyErrorString="@string/error_empty"
+            whatever:testErrorString="@string/error_form"
+            whatever:testType="personName" />
+
+        <Button
+            android:id="@+id/login_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/btn_private_login"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="@string/login"
+            android:textColor="@color/White"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/close_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/input_area"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="10dp"
+        android:gravity="center"
+        android:button="@drawable/checkbox_selector"
+        android:text="@string/close_camera"
+        android:textColor="@color/font_color_313131"
+        android:visibility="gone"
+        android:textSize="14sp" />
+
+    <CheckBox
+        android:id="@+id/close_mic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/close_camera"
+        android:layout_marginLeft="40dp"
+        android:paddingLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:button="@drawable/checkbox_selector"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="@string/close_mic"
+        android:textColor="@color/font_color_313131"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/text_advance_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/advanced_setting"
+        android:padding="15dp"
+        android:layout_marginBottom="10dp"
+        android:visibility="gone"
+        android:textColor="@color/Blue"
+        android:textSize="14sp"/>
+
+</RelativeLayout>

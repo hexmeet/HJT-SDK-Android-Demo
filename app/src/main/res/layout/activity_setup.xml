@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/hexmeet_bg"
+    android:fitsSystemWindows="true"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/setting"
+            android:textColor="@color/title_bar"
+            android:textSize="@dimen/title_bar_font_size" />
+
+        <ImageView
+            android:id="@+id/setup_btn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:padding="15dp"
+            android:src="@drawable/icon_back_black" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/setup_setting"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="15dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_marginLeft="@dimen/standard_padding"
+        android:layout_marginRight="@dimen/standard_padding"
+        android:background="@drawable/bg_click_item">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:drawablePadding="15dp"
+            android:drawableStart="@drawable/icon_setting"
+            android:gravity="center"
+            android:text="@string/setting"
+            android:textColor="@drawable/popup_key_label"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/arrow_right" />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/setup_about"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="7dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_marginLeft="@dimen/standard_padding"
+        android:layout_marginRight="@dimen/standard_padding"
+        android:background="@drawable/bg_click_item">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:drawablePadding="15dp"
+            android:drawableStart="@drawable/icon_about"
+            android:gravity="center"
+            android:text="@string/about_hexmeet"
+            android:textColor="@drawable/popup_key_label"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/arrow_right" />
+    </RelativeLayout>
+</LinearLayout>

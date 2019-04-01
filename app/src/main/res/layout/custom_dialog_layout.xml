@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minWidth="320dp"
+    android:background="@color/White"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/dialog_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#20919191"
+            android:paddingBottom="10dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
+            android:text="@string/conf_password"
+            android:textColor="@color/font_color_313131"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/dialog_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:textColor="@color/font_color_AB313131"
+            android:visibility="gone"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+
+    <EditText
+        android:id="@+id/input_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:background="@drawable/bg_password_box"
+        android:gravity="center"
+        android:hint="@string/conf_password_hint"
+        android:inputType="number"
+        android:padding="12dp"
+        android:singleLine="true"
+        android:textColor="#232323"
+        android:textColorHint="#70232323"
+        android:textCursorDrawable="@null"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:id="@+id/twoButtonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="15dp">
+
+        <Button
+            android:id="@+id/negativeButton"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_select_cancel"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textColor="@drawable/popup_key_label"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/positiveButton"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_private_login"
+            android:gravity="center"
+            android:text="@string/join"
+            android:textColor="@drawable/color_text_join"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</LinearLayout>

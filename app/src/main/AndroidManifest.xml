@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.hexmeet.hjt">
+
+    <uses-feature
+        android:name="android.hardware.screen.landscape"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.screen.portrait"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.READ_SETTINGS" />
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" /><!--允许程序读取或写入系统设置-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 头像存取 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 读写日志 -->
+    <uses-permission android:name="android.permission.GET_TASKS" /> <!-- 允许一个程序获取信息有关当前或最近运行的任务，一个缩略的任务状态，是否活动等等 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- 发送视频 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- 发送音频 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 判断系统是否在通话中， 会议中系统来电的相关处理 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 判断当前网络状态 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission
+        android:name="android.permission.READ_LOGS"
+        tools:ignore="ProtectedPermissions" /><!--允许程序读取系统底层日志-->
+    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- 通话中禁止锁屏 -->
+    <uses-permission android:name="android.permission.VIBRATE" /> <!--系统静音后震动取代铃声 -->
+    <uses-permission android:name="android.permission.RESTART_PACKAGES" /> <!-- 允许程序重新启动其他程序 -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" /> <!-- 允许程序修改全局音频设置 -->
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" /> <!-- 允许一个程序广播常用intents -->
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" /> <!-- 允许应用后台运行 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- CAMERA权限配合使用 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- CAMERA权限配合使用 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- back HOME 启动悬浮窗 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- 启动前台服务 -->
+
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="true" />
+    <!--
+    是否包含能够适用于任何屏幕密度的资源
+    是否是支持较大一点的屏幕形式因素
+    是否支持“正常”屏幕形式因素
+    是否需要为不同的屏幕大小而进行调整
+    是否支持小屏幕形式因素
+    -->
+
+    <!-- Needed to allow  to install on tablets, since android.permission.CALL_PHONE implies android.hardware.telephony is required -->
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    <!-- Needed to allow  to install on tablets, since android.permission.CAMERA implies android.hardware.camera and android.hardware.camera.autofocus are required -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <application
+        android:name=".HjtApp"
+        android:allowBackup="false"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+
+        <activity
+            android:name=".SplashActivity"
+            android:alwaysRetainTaskState="true"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/app.splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".login.Login"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize|adjustPan" />
+        <activity
+            android:name=".HexMeet"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/NoDarkEdgeTheme.Light"
+            />
+        <activity
+            android:name=".InviteActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize|adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="hexmeethjt" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".me.MeDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".me.InviteFriendsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".me.AboutActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".me.ServiceTermsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".me.ParametersActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".me.EditPasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".utils.StringPropertyEditor"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <activity
+            android:name=".call.CallIncomingActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/ActivityDialogTheme">
+            <intent-filter>
+                <action android:name="hexmeet.software.hjt.calling" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".call.Conversation"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTask"
+            android:screenOrientation="sensorLandscape"
+            android:excludeFromRecents="true"
+            />
+        <activity
+            android:name=".call.ConnectActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".call.AnonymousJoinMeetActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".me.VoiceLinkListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Transparent" />
+        <activity android:name=".login.SetupActivity"
+            android:screenOrientation="portrait"
+            />
+        <service
+            android:name=".service.AppService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.hexmeet.hjt.service.AppService" />
+            </intent-filter>
+        </service>
+        <service android:name=".service.MeetingWindowService" />
+
+        <meta-data
+            android:name="com.alibaba.app.appkey"
+            android:value="24904440" />
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.1" />
+        <meta-data
+            android:name="com.alibaba.app.appsecret"
+            android:value="751537cc99f15855a91ee57e037e50a4" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${APP_FILE_PROVIDER_AUTH}"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
+
+        <receiver android:name=".PhoneStateChangedReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE" />
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${APP_FILE_PROVIDER_AUTH}"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
+
+    </application>
+
+</manifest>

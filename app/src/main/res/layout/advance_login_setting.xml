@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="32dp"
+    android:background="@color/White">
+
+    <TextView
+        android:id="@+id/login_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/login_private"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:text="@string/advanced_setting"
+        android:textColor="@color/title_bar"
+        android:textSize="32sp" />
+
+    <ImageView
+        android:id="@+id/login_back"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="10dp"
+        android:src="@drawable/icon_back_black" />
+
+    <LinearLayout
+        android:id="@+id/input_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp">
+
+        <EditText
+            android:id="@+id/login_port"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/bg_input_box"
+            android:gravity="center"
+            android:hint="@string/hint_port"
+            android:padding="10dp"
+            android:inputType="number"
+            android:textColor="@color/font_color_313131"
+            android:textColorHint="@color/hexmeet_light_gray"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/test_web_ip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/bg_input_box"
+            android:gravity="center"
+            android:hint="@string/test_ip"
+            android:padding="10dp"
+            android:inputType="textUri"
+            android:textColor="@color/font_color_313131"
+            android:textColorHint="@color/hexmeet_light_gray"
+            android:textSize="18sp"
+            android:visibility="gone"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/https"
+                android:textColor="@color/font_color_313131"
+                android:textSize="18sp" />
+
+            <Switch
+                android:id="@+id/https_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:switchMinWidth="20dp"
+                android:textOn=""
+                android:textOff=""
+                android:layout_alignParentRight="true"
+                android:thumb="@drawable/thumb_switch"
+                android:track="@drawable/bg_switch" />
+
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/save_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/btn_private_login"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="@string/save"
+            android:textColor="@color/White"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+</RelativeLayout>

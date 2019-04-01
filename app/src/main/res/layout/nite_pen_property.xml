@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/nite_pen_property_view"
+    android:layout_width="130dp"
+    android:layout_height="220dp"
+    android:padding="15dp"
+    android:orientation="horizontal"
+    android:background="#313131">
+
+    <RadioGroup
+        android:id="@+id/rg_nite_pen_color"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical" >
+    <RadioButton
+        android:id="@+id/iv_nite_color_yellow"
+        android:layout_width="@dimen/pen_prop_cell_width"
+        android:layout_height="@dimen/pen_prop_cell_height"
+        android:layout_gravity="center_horizontal"
+        style="@style/RadioButton"
+        android:background="@drawable/nite_pen_color_yellow"/>
+
+    <RadioButton
+        android:id="@+id/iv_nite_color_green"
+        android:layout_width="@dimen/pen_prop_cell_width"
+        android:layout_height="@dimen/pen_prop_cell_height"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center_horizontal"
+        style="@style/RadioButton"
+        android:background="@drawable/nite_pen_color_green"/>
+
+    <RadioButton
+        android:id="@+id/iv_nite_color_lake"
+        android:layout_width="@dimen/pen_prop_cell_width"
+        android:layout_height="@dimen/pen_prop_cell_height"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center_horizontal"
+        style="@style/RadioButton"
+        android:background="@drawable/nite_pen_color_lake"/>
+
+    <RadioButton
+        android:id="@+id/iv_nite_color_pink"
+        android:layout_width="@dimen/pen_prop_cell_width"
+        android:layout_height="@dimen/pen_prop_cell_height"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center_horizontal"
+        style="@style/RadioButton"
+        android:background="@drawable/nite_pen_color_pink"/>
+    </RadioGroup>
+    <RadioGroup
+        android:id="@+id/rg_nite_pen_line_width"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical" >
+    <RadioButton
+        android:id="@+id/iv_nite_line_width_1"
+        android:layout_width="@dimen/pen_prop_cell_width"
+        android:layout_height="@dimen/pen_prop_cell_height"
+        android:layout_gravity="center_horizontal"
+        style="@style/RadioButton"
+        android:background="@drawable/line_width_level_1"
+        />
+
+    <RadioButton
+        android:id="@+id/iv_nite_line_width_2"
+        android:layout_width="@dimen/pen_prop_cell_width"
+        android:layout_height="@dimen/pen_prop_cell_height"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center_horizontal"
+        style="@style/RadioButton"
+        android:background="@drawable/line_width_level_2"/>
+
+    <RadioButton
+        android:id="@+id/iv_nite_line_width_3"
+        android:layout_width="@dimen/pen_prop_cell_width"
+        android:layout_height="@dimen/pen_prop_cell_height"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center_horizontal"
+        style="@style/RadioButton"
+        android:background="@drawable/line_width_level_3" />
+
+    <RadioButton
+        android:id="@+id/iv_nite_line_width_4"
+        android:layout_width="@dimen/pen_prop_cell_width"
+        android:layout_height="@dimen/pen_prop_cell_height"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center_horizontal"
+        style="@style/RadioButton"
+        android:background="@drawable/line_width_level_4" />
+    </RadioGroup>
+
+</LinearLayout>

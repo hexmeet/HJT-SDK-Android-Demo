@@ -1,0 +1,60 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_connecting" />
+
+    <LinearLayout
+        android:id="@+id/avatar_layout"
+        android:layout_width="380dp"
+        android:layout_height="380dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.hexmeet.hjt.widget.PulseView
+            android:id="@+id/pulse_view"
+            android:layout_width="280dp"
+            android:layout_height="280dp"
+            android:layout_centerHorizontal="true"
+            android:drawingCacheQuality="high"
+            app:pv_alpha="95"
+            app:pv_color="#FFFFFF"
+            app:pv_count="2"
+            app:pv_icon="@drawable/connecting"
+            app:pv_icon_height="92dp"
+            app:pv_icon_width="92dp"
+            app:pv_interpolator="@android:anim/accelerate_decelerate_interpolator"
+            app:pv_measure="width"
+            app:pv_spawn_period="800" />
+
+        <TextView
+            android:id="@+id/conn_to_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:ellipsize="end"
+            android:maxEms="14"
+            android:singleLine="true"
+            android:textColor="@color/White"
+            android:textSize="23sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/end_call"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="60dp"
+        android:src="@drawable/btn_reject" />
+
+</RelativeLayout>

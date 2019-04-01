@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/hexmeet_bg"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_height="60dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/invite_friends"
+            android:textColor="@color/title_bar"
+            android:textSize="@dimen/title_bar_font_size" />
+
+        <ImageView
+            android:id="@+id/back_btn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:padding="15dp"
+            android:src="@drawable/icon_back_black" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/qr_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@id/title_layout"
+        android:background="@drawable/bg_card_border">
+
+        <ImageView
+            android:id="@+id/qr_code"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/bkg_qr"
+            android:padding="15dp"
+            android:src="@drawable/qr_code" />
+
+        <TextView
+            android:id="@+id/ev_scan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/qr_code"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="50dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/scan_qrcode_download_app"
+            android:textColor="@color/font_color_313131"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/share_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/wechat_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="10dp"
+            android:drawableTop="@drawable/wechat"
+            android:gravity="center"
+            android:text="@string/friends_wechat"
+            android:textColor="@color/sub_title_bar"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/friend_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="100dp"
+            android:drawablePadding="10dp"
+            android:drawableTop="@drawable/friend"
+            android:gravity="center"
+            android:text="@string/circle_friends_wechat"
+            android:textColor="@color/sub_title_bar"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_above="@+id/share_layout"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp">
+
+        <TextView
+            android:id="@+id/do_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/tip_share"
+            android:textColor="@color/sub_title_bar"
+            android:textSize="15sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/do_more"
+            android:background="#60919191" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/do_more"
+            android:background="#60919191" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

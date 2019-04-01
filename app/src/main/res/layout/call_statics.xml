@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <ImageView
+            android:id="@+id/call_statistics_back"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_menu_converstation"
+            android:padding="15dp"
+            android:src="@drawable/icon_back_black"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/call_statistics_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/call_statistics"
+            android:textColor="@color/font_color_313131"
+            android:textSize="19sp" />
+    </RelativeLayout>
+
+    <include layout="@layout/call_statics_item" />
+
+    <ListView
+        android:id="@+id/call_statistics_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:listSelector="@null"
+        android:cacheColorHint="@color/deep_transparent" />
+</LinearLayout>

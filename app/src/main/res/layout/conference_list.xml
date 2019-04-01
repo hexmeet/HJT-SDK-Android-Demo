@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/White"
+    android:orientation="vertical">
+
+    <WebView
+        android:id="@+id/conference_web"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/progress_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/White"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center">
+
+        <com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:mlpb_enable_circle_background="false"
+            app:mlpb_inner_radius="32dp"
+            app:mlpb_max="100"
+            app:mlpb_progress_color="@color/Blue"
+            app:mlpb_progress_stoke_width="5dp"
+            app:mlpb_progress_text_color="@color/Blue"
+            app:mlpb_progress_text_size="16sp"
+            app:mlpb_progress_text_visibility="visible"
+            app:mlpb_show_arrow="false" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/no_network"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="212dp"
+            android:layout_height="195dp"
+            android:src="@drawable/default_page_nonetwork" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/load_failed"
+            android:layout_marginTop="15dp"
+            android:textSize="16sp"
+            android:textColor="@color/sub_title_bar"/>
+
+        <Button
+            android:id="@+id/reload"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:background="@drawable/btn_private_login"
+            android:text="@string/reload"
+            android:layout_marginTop="20dp"
+            android:textSize="17sp"
+            android:textColor="@color/White"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/close_window"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:padding="10dp"
+        android:visibility="gone"
+        android:src="@drawable/btn_closed"/>
+</RelativeLayout>

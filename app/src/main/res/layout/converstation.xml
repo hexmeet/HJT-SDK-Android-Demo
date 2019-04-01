@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_1024x768">
+
+    <SurfaceView
+        android:id="@+id/dummyPreviewView"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true" />
+
+    <TextView
+        android:id="@+id/record_view"
+        android:layout_width="@dimen/cancel_button_height"
+        android:layout_height="@dimen/setting_padding_double"
+        android:layout_marginLeft="@dimen/content_margin"
+        android:layout_marginTop="@dimen/content_margin"
+        android:gravity="center"
+        android:background="@drawable/shape_recording_bg"
+        android:text="REC"
+        android:drawableLeft="@drawable/image_recording"
+        android:drawablePadding="4dp"
+        android:paddingLeft="5dp"
+        android:textColor="@color/White"
+        android:textSize="17sp" />
+    <LinearLayout
+        android:id="@+id/layout_toast"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/mytoast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/warntoast_bg"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.3"
+            android:padding="15dp"
+            android:text=""
+            android:textColor="#FFFFFF"
+            android:textSize="16dp" />
+
+    </LinearLayout>
+
+
+    <include
+        android:id="@+id/control_layout"
+        layout="@layout/converstation_control"
+        />
+
+</RelativeLayout>

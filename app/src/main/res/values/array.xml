@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<array name="gate_keeper_sel">
+<item>Off</item>
+<item>Specify</item>
+<!-- 
+<item>Auto</item>
+ -->
+</array>
+<array name="gate_keeper_values_sel">
+<item>off</item>
+<item>specify</item>
+<!-- 
+<item>auto</item>
+ -->
+</array>
+
+<array name="qos_service_type_sel">
+	<item>IP_PRECEDENCE</item>
+	<item>DIFFSERV</item>
+</array>
+<array name="qos_service_type_values_sel">
+	<item>IP_PRECEDENCE</item>
+	<item>DIFFSERV</item>
+</array>
+
+<array name="crypto_suite_type_sel">
+	<item>AES_CM_128_HMAC_SHA1_80</item>
+	<item>AES_CM_128_HMAC_SHA1_32</item>
+	<item>F8_128_HMAC_SHA1_80</item>
+</array>
+<array name="crypto_suite_type_values_sel">
+	<item>AES_CM_128_HMAC_SHA1_80</item>
+	<item>AES_CM_128_HMAC_SHA1_32</item>
+	<item>F8_128_HMAC_SHA1_80</item>
+</array>
+
+<array name="settings_sip_transport_sel">
+	<item>TCP</item>
+	<item>UDP</item>
+	<item>TLS</item>
+</array>
+<array name="settings_sip_transport_values_sel">
+	<item>TCP</item>
+	<item>UDP</item>
+	<item>TLS</item>
+</array>
+
+<array name="settings_sip_free_transport_sel">
+	<item>TCP</item>
+	<item>UDP</item>
+	<item>AUTO</item>
+</array>
+<array name="settings_sip_free_transport_values_sel">
+	<item>TCP</item>
+	<item>UDP</item>
+	<item>AUTO</item>
+</array>
+
+<string-array name="settings_max_stream_num_sel">
+	<item>AUTO</item>
+	<item>1</item>
+	<item>2</item>
+	<item>3</item>
+	<item>4</item>
+</string-array>
+
+<string-array name="settings_max_stream_num_value_sel">
+	<item>AUTO</item>
+	<item>1</item>
+	<item>2</item>
+	<item>3</item>
+	<item>4</item>
+</string-array>
+
+<array name="settings_log_level_sel">
+	<item>DEBUG</item>
+	<item>INFO</item>
+	<item>WARN</item>
+	<item>ERROR</item>
+	<item>FATAL</item>
+</array>
+<array name="settings_log_level_value_sel">
+	<item>DEBUG</item>
+	<item>INFO</item>
+	<item>WARN</item>
+	<item>ERROR</item>
+	<item>FATAL</item>
+</array>
+
+<array name="settings_gatekeeper_kind_sel">
+	<item>@string/GK_INTERNAL</item>
+	<item>@string/GK_EXTERNAL</item>
+</array>
+<string-array name="settings_gatekeeper_kind_selected">
+	<item>@string/INT_SERVER_SELECTED</item>
+	<item>@string/EXTERNAL_GK_SELECTED</item>
+</string-array>
+<array name="settings_gatekeeper_kind_values_sel">
+	<item>INTERNAL</item>
+	<item>EXTERNAL</item>
+</array>
+
+<array name="settings_sip_server_type_sel">
+	<item>STANDARD</item>
+	<item>OFF</item>
+	<item>ibm</item>
+</array>
+<array name="settings_sip_server_type_values_sel">
+	<item>STANDARD</item>
+	<item>OFF</item>
+	<item>ibm</item>
+</array>
+
+<array name="network_wifi_sel">
+<item>@string/CALLRATE_64</item>
+<item>@string/settings_call_rate_256k</item>
+<item>@string/settings_call_rate_384k</item>
+<item>@string/settings_call_rate_512k</item>
+<item>@string/settings_call_rate_768k</item>
+<item>@string/settings_call_rate_1m</item>
+<item>@string/settings_call_rate_1_9m</item>
+</array>
+<string-array name="network_wifi_values_sel">
+<item>64</item>
+<item>256</item>
+<item>384</item>
+<item>512</item>
+<item>768</item>
+<item>1024</item>
+<item>1920</item>
+</string-array>
+
+<array name="network_soft_codec_sel">
+	<item>@string/CALLRATE_64</item>
+	<item>@string/settings_call_rate_256k</item>
+	<item>@string/settings_call_rate_384k</item>
+	<item>@string/settings_call_rate_512k</item>
+</array>
+<string-array name="network_soft_codec_values_sel">
+	<item>64</item>
+	<item>256</item>
+	<item>384</item>
+	<item>512</item>
+</string-array>
+
+<array name="network_3g_sel">
+<item>@string/CALLRATE_64</item>
+<item>@string/settings_call_rate_256k</item>
+<item>@string/settings_call_rate_384k</item>
+<item>@string/settings_call_rate_512k</item>
+<item>@string/settings_call_rate_768k</item>
+<item>@string/settings_call_rate_1m</item>
+<item>@string/settings_call_rate_1_9m</item>
+</array>
+<string-array name="network_3g_values_sel">
+<item>64</item>
+<item>256</item>
+<item>384</item>
+<item>512</item>
+<item>768</item>
+<item>1024</item>
+<item>1920</item>
+</string-array>
+<string-array name="protocols">
+<item>H.323</item>
+</string-array>
+<array name="protocols_array">
+<item>H.323</item>
+<item>SIP</item>
+</array>
+<string-array name="protocols_with_sip">
+<item>H.323</item>
+<item>SIP</item>
+</string-array>
+
+<array name="settings_ldap_auth_type">
+	<item>NTLM</item>
+	<item>SIMPLE</item>
+	<item>ANONYMOUS</item>
+</array>
+
+<array name="debug_aessettings">
+<item>off</item>
+<item>on</item>
+<item>auto</item>
+</array>
+
+<array name="debug_log_level_settings">
+<item>debug</item>
+<item>info</item>
+<item>warning</item>
+<item>error</item>
+<item>fatal</item>
+</array>
+</resources>

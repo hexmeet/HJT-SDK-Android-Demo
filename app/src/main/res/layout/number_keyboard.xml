@@ -1,0 +1,153 @@
+<android.support.v7.widget.GridLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="220dp"
+    android:layout_alignParentBottom="true"
+    app:columnCount="3"
+    app:rowCount="4">
+
+    <Button
+        android:id="@+id/one"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_columnWeight="1"
+        app:layout_rowWeight="1"
+        android:background="@drawable/popup_key_bkg"
+        android:text="1"
+        android:layout_margin="1px"
+        android:textColor="@drawable/popup_key_label"
+        android:textSize="25sp" />
+
+    <Button
+        android:id="@+id/two"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_columnWeight="1"
+        app:layout_rowWeight="1"
+        android:layout_margin="1px"
+        android:background="@drawable/popup_key_bkg"
+        android:text="2"
+        android:textColor="@drawable/popup_key_label"
+        android:textSize="25sp" />
+
+    <Button
+        android:id="@+id/three"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="1px"
+        app:layout_columnWeight="1"
+        app:layout_rowWeight="1"
+        android:background="@drawable/popup_key_bkg"
+        android:text="3"
+        android:textColor="@drawable/popup_key_label"
+        android:textSize="25sp" />
+
+    <Button
+        android:id="@+id/four"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_columnWeight="1"
+        app:layout_rowWeight="1"
+        android:layout_margin="1px"
+        android:background="@drawable/popup_key_bkg"
+        android:text="4"
+        android:textColor="@drawable/popup_key_label"
+        android:textSize="25sp" />
+
+    <Button
+        android:id="@+id/five"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_columnWeight="1"
+        app:layout_rowWeight="1"
+        android:layout_margin="1px"
+        android:background="@drawable/popup_key_bkg"
+        android:text="5"
+        android:textColor="@drawable/popup_key_label"
+        android:textSize="25sp" />
+
+    <Button
+        android:id="@+id/six"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_columnWeight="1"
+        app:layout_rowWeight="1"
+        android:background="@drawable/popup_key_bkg"
+        android:text="6"
+        android:layout_margin="1px"
+        android:textColor="@drawable/popup_key_label"
+        android:textSize="25sp" />
+
+    <Button
+        android:id="@+id/seven"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_columnWeight="1"
+        app:layout_rowWeight="1"
+        android:layout_margin="1px"
+        android:background="@drawable/popup_key_bkg"
+        android:text="7"
+        android:textColor="@drawable/popup_key_label"
+        android:textSize="25sp" />
+
+    <Button
+        android:id="@+id/eight"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_columnWeight="1"
+        app:layout_rowWeight="1"
+        android:layout_margin="1px"
+        android:background="@drawable/popup_key_bkg"
+        android:text="8"
+        android:textColor="@drawable/popup_key_label"
+        android:textSize="25sp" />
+
+    <Button
+        android:id="@+id/nine"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_columnWeight="1"
+        app:layout_rowWeight="1"
+        android:layout_margin="1px"
+        android:background="@drawable/popup_key_bkg"
+        android:text="9"
+        android:textColor="@drawable/popup_key_label"
+        android:textSize="25sp" />
+
+
+    <Button
+        android:id="@+id/star"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_columnWeight="1"
+        app:layout_rowWeight="1"
+        android:layout_margin="1px"
+        android:background="@drawable/popup_key_bkg"
+        android:text="*"
+        android:textColor="@drawable/popup_key_label"
+        android:textSize="25sp" />
+
+    <Button
+        android:id="@+id/zero"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_columnWeight="1"
+        app:layout_rowWeight="1"
+        android:layout_margin="1px"
+        android:background="@drawable/popup_key_bkg"
+        android:text="0"
+        android:textColor="@drawable/popup_key_label"
+        android:textSize="25sp" />
+
+    <ImageButton
+        android:id="@+id/backspace_btn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="1px"
+        app:layout_columnWeight="1"
+        app:layout_rowWeight="1"
+        android:background="@drawable/popup_key_bkg"
+        android:src="@drawable/keyboard_delete" />
+
+</android.support.v7.widget.GridLayout>
