@@ -106,6 +106,7 @@ public class ConferenceListFrag extends Fragment {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
+                LOG.info("newProgress : "+newProgress);
                 if (newProgress == 100) {
                     progressLayout.setVisibility(View.GONE);
                 } else {
@@ -189,7 +190,8 @@ public class ConferenceListFrag extends Fragment {
         public void tokenExpired(){
             LOG.info("JavaScript: tokenExpired");
             if(!SystemCache.getInstance().isAnonymousMakeCall() && isResumed()) {
-                HjtApp.getInstance().getAppService().loginInLoop(true);
+               HjtApp.getInstance().getAppService().loginInLoop(true);
+
             } else {
                 tokenExpired = true;
             }
@@ -203,6 +205,7 @@ public class ConferenceListFrag extends Fragment {
     }
 
     public void updateTokenForWeb() {
+        //LOG.error("JavaScript: updateToken error : url not load finished-------------222----------------");
         if(tokenExpired) {
             tokenExpired = false;
             loadConference();
@@ -219,14 +222,12 @@ public class ConferenceListFrag extends Fragment {
         webView.post(new Runnable() {
             @Override
             public void run() {
-                webView.evaluateJavascript("javascript:updateToken("+token+")", new ValueCallback<String>() {
-                    @Override
-                    public void onReceiveValue(String value) {
-                        LOG.info("JavaScript: updateToken, value: "+value);
-                    }
-                });
+                webView.evaluateJavascript("javascript:updateToken("+token+")", null);
+                //LOG.error("JavaScript: updateToken error : url not load finished-------------333----------------");
+                loadConference();
             }
         });
+
     }
 
     @Override
@@ -244,10 +245,12 @@ public class ConferenceListFrag extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        LOG.info("onResume()");
         webView.onResume();
         webView.resumeTimers();
         if(tokenExpired) {
             HjtApp.getInstance().getAppService().loginInLoop(true);
+            //LOG.error("JavaScript: updateToken error : url not load finished-------------444----------------");
         } else {
             loadConference();
         }
@@ -269,10 +272,12 @@ public class ConferenceListFrag extends Fragment {
     }
 
     private void loadConference() {
+        //LOG.error("JavaScript: updateToken error : url not load finished--------------111----------------");
         RestLoginResp restLoginResp = SystemCache.getInstance().getLoginResponse();
         if (restLoginResp != null && NetworkUtil.isNetConnected(getContext())) {
             loadFailedInfo.setVisibility(View.GONE);
             webView.setVisibility(View.VISIBLE);
+           // webView.clearCache(true);
             StringBuilder sb = new StringBuilder();
             sb.append(restLoginResp.customizedH5UrlPrefix);
             sb.append("/mobile/#/conferences?token=");
@@ -285,6 +290,7 @@ public class ConferenceListFrag extends Fragment {
             LOG.info("Load URL : [" + url + "]");
             Log.i("=========",url);
             webView.loadUrl(url);
+
         } else {
             loadFailedInfo.setVisibility(View.VISIBLE);
             webView.setVisibility(View.GONE);

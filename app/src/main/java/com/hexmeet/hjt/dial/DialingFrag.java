@@ -70,7 +70,7 @@ public class DialingFrag extends Fragment {
                     String number = numberKeyboard.getNumber();
                     if(validate(number)) {
                         SystemCache.getInstance().setUserMuteVideo(closeCameraView.getChildAt(1).isSelected());
-                        SystemCache.getInstance().setUserMuteMic(closeMicView.getChildAt(1).isSelected());
+                        //SystemCache.getInstance().setUserMuteMic(closeMicView.getChildAt(1).isSelected());
                         String sipNumberWithoutPassword = number;
                         String password = "";
                         if (number.contains("*")) {
@@ -79,7 +79,6 @@ public class DialingFrag extends Fragment {
                             password = strs[1];
                         }
                         HjtApp.getInstance().getAppService().muteMic(closeMicView.getChildAt(1).isSelected());
-
                         ((HexMeet)getActivity()).dialOut(sipNumberWithoutPassword, password);
                     }
                     break;

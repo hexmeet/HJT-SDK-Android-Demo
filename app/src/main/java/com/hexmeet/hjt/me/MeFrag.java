@@ -86,7 +86,6 @@ public class MeFrag extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        HjtApp.getInstance().getAppService().getUserInfo();
         Utils.loadAvatar(avatar);
         if (SystemCache.getInstance().getLoginResponse() != null) {
             username.setText(SystemCache.getInstance().getLoginResponse().getDisplayName());

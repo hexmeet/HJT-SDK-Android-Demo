@@ -236,23 +236,19 @@ public class CopyAssets {
         isBTPHeadSetConnected = isOn;
         LOG.info("setBluetoothMonoState "+isOn+"  sdk int :"+android.os.Build.VERSION.SDK_INT);
         if (isOn) {
-            mAudioManager.setBluetoothScoOn(true);
+            mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION); // After API level >= 11
             mAudioManager.startBluetoothSco();
+            mAudioManager.setBluetoothScoOn(true);
             mAudioManager.setSpeakerphoneOn(false);
-            if (android.os.Build.VERSION.SDK_INT >= 11) {
-                mAudioManager.setMode(AudioManager.MODE_NORMAL); // After API level >= 11
-            }
-            else {
-               // mAudioManager.setMode(AudioManager.MODE_IN_CALL);
-                mAudioManager.setMode(AudioManager.MODE_NORMAL);
-            }
         }
         else {
-            mAudioManager.setMode(AudioManager.MODE_NORMAL);
-            mAudioManager.stopBluetoothSco();
+            mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
             mAudioManager.setBluetoothScoOn(false);
+            mAudioManager.stopBluetoothSco();
+
             mAudioManager.setSpeakerphoneOn(true);
         }
+        LOG.info("hexmeet isSetBluetoothScoOn : "+mAudioManager.isBluetoothScoOn());
     }
 
     public void routeAudioToReceiver() {
@@ -378,7 +374,7 @@ public class CopyAssets {
 
     private String processAudioRouteEventConversation(int value){
         if(EVENT_START == value){ // conversation start
-            LOG.info("hexmeet processAudioRouteEventConversation(start) set audio mode to STREAM_VOICE_CALL");
+            LOG.info("hexmeet processAudioRouteEventConversation(start) set audio mode to MODE_IN_COMMUNICATION");
             if (android.os.Build.VERSION.SDK_INT >= 11) {
                 mAudioManager.setMode(AudioManager.MODE_NORMAL); // After API level >= 11
             }
@@ -386,7 +382,7 @@ public class CopyAssets {
                 mAudioManager.setMode(AudioManager.MODE_NORMAL);
             }
             mCurrentAudioMode = mAudioManager.getMode();
-
+            LOG.info("hexmeet isBluetoothScoOn() : "+mAudioManager.isBluetoothScoOn()+",isBluetoothA2dpOn(): "+mAudioManager.isBluetoothA2dpOn());
             if(mAudioManager.isBluetoothScoOn() || mAudioManager.isBluetoothA2dpOn()){
                 LOG.info("hexmeet processAudioRouteEventConversation(start) current audio route is bluetooth");
                 mCurrentAudioRoute = ROUTE_TO_BLUETOOTH;

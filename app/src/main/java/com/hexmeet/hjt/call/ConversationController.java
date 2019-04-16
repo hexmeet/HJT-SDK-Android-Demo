@@ -24,6 +24,8 @@ import com.hexmeet.hjt.utils.Utils;
 
 import org.apache.log4j.Logger;
 
+import ev.common.EVFactory;
+
 public class ConversationController implements View.OnClickListener{
     private Logger LOG = Logger.getLogger(Conversation.class);
     private View rootView;
@@ -141,6 +143,7 @@ public class ConversationController implements View.OnClickListener{
     }
 
     public void toggleLayoutMode() {
+        LOG.info("toggleLayoutMode isSpeaker : "+AppSettings.getInstance().isSpeakerMode());
         setLayoutMode(!AppSettings.getInstance().isSpeakerMode());
         HjtApp.getInstance().getAppService().setLayoutMode(!AppSettings.getInstance().isSpeakerMode() ? 2 : 1);
     }
@@ -201,9 +204,13 @@ public class ConversationController implements View.OnClickListener{
                 break;
             case R.id.toolbar_local_mute:
                 boolean mute = !((ViewGroup)v).getChildAt(0).isSelected();
+                LOG.info("mute onClick : "+mute+",micEnabled : "+EVFactory.createEngine().micEnabled());
                 SystemCache.getInstance().setUserMuteMic(mute);
-                muteMic(mute);
-                HjtApp.getInstance().getAppService().muteMic(mute);
+                if(mute ^ !EVFactory.createEngine().micEnabled()){
+                    EVFactory.createEngine().enableMic(!mute);
+                }
+                muteMic(!EVFactory.createEngine().micEnabled());
+               /* HjtApp.getInstance().getAppService().muteMic(mute);*/
                 break;
             case R.id.toolbar_layout_mode:
                 if(SystemCache.getInstance().isLayoutModeEnable()) {

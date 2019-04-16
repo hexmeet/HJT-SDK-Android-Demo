@@ -21,7 +21,9 @@ public class ResourceUtils {
 
     private static ResourceUtils instance = null;
     public static final int CALL_ERROR = 0;
+    public static final int CALL_ERROR_9 = 9;
     public static final int CALL_ERROR_1001 = 1001;
+    public static final int CALL_ERROR_10009 = 10009;
     public static final int CALL_ERROR_2001 = 2001;
     public static final int CALL_ERROR_2005 = 2005;
     public static final int CALL_ERROR_2023 = 2023;
@@ -95,7 +97,7 @@ public class ResourceUtils {
     }
 
     public String getCallFailedReason(int code) {
-        if(code == CALL_ERROR_1001) {
+        if(code == CALL_ERROR_1001 || code == CALL_ERROR_10009) {
             return HjtApp.getInstance().getString(R.string.call_error_1001);
         } else if(code == CALL_ERROR_2005) {
             return HjtApp.getInstance().getString(R.string.call_error_2005);
@@ -109,7 +111,9 @@ public class ResourceUtils {
             return HjtApp.getInstance().getString(R.string.call_error_2033);
         }else if(code == CALL_ERROR_2035){
             return HjtApp.getInstance().getString(R.string.call_error_2035);
-        }else {
+        }else if(code == CALL_ERROR || code == CALL_ERROR_9){
+            return null;
+        } else {
             /*int startIndex = message.indexOf("[");
             if(startIndex >= 0) {
                 int endIndex = message.indexOf("]");

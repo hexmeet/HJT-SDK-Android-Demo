@@ -106,7 +106,8 @@ public class FullscreenActivity extends Activity {
     protected void clearInviteData(){
         Log.i("fullscreen",SystemCache.getInstance().isInviteMakeCall()+"");
         // TODO - why make a autoLogin here?
-        //LoginService.getInstance().autoLogin();
+        LoginService.getInstance().autoLogin();
+        SystemCache.getInstance().setInviteMakeCall(false);
     }
 
     protected void hideNavigationBar(final Handler handler) {
