@@ -200,6 +200,7 @@ public class SystemCache {
                 withContent = false;
                 if(this.callState == CallState.CONNECTED && peer != null) {
                     peer.setEndTime(SystemClock.elapsedRealtime());
+                    setStartTime(SystemClock.elapsedRealtime());
                 }
                 break;
             case CONNECTED:
@@ -391,5 +392,13 @@ public class SystemCache {
 
     public void setParticipant(String participantNumber) {
         this.participantNumber = participantNumber;
+    }
+
+    public String getToken(){
+        return loginResponse == null ? null : loginResponse.getToken();
+    }
+
+    public String getDoradoVersion() {
+        return loginResponse == null ? null : loginResponse.getDoradoVersion();
     }
 }

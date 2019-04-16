@@ -47,7 +47,7 @@
         android:orientation="vertical"
         android:layout_margin="40dp"
         android:layout_width="match_parent"
-        android:layout_height="260dp">
+        android:layout_height="@dimen/invite_height">
         <com.andreabaccega.widget.FormEditText
             android:id="@+id/display_name"
             android:layout_width="match_parent"
@@ -87,12 +87,12 @@
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/btn_private_login"
+            android:background="@drawable/btn_private_cancel"
             android:state_pressed="false"
             android:gravity="center"
             android:padding="10dp"
             android:text="@string/cancel"
-            android:textColor="@color/White"
+            android:textColor="@color/font_color_313131"
             android:textSize="15sp" />
 
         <CheckBox

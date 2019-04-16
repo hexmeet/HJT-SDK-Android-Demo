@@ -80,7 +80,7 @@ public class MeDetailActivity extends BaseActivity {
         if (savedInstanceState != null && savedInstanceState.getSerializable("filePath") != null) {
             avatarTempCaptureFile = new File((String) savedInstanceState.getSerializable("filePath"));
         }
-
+        HjtApp.getInstance().getAppService().getUserInfo();
         username = (TextView) findViewById(R.id.account);
         displayName = (TextView) findViewById(R.id.display_name);
         cellphone = (TextView) findViewById(R.id.phone);
@@ -151,7 +151,7 @@ public class MeDetailActivity extends BaseActivity {
             cellphone.setText(TextUtils.isEmpty(loginResp.getCellphone()) ? loginResp.getTelephone() : loginResp.getCellphone());
             email.setText(loginResp.getEmail());
             company.setText(loginResp.getOrg());
-            department.setText(SystemCache.getInstance().getDepartment());
+            department.setText(loginResp.getDept());
         }
     }
 
@@ -435,6 +435,17 @@ public class MeDetailActivity extends BaseActivity {
         } else {
             Utils.showToast(this, R.string.rename_failed);
             LOG.error("User rename failed: ["+event.getMessage()+"]");
+        }
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLoginRespEvent(RestLoginResp event) {
+        if(event!=null){
+            displayName.setText(event.getDisplayName());
+            username.setText(event.getUsername());
+            cellphone.setText(TextUtils.isEmpty(event.getCellphone()) ? event.getTelephone() : event.getCellphone());
+            email.setText(event.getEmail());
+            company.setText(event.getOrg());
+            department.setText(event.getDept());
         }
     }
 }

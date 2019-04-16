@@ -43,7 +43,9 @@
         android:padding="15dp"
         android:text="@string/join_meeting"
         android:textColor="@color/White"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textAllCaps="false"
+        />
 
     <Button
         android:id="@+id/login_btn"
@@ -58,7 +60,9 @@
         android:padding="15dp"
         android:text="@string/login"
         android:textColor="@color/White"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textAllCaps="false"
+        />
 
 
     <LinearLayout
