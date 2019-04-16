@@ -4,6 +4,7 @@ package com.hexmeet.hjt;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
+import android.util.Log;
 
 public class AppSettings {
     private static final String APP_SETTINGS = "app_settings";
@@ -40,6 +41,7 @@ public class AppSettings {
     }
 
     public void setSpeakerMode(boolean speakerMode) {
+        Log.i("isSpeaker : [",speakerMode+"]");
         if (isSpeakerMode ^ speakerMode) {
             this.isSpeakerMode = speakerMode;
             sp.edit().putBoolean(Key.SPEAKER_LAYOUT, speakerMode).apply();

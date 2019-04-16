@@ -32,7 +32,6 @@ public class Login extends BaseActivity implements LoginFragmentCallback{
     private Logger LOG = Logger.getLogger(Login.class);
     private ProgressUtil progress = null;
     private LoginFragment loginFragment;
-    private int time=5;
 
 
     public static void actionStart(Context context) {
@@ -155,6 +154,7 @@ public class Login extends BaseActivity implements LoginFragmentCallback{
 
     @Override
     public void doLogin(LoginParams locationParams, boolean https, String port) {
+        LOG.info(" dologin ");
         progress.showDelayed(500);
         SystemCache.getInstance().setAnonymousMakeCall(false);
         HjtApp.getInstance().getAppService().loginInThread(locationParams, https, port);
@@ -206,12 +206,19 @@ public class Login extends BaseActivity implements LoginFragmentCallback{
                 HexMeet.actionStart(Login.this);
             }
             finish();
-        } else if(event.getCode() == LoginResultEvent.LOGIN_WRONG_PASSWORD || event.getCode() == LoginResultEvent.LOGIN_MANUAL_TRY){
-            Utils.showToastWithCustomLayout(Login.this, event.getMessage());
-        }else if(event.getCode() == LoginResultEvent.LOGIN_WRONG_PASSWORD_TIME){
-            Utils.showToastWithCustomLayout(Login.this, event.getMessage());
-        } else {
-            Utils.showToastWithCustomLayout(Login.this, event.getMessage());
+        }else {
+            if(event.getCode() == LoginResultEvent.LOGIN_WRONG_PASSWORD || event.getCode() == LoginResultEvent.LOGIN_MANUAL_TRY){
+                Utils.showToastWithCustomLayout(Login.this, event.getMessage());
+            }else if(event.getCode() == LoginResultEvent.LOGIN_WRONG_PASSWORD_TIME){
+                Utils.showToastWithCustomLayout(Login.this, event.getMessage());
+            }else if(event.getCode() == LoginResultEvent.LOGIN_WRONG_INVALID_NAME){
+                Utils.showToastWithCustomLayout(Login.this, event.getMessage());
+            }else if(event.getCode() == LoginResultEvent.LOGIN_WRONG_NET){
+                Utils.showToastWithCustomLayout(Login.this, event.getMessage());
+            } else {
+                Utils.showToastWithCustomLayout(Login.this, event.getMessage());
+            }
+            HjtApp.getInstance().getAppService().logout();
         }
     }
 
