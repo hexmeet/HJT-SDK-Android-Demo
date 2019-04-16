@@ -233,22 +233,22 @@ public class CopyAssets {
     }
 
     private void setBluetoothMonoState(boolean isOn){
+
+
+        mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+
+
         isBTPHeadSetConnected = isOn;
-        LOG.info("setBluetoothMonoState "+isOn+"  sdk int :"+android.os.Build.VERSION.SDK_INT);
+
+        LOG.info("setBluetoothMonoState "+ isOn +"  sdk int :"+android.os.Build.VERSION.SDK_INT);
         if (isOn) {
             mAudioManager.setBluetoothScoOn(true);
             mAudioManager.startBluetoothSco();
             mAudioManager.setSpeakerphoneOn(false);
-            if (android.os.Build.VERSION.SDK_INT >= 11) {
-                mAudioManager.setMode(AudioManager.MODE_NORMAL); // After API level >= 11
-            }
-            else {
-               // mAudioManager.setMode(AudioManager.MODE_IN_CALL);
-                mAudioManager.setMode(AudioManager.MODE_NORMAL);
-            }
+
         }
         else {
-            mAudioManager.setMode(AudioManager.MODE_NORMAL);
+            mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
             mAudioManager.stopBluetoothSco();
             mAudioManager.setBluetoothScoOn(false);
             mAudioManager.setSpeakerphoneOn(true);

@@ -223,7 +223,7 @@
     <string name="port">端口（可选）</string>
     <string name="login_timeout">登录超时，请检查网络</string>
     <string name="login_failed">登录失败: 服务器不可用,请检查网络设置</string>
-    <string name="invalid_username_or_password">无效的用户名或密码</string>
+    <string name="invalid_username_or_password">无效的用户</string>
     <string name="error_account_or_password">账号或密码错误</string>
     <string name="password_changed">密码已更改,请重新登录</string>
     <string name="login_again">登录失败，请稍后再试</string>

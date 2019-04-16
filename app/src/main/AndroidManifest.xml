@@ -200,7 +200,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepaths" />
+                android:resource="@xml/evsdk_file_paths" />
         </provider>
 
         <receiver android:name=".PhoneStateChangedReceiver">
@@ -209,15 +209,7 @@
             </intent-filter>
         </receiver>
 
-        <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="${APP_FILE_PROVIDER_AUTH}"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepaths" />
-        </provider>
+
 
     </application>
 

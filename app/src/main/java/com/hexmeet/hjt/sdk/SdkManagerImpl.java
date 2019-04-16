@@ -17,6 +17,7 @@ import com.hexmeet.hjt.event.LiveEvent;
 import com.hexmeet.hjt.event.LogPathEvent;
 import com.hexmeet.hjt.event.LoginRetryEvent;
 import com.hexmeet.hjt.event.FileMessageEvent;
+import com.hexmeet.hjt.event.MicEnabledEvent;
 import com.hexmeet.hjt.event.MuteSpeaking;
 import com.hexmeet.hjt.event.NetworkEvent;
 import com.hexmeet.hjt.event.NetworkStatusEvent;
@@ -57,8 +58,8 @@ public class SdkManagerImpl implements SdkManager {
     private Logger LOG = Logger.getLogger(SdkManagerImpl.class);
     public EVEngine engine;
     public static final int CODE_SUCCESS = 0;
-
-
+    static final  int LOGIN_ERROR_1101 = 1101;
+    static final  int LOGIN_ERROR_10009 = 10009;
     @Override
     public void initSDK() {
         LOG.info("initSDK");
@@ -66,7 +67,7 @@ public class SdkManagerImpl implements SdkManager {
         engine = EVFactory.createEngine();
         CopyAssets.getInstance().createAndStart(appContext);
         String path = appContext.getFilesDir().getAbsolutePath();
-        engine.setLog("EasyVideo", path, "evsdk", 1024 * 1024 * 2);
+        engine.setLog("EasyVideo", path, "evsdk", 1024 * 1024 * 10);
         engine.enableLog(true);
         engine.setRootCA(path);
         engine.initialize(path, "config");
@@ -95,14 +96,15 @@ public class SdkManagerImpl implements SdkManager {
 
     @Override
     public void login(LoginParams params, boolean https, String port) {
-        LOG.info("login" + params.toString());
+        LOG.info("login : " + params.toString());
+
         engine.enableSecure(https);
         String password = engine.encryptPassword(params.getPassword());
         int loginPort = 0;
         if (!TextUtils.isEmpty(port)) {
             loginPort = Integer.parseInt(port);
         }
-        LOG.info("login" + params.getServerAddress()+""+loginPort+""+ params.getUser_name()+""+password);
+        LOG.info("login : " + params.getServerAddress()+", loginPort : "+loginPort+", User_name: "+ params.getUser_name()+",password:"+password);
         engine.loginWithLocation(params.getServerAddress(), loginPort, params.getUser_name(), password);
     }
 
@@ -145,12 +147,22 @@ public class SdkManagerImpl implements SdkManager {
     public void getUserInfo() {
         UserInfo user = engine.getUserInfo();
         LOG.info("getUserInfo : "+user.toString());
-        if(!SystemCache.getInstance().isAnonymousMakeCall()){
-            SystemCache.getInstance().setDepartment(user.dept);
-        }else {
-            LOG.info(" UserInfo NULL !!!");
-        }
+        RestLoginResp restLoginResp = new RestLoginResp();
+        restLoginResp.setUsername(user.username);
+        restLoginResp.setDisplayName(user.displayName);
+        restLoginResp.setOrg(user.org);
+        restLoginResp.setEmail(user.email);
+        restLoginResp.setCellphone(user.cellphone);
+        restLoginResp.setTelephone(user.telephone);
+        restLoginResp.setDept(user.dept);
+        restLoginResp.setEverChangedPasswd(user.everChangedPasswd);
+        restLoginResp.setCustomizedH5UrlPrefix(user.customizedH5UrlPrefix);
+        restLoginResp.setToken(user.token);
+        restLoginResp.setDoradoVersion(user.doradoVersion);
+        SystemCache.getInstance().setLoginResponse(restLoginResp);
 
+        EventBus.getDefault().post(new RestLoginResp(user.username,user.displayName,user.org,user.email,user.cellphone,user.telephone,user.dept,user.everChangedPasswd,user.customizedH5UrlPrefix
+        ,user.token,user.doradoVersion));
     }
 
     @Override
@@ -179,6 +191,7 @@ public class SdkManagerImpl implements SdkManager {
 
     @Override
     public void onEnableSpeaker(boolean isSpeaker) {
+        LOG.info(" isSpeaker : "+isSpeaker);
         engine.enableSpeaker(isSpeaker);
     }
 
@@ -190,7 +203,7 @@ public class SdkManagerImpl implements SdkManager {
     @SuppressLint("StringFormatInvalid")
     public static void handlerError(int errorCode, String error, ArrayList<String> time) {
         boolean needRetry = true;
-        int LOGIN_ERROR_1101 = 1101;
+
         if (error != null) {
             if (error.contains("java.net.SocketTimeoutException") || error.contains("connect timed out")) {
                 errorCode = LoginResultEvent.LOGIN_WRONG_NET;
@@ -208,6 +221,10 @@ public class SdkManagerImpl implements SdkManager {
                 String frequency = time.get(0);
                 errorCode=LoginResultEvent.LOGIN_WRONG_PASSWORD_TIME;
                 error = HjtApp.getInstance().getString(R.string.locking_password,frequency);
+                needRetry = false;
+            }else if (errorCode == LOGIN_ERROR_10009) {
+                errorCode=LoginResultEvent.LOGIN_WRONG_INVALID_NAME;
+                error = HjtApp.getInstance().getString(R.string.invalid_username_or_password);
                 needRetry = false;
             } else if (error.contains("400 Bad Request")) {
                 errorCode = LoginResultEvent.LOGIN_WRONG_NET;
@@ -260,7 +277,7 @@ public class SdkManagerImpl implements SdkManager {
 
     @Override
     public void enableVideo(boolean enable) {
-        LOG.info(" enableVideo " + enable);
+        LOG.info(" enableVideo " + enable +",cameraEnabled : "+engine.cameraEnabled());
         if(enable ^ engine.cameraEnabled()){
             engine.enableCamera(enable);
         }else {
@@ -283,14 +300,15 @@ public class SdkManagerImpl implements SdkManager {
 
     @Override
     public void setMicMute(boolean mute) {
-        LOG.info(" setMicMute " + mute);
+        LOG.info(" setMicMute " + mute +" micEnabled : "+engine.micEnabled());
         if(mute ^ !engine.micEnabled()){
             engine.enableMic(!mute);
         }else {
             LOG.error("no MicMute instance!!!");
         }
-
     }
+
+
     @Override
     public void reLoadCamera() {
         engine.reloadVideoDevices();
@@ -533,13 +551,23 @@ public class SdkManagerImpl implements SdkManager {
                         CallEvent event = new CallEvent(CallState.IDLE);
                         event.setEndReason(ResourceUtils.getInstance().getCallFailedReason(err.code));
                         EventBus.getDefault().post(event);
+                        LoginSettings.getInstance().setLoginState(LoginSettings.LOGIN_STATE_IDLE, true);
+                        EventBus.getDefault().post(new LoginResultEvent(LoginResultEvent.LOGIN_ANONYMOUS_FAILED, "No callBack in response", true));
                     }else {
                         SystemCache.getInstance().setCloudLogin(false);
                         SdkManagerImpl.handlerError(err.code, err.msg ,err.arg);
-                        logout();
+
                     }
 
                 }else if(err.type.toString()== ErrorType.EVErrorTypeSdk){
+                    if(SystemCache.getInstance().isAnonymousMakeCall()){
+                        CallEvent event = new CallEvent(CallState.IDLE);
+                        event.setEndReason(ResourceUtils.getInstance().getCallFailedReason(err.code));
+                        EventBus.getDefault().post(event);
+                    }else {
+                        SystemCache.getInstance().setCloudLogin(false);
+                        SdkManagerImpl.handlerError(err.code, err.msg ,err.arg);
+                    }
                 }else if(err.type.toString()== ErrorType.EVErrorTypeCall){
                     //TODO
                 }else if(err.type.toString()== ErrorType.EVErrorTypeUnknown){
@@ -566,11 +594,20 @@ public class SdkManagerImpl implements SdkManager {
                 restLoginResp.setToken(user.token);
                 restLoginResp.setDoradoVersion(user.doradoVersion);
                 SystemCache.getInstance().setLoginResponse(restLoginResp);
-                EventBus.getDefault().post(new LoginResultEvent(LoginResultEvent.LOGIN_SUCCESS, "success"));
-                boolean isCloudLogin = SystemCache.getInstance().isCloudLogin();
-                LOG.info("CallBack isCloudLogin : "+isCloudLogin);
-                LoginSettings.getInstance().setLoginState(isCloudLogin ? LoginSettings.LOGIN_CLOUD_SUCCESS : LoginSettings.LOGIN_PRIVATE_SUCCESS, false);
-                downloadAvatar();
+
+                if(SystemCache.getInstance().isAnonymousMakeCall()){
+                    LOG.info("CallBack isCloud : "+SystemCache.getInstance().getJoinMeetingParam().isCloud());
+                    LoginSettings.getInstance().setLoginState(SystemCache.getInstance().getJoinMeetingParam().isCloud() ? LoginSettings.LOGIN_CLOUD_SUCCESS : LoginSettings.LOGIN_PRIVATE_SUCCESS, true);
+                    EventBus.getDefault().post(new LoginResultEvent(LoginResultEvent.LOGIN_SUCCESS, "success", true));
+                    updateVideoUserImage(null);
+                }else {
+                    boolean isCloudLogin = SystemCache.getInstance().isCloudLogin();
+                    LOG.info("CallBack isCloudLogin : "+isCloudLogin);
+                    LoginSettings.getInstance().setLoginState(isCloudLogin ? LoginSettings.LOGIN_CLOUD_SUCCESS : LoginSettings.LOGIN_PRIVATE_SUCCESS, false);
+                    EventBus.getDefault().post(new LoginResultEvent(LoginResultEvent.LOGIN_SUCCESS, "success"));
+                    downloadAvatar();
+                }
+
         }
 
         @Override

@@ -320,7 +320,8 @@ public class HexMeet extends BaseActivity implements OnClickListener {
                     JsJoinMeeting meeting = JsonUtil.toObject(json, JsJoinMeeting.class);
                     if(!TextUtils.isEmpty(meeting.getNumericId())) {
                         SystemCache.getInstance().setUserMuteVideo(meeting.isCameraStatus());
-                        SystemCache.getInstance().setUserMuteMic(meeting.isMicrophoneStatus());
+                       /* SystemCache.getInstance().setUserMuteMic(meeting.isMicrophoneStatus());*/
+                        HjtApp.getInstance().getAppService().muteMic(meeting.isMicrophoneStatus());
                         dialOut(meeting.getNumericId(), meeting.getPassword());
                     }
                 } catch (Exception e) {

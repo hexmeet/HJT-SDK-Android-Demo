@@ -154,8 +154,9 @@ public class ConfManageWindow {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
+                LOG.info("newProgress : "+newProgress);
                 if (newProgress == 100) {
-                    progressBar.setShowProgressText(false);
+                    progressBar.setProgress(99);
                 } else {
                     progressBar.setProgress(newProgress);
                 }
@@ -212,9 +213,9 @@ public class ConfManageWindow {
     }
 
     private void loadConference() {
-        String token = SystemCache.getInstance().getLoginResponse().getToken();
-        String version = SystemCache.getInstance().getLoginResponse().getDoradoVersion();
-
+        String token = SystemCache.getInstance().getToken();
+        String version = SystemCache.getInstance().getDoradoVersion();
+        LOG.info("Load toke : [" + token + "] version : ["+ version + "]");
         if (token != null && NetworkUtil.isNetConnected(conversation)) {
             loadFailedInfo.setVisibility(View.GONE);
             webView.setVisibility(View.VISIBLE);
@@ -232,6 +233,7 @@ public class ConfManageWindow {
             LOG.info("Load URL : [" + url + "]");
             webView.loadUrl(url);
         } else {
+            LOG.info("Load URL : null");
             loadFailedInfo.setVisibility(View.VISIBLE);
             webView.setVisibility(View.GONE);
         }
@@ -306,19 +308,16 @@ public class ConfManageWindow {
             LOG.error("JavaScript: updateToken error : url not load finished");
             return;
         }
-        final String token = SystemCache.getInstance().getLoginResponse().getToken();
+        final String token = SystemCache.getInstance().getToken();
         LOG.info("JavaScript: updateToken ["+token+"]");
         webView.post(new Runnable() {
             @Override
             public void run() {
-                webView.evaluateJavascript("javascript:updateToken("+token+")", new ValueCallback<String>() {
-                    @Override
-                    public void onReceiveValue(String value) {
-                        LOG.info("JavaScript: updateToken, value: "+value);
-                    }
-                });
+                webView.evaluateJavascript("javascript:updateToken("+token+")",null);
+                loadConference();
             }
         });
+
     }
 
 }

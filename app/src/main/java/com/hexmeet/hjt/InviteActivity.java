@@ -26,7 +26,6 @@ import com.hexmeet.hjt.utils.ResourceUtils;
 import com.hexmeet.hjt.utils.Utils;
 import org.apache.log4j.Logger;
 
-import ev.common.EVFactory;
 import pl.droidsonroids.gif.GifImageView;
 
 public class InviteActivity extends BaseActivity{
@@ -272,7 +271,8 @@ public class InviteActivity extends BaseActivity{
             gotoLogin();
         }
         SystemCache.getInstance().setUserMuteVideo(invite_camera1.isChecked());
-        SystemCache.getInstance().setUserMuteMic(invite_mic.isChecked());
+       /* SystemCache.getInstance().setUserMuteMic(invite_mic.isChecked());*/
+        HjtApp.getInstance().getAppService().muteMic(invite_mic.isChecked());
     }
 
 

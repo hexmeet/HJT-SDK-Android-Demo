@@ -92,6 +92,7 @@ public class FullscreenActivity extends Activity {
             mRingerPlayer.release();
             mRingerPlayer = null;
         }
+
        String event = CopyAssets.REMOTE_RING_EVENT;
         int value = CopyAssets.EVENT_STOP;
         CopyAssets.getInstance().processAudioRouteEvent(event, value);
@@ -106,7 +107,8 @@ public class FullscreenActivity extends Activity {
     protected void clearInviteData(){
         Log.i("fullscreen",SystemCache.getInstance().isInviteMakeCall()+"");
         // TODO - why make a autoLogin here?
-        //LoginService.getInstance().autoLogin();
+        LoginService.getInstance().autoLogin();
+        SystemCache.getInstance().setInviteMakeCall(false);
     }
 
     protected void hideNavigationBar(final Handler handler) {

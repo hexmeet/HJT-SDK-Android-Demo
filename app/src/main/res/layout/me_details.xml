@@ -288,5 +288,7 @@
         android:padding="15dp"
         android:text="@string/logout"
         android:textColor="#FF4747"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textAllCaps="false"
+        />
 </LinearLayout>

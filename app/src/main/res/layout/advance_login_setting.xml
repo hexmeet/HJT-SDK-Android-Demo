@@ -98,7 +98,9 @@
             android:padding="15dp"
             android:text="@string/save"
             android:textColor="@color/White"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textAllCaps="false"
+            />
     </LinearLayout>
 
 </RelativeLayout>

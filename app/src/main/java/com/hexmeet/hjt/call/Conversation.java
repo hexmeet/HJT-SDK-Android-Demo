@@ -2,6 +2,7 @@ package com.hexmeet.hjt.call;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -35,7 +36,6 @@ import com.hexmeet.hjt.AppSettings;
 import com.hexmeet.hjt.CallState;
 import com.hexmeet.hjt.FullscreenActivity;
 import com.hexmeet.hjt.HjtApp;
-import com.hexmeet.hjt.PermissionWrapper;
 import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.conf.MeetingForWechat;
@@ -59,7 +59,6 @@ import com.hexmeet.hjt.sdk.MessageOverlayInfo;
 import com.hexmeet.hjt.sdk.SvcLayoutInfo;
 import com.hexmeet.hjt.utils.JsonUtil;
 import com.hexmeet.hjt.utils.Utils;
-import com.hexmeet.hjt.login.LoginService;
 
 import org.apache.log4j.Logger;
 import org.greenrobot.eventbus.EventBus;
@@ -100,6 +99,7 @@ public class Conversation extends FullscreenActivity {
     private ScaleGestureDetector mScaleGestureDetector;
     private TextView recordView,mytoast;
     private LinearLayout toast_layout;
+    private AudioManager audio;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -120,7 +120,7 @@ public class Conversation extends FullscreenActivity {
         mytoast = (TextView)findViewById(R.id.mytoast);
         toast_layout = (LinearLayout)findViewById(R.id.layout_toast);
 
-
+        audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         recordView.setVisibility(SystemCache.getInstance().isRecordingOn() ? View.VISIBLE : View.GONE);
         recordView.setText(SystemCache.getInstance().isRecording() ? "LIVE" : "REC");
         controller = new ConversationController(findViewById(R.id.control_layout), iController, getScreenWidth());
@@ -137,7 +137,6 @@ public class Conversation extends FullscreenActivity {
 
         videoBoxGroup = new VideoBoxGroup((RelativeLayout) findViewById(R.id.root));
         svcHandler.postDelayed(buildTask, 500);
-
         mDummyPreviewView = (SurfaceView) findViewById(R.id.dummyPreviewView);
         if (isVideoCall) {
             signalIntensityScanner.sendEmptyMessageDelayed(1, 5000);
@@ -315,6 +314,8 @@ public class Conversation extends FullscreenActivity {
         LOG.info("onStart");
         super.onStart();
 
+        setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
+
         HjtApp.getInstance().getAppService().startAudioMode(true);
         HjtApp.getInstance().getAppService().cancelFloatIndicator();
         // frontend, start video
@@ -324,14 +325,16 @@ public class Conversation extends FullscreenActivity {
             HjtApp.getInstance().getAppService().enableVideo(!isLocalVideoMuted);
         }
 
-        boolean isLocalMicMuted = SystemCache.getInstance().isUserMuteMic();
-        controller.muteMic(isLocalMicMuted);
-        HjtApp.getInstance().getAppService().muteMic(isLocalMicMuted);
+        boolean isLocalMicMuted = EVFactory.createEngine().micEnabled();
+        //boolean isLocalMicMuted = SystemCache.getInstance().isUserMuteMic();
+        controller.muteMic(!isLocalMicMuted);
+        HjtApp.getInstance().getAppService().muteMic(!isLocalMicMuted);
 
     }
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+        LOG.info("dispath : "+event);
         return super.dispatchKeyEvent(event);
     }
 
@@ -390,6 +393,29 @@ public class Conversation extends FullscreenActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        int maxCall = audio.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL);//通话音量
+        int callVolume = audio.getStreamVolume(AudioManager.STREAM_VOICE_CALL);
+
+        LOG.info("onKeyDown : ["+keyCode+"],event: "+event);
+        LOG.info("max maxCall : "+maxCall+",callVolume : "+callVolume+",brand : "+Build.BRAND);
+
+        String model = Build.BRAND;
+        if(model.equalsIgnoreCase("xiaomi")) {
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_VOLUME_DOWN://调低
+                    audio.adjustStreamVolume(AudioManager.STREAM_VOICE_CALL,
+                            AudioManager.ADJUST_LOWER, AudioManager.FLAG_PLAY_SOUND|AudioManager.FLAG_SHOW_UI);
+                    return true;
+                case KeyEvent.KEYCODE_VOLUME_UP://调高
+                    audio.adjustStreamVolume(AudioManager.STREAM_VOICE_CALL,
+                            AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND|AudioManager.FLAG_SHOW_UI);
+                    return true;
+                case KeyEvent.KEYCODE_VOLUME_MUTE:
+                    break;
+            }
+        }
+
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             return true;
         }
@@ -575,6 +601,7 @@ public class Conversation extends FullscreenActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onLoginEvent(LoginResultEvent event) {
+        LOG.info("isAnonymousCall : ["+event.isAnonymous()+"] ,isSuccess : "+event.getCode());
         if(event.getCode() == LoginResultEvent.LOGIN_SUCCESS) {
             if(confManageWindow != null) {
                 confManageWindow.updateTokenForWeb();
@@ -664,6 +691,7 @@ public class Conversation extends FullscreenActivity {
                     case ON_SVC_REFRESH_LAYOUT_MODE:
                         if(videoBoxGroup != null && controller != null && videoBoxGroup.isRemoteCellReady()) {
                             controller.setLayoutMode(true);
+                            AppSettings.getInstance().setSpeakerMode(true);
                         } else {
                             sendEmptyMessageDelayed(ON_SVC_REFRESH_LAYOUT_MODE, 1000);
                         }
