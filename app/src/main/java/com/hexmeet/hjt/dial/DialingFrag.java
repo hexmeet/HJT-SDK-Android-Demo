@@ -1,7 +1,5 @@
 package com.hexmeet.hjt.dial;
 
-import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.TypedValue;
@@ -10,18 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hexmeet.hjt.HexMeet;
-import com.hexmeet.hjt.cache.SystemCache;
-import com.hexmeet.hjt.call.ConnectActivity;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
+import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.utils.NetworkUtil;
 import com.hexmeet.hjt.utils.Utils;
 import com.hexmeet.hjt.widget.NumberKeyboard;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 

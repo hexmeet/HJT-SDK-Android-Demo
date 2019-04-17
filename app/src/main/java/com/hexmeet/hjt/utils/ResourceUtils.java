@@ -4,12 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Build;
-import android.text.TextUtils;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
+
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
+
 import org.apache.log4j.Logger;
 
 import java.util.concurrent.atomic.AtomicInteger;

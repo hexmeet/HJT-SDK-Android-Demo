@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.BaseActivity;
+import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.me.AboutActivity;
 import com.hexmeet.hjt.me.ParametersActivity;
 

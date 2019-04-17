@@ -23,14 +23,11 @@ import com.hexmeet.hjt.utils.ResourceUtils;
 
 import org.apache.log4j.Logger;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import ev.common.EVFactory;
 import ev.common.EVEngine;
+import ev.common.EVFactory;
 
 public class RemoteBox extends RelativeLayout {
     private Logger LOG = Logger.getLogger(this.getClass());

@@ -21,12 +21,11 @@ import com.hexmeet.hjt.event.LoginResultEvent;
 import com.hexmeet.hjt.model.LoginParams;
 import com.hexmeet.hjt.utils.ProgressUtil;
 import com.hexmeet.hjt.utils.Utils;
+
 import org.apache.log4j.Logger;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import ev.common.EVFactory;
 
 public class Login extends BaseActivity implements LoginFragmentCallback{
     private Logger LOG = Logger.getLogger(Login.class);

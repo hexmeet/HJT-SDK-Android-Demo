@@ -7,15 +7,11 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Handler;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.sdk.CopyAssets;
-import com.hexmeet.hjt.sdk.SdkManagerImpl;
 
 import org.apache.log4j.Logger;
-
-import ev.common.EVFactory;
 
 public class PhoneStateChangedReceiver extends BroadcastReceiver {
     private Logger LOG = Logger.getLogger(PhoneStateChangedReceiver.class);

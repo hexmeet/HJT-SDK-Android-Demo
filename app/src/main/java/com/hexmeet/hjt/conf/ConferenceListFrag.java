@@ -17,11 +17,11 @@ import android.webkit.JavascriptInterface;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.SslErrorHandler;
-import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
 import com.hexmeet.hjt.HexMeet;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;

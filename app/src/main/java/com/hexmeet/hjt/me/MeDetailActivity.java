@@ -29,6 +29,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.hexmeet.hjt.BaseActivity;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
@@ -41,6 +42,7 @@ import com.hexmeet.hjt.model.RestLoginResp;
 import com.hexmeet.hjt.utils.Utils;
 import com.hexmeet.hjt.widget.MenuItem;
 import com.hexmeet.hjt.widget.PopupMenuBottom;
+
 import org.apache.log4j.Logger;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

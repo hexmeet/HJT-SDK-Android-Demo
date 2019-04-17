@@ -1,12 +1,8 @@
 package com.hexmeet.hjt.service;
 
-import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.bluetooth.BluetoothA2dp;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothProfile;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -20,17 +16,13 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.SurfaceView;
-import android.widget.RemoteViews;
 
 import com.hexmeet.hjt.AppCons;
 import com.hexmeet.hjt.AppSettings;
 import com.hexmeet.hjt.CallState;
-import com.hexmeet.hjt.HexMeet;
 import com.hexmeet.hjt.HjtApp;
-import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.RegisterState;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.event.CallEvent;

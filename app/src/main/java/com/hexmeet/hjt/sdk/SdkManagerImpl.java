@@ -3,21 +3,22 @@ package com.hexmeet.hjt.sdk;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.SurfaceView;
 
 import com.hexmeet.hjt.AppCons;
 import com.hexmeet.hjt.CallState;
 import com.hexmeet.hjt.HjtApp;
+import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.RegisterState;
+import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.event.AvatarUploadEvent;
 import com.hexmeet.hjt.event.CallEvent;
 import com.hexmeet.hjt.event.ContentEvent;
+import com.hexmeet.hjt.event.FileMessageEvent;
 import com.hexmeet.hjt.event.LiveEvent;
 import com.hexmeet.hjt.event.LogPathEvent;
+import com.hexmeet.hjt.event.LoginResultEvent;
 import com.hexmeet.hjt.event.LoginRetryEvent;
-import com.hexmeet.hjt.event.FileMessageEvent;
-import com.hexmeet.hjt.event.MicEnabledEvent;
 import com.hexmeet.hjt.event.MuteSpeaking;
 import com.hexmeet.hjt.event.NetworkEvent;
 import com.hexmeet.hjt.event.NetworkStatusEvent;
@@ -30,16 +31,15 @@ import com.hexmeet.hjt.event.SvcSpeakerEvent;
 import com.hexmeet.hjt.event.UserPasswordEvent;
 import com.hexmeet.hjt.login.JoinMeetingParam;
 import com.hexmeet.hjt.login.LoginSettings;
-import com.hexmeet.hjt.R;
-import com.hexmeet.hjt.cache.SystemCache;
-import com.hexmeet.hjt.event.LoginResultEvent;
 import com.hexmeet.hjt.model.LoginParams;
 import com.hexmeet.hjt.model.RestLoginResp;
 import com.hexmeet.hjt.utils.NetworkUtil;
 import com.hexmeet.hjt.utils.ResourceUtils;
 import com.hexmeet.hjt.utils.Utils;
+
 import org.apache.log4j.Logger;
 import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,7 +51,22 @@ import ev.common.EVEngine.VideoSize;
 import ev.common.EVEventListener;
 import ev.common.EVFactory;
 
-import static ev.common.EVEngine.*;
+import static ev.common.EVEngine.CallInfo;
+import static ev.common.EVEngine.ContentInfo;
+import static ev.common.EVEngine.EVError;
+import static ev.common.EVEngine.LayoutIndication;
+import static ev.common.EVEngine.LayoutMode;
+import static ev.common.EVEngine.LayoutPage;
+import static ev.common.EVEngine.LayoutRequest;
+import static ev.common.EVEngine.LayoutSpeakerIndication;
+import static ev.common.EVEngine.LayoutType;
+import static ev.common.EVEngine.MessageOverlay;
+import static ev.common.EVEngine.RecordingInfo;
+import static ev.common.EVEngine.Site;
+import static ev.common.EVEngine.StreamStats;
+import static ev.common.EVEngine.StreamType;
+import static ev.common.EVEngine.UserInfo;
+import static ev.common.EVEngine.Warning;
 
 
 public class SdkManagerImpl implements SdkManager {
@@ -148,6 +163,8 @@ public class SdkManagerImpl implements SdkManager {
     public void getUserInfo() {
         UserInfo user = engine.getUserInfo();
         if(user!=null){
+
+
         LOG.info("getUserInfo : "+user.toString());
         RestLoginResp restLoginResp = new RestLoginResp();
         restLoginResp.setUsername(user.username);
@@ -573,6 +590,7 @@ public class SdkManagerImpl implements SdkManager {
                         if(err.code != LOGIN_ERROR_9){
                             SdkManagerImpl.handlerError(err.code, err.msg ,err.arg);
                         }
+
                     }
                 }else if(err.type.toString()== ErrorType.EVErrorTypeCall){
                     //TODO

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.hexmeet.hjt.R;
+
 import org.apache.log4j.Logger;
 
 public class MarqueeView extends View {

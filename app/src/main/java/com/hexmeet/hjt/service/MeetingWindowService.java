@@ -1,43 +1,33 @@
 package com.hexmeet.hjt.service;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.NotificationCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.WindowManager;
-import android.webkit.WebSettings;
 import android.widget.Chronometer;
 import android.widget.LinearLayout;
-import android.widget.RemoteViews;
 
 import com.hexmeet.hjt.HjtApp;
-import com.hexmeet.hjt.PermissionWrapper;
 import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.call.Conversation;
-import com.hexmeet.hjt.utils.Utils;
 
 import org.apache.log4j.Logger;
 
