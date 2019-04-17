@@ -1,15 +1,8 @@
 package com.hexmeet.hjt.me;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.InputType;
-import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,20 +10,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.cache.SystemCache;
-import com.hexmeet.hjt.call.PasswordDialog;
-import com.hexmeet.hjt.event.FileMessageEvent;
 import com.hexmeet.hjt.login.Login;
-import com.hexmeet.hjt.login.LoginSettings;
 import com.hexmeet.hjt.utils.Utils;
-import org.apache.log4j.Logger;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.File;
+import org.apache.log4j.Logger;
 
 public class MeFrag extends Fragment {
     private Logger LOG = Logger.getLogger(MeFrag.class);

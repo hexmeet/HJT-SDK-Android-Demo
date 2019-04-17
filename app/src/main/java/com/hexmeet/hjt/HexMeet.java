@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -27,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.call.AnonymousJoinMeetActivity;
 import com.hexmeet.hjt.call.ConnectActivity;
@@ -45,6 +45,7 @@ import com.hexmeet.hjt.utils.NetworkUtil;
 import com.hexmeet.hjt.utils.ResourceUtils;
 import com.hexmeet.hjt.utils.ScreenUtil;
 import com.hexmeet.hjt.utils.Utils;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -251,7 +252,7 @@ public class HexMeet extends BaseActivity implements OnClickListener {
     }
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
-        @RequiresApi(api = Build.VERSION_CODES.M)
+
         @Override
         public void handleMessage(Message msg) {
             if(msg.what == 0) {
@@ -346,7 +347,7 @@ public class HexMeet extends BaseActivity implements OnClickListener {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permission, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permission, int[] grantResults) {
         if(requestCode == PermissionWrapper.REQUEST_PERMISSIONS_HEXMEET) {
             PermissionWrapper.getInstance().hasFloatWindowPermission(HexMeet.this, true);
         }

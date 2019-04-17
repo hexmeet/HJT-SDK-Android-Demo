@@ -1,7 +1,6 @@
 package com.hexmeet.hjt;
 
 import android.content.Intent;
-
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -14,7 +13,7 @@ import com.hexmeet.hjt.conf.MeetingForWechat;
 import com.hexmeet.hjt.conf.WeChat;
 import com.hexmeet.hjt.utils.JsonUtil;
 import com.hexmeet.hjt.utils.NetworkUtil;
-import com.hexmeet.hjt.utils.StatusBarUtil;
+import com.hexmeet.hjt.utils.StateUtil;
 import com.hexmeet.hjt.utils.Utils;
 
 import org.apache.log4j.Logger;
@@ -25,8 +24,7 @@ public class BaseActivity extends android.support.v4.app.FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         LOG.info("onCreate()");
-        StatusBarUtil.MIUISetStatusBarLightMode(getWindow(),true);
-        StatusBarUtil.FlymeSetStatusBarLightMode(getWindow(),true);
+        StateUtil.setStatusBar(this,true,false);
         super.onCreate(savedInstanceState);
         SystemCache.getInstance().setNetworkConnected(NetworkUtil.isNetConnected(this));
     }

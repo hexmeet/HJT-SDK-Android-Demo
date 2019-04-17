@@ -8,6 +8,7 @@ import android.view.SurfaceView;
 
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.utils.ResourceUtils;
+
 import org.apache.log4j.Logger;
 
 import ev.common.EVEngine;

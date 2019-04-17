@@ -3,24 +3,21 @@ package com.hexmeet.hjt.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import com.hexmeet.hjt.HjtApp;
+
 import com.hexmeet.hjt.R;
-import com.hexmeet.hjt.cache.RuntimeData;
 import com.hexmeet.hjt.cache.SystemCache;
-import com.hexmeet.hjt.event.ServerReachableEvent;
+
 import org.apache.http.conn.util.InetAddressUtils;
 import org.apache.log4j.Logger;
-import org.greenrobot.eventbus.EventBus;
+
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Enumeration;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 public class NetworkUtil extends android.support.v4.app.FragmentActivity {
     private static Logger LOG = Logger.getLogger(NetworkUtil.class);
