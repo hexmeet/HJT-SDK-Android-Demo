@@ -15,15 +15,16 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.andreabaccega.widget.FormEditText;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.call.Conversation;
-import com.hexmeet.hjt.login.JoinMeetingParam;
 import com.hexmeet.hjt.login.Login;
 import com.hexmeet.hjt.login.LoginSettings;
 import com.hexmeet.hjt.utils.NetworkUtil;
 import com.hexmeet.hjt.utils.ResourceUtils;
 import com.hexmeet.hjt.utils.Utils;
+
 import org.apache.log4j.Logger;
 
 import pl.droidsonroids.gif.GifImageView;

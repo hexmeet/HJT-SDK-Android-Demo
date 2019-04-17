@@ -1,15 +1,12 @@
 package com.hexmeet.hjt.call;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.hexmeet.hjt.HjtApp;
-import com.hexmeet.hjt.cache.SystemCache;
-import org.apache.log4j.Logger;
 
-import java.io.IOException;
+import org.apache.log4j.Logger;
 
 import ev.common.EVEngine;
 import ev.common.EVFactory;

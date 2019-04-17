@@ -77,4 +77,5 @@
     <dimen name="wheelview_label_offset" >4dp</dimen>
     <dimen name="wheelview_padding" >5dp</dimen>
     <dimen name="invite_height" >280dp</dimen>
+    <dimen name="keyboard_height" >220dp</dimen>
 </resources>

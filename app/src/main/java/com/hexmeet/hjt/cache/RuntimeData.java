@@ -3,8 +3,10 @@ package com.hexmeet.hjt.cache;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
+
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.utils.Utils;
+
 import org.apache.commons.lang3.StringUtils;
 
 public class RuntimeData {

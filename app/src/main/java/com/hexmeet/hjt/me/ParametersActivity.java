@@ -29,8 +29,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import ev.common.EVFactory;
-
 public class ParametersActivity extends BaseActivity {
 
     public static void actionStart(Context context) {

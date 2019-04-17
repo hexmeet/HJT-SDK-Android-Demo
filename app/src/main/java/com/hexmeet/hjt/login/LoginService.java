@@ -1,5 +1,4 @@
 package com.hexmeet.hjt.login;
-import android.util.Log;
 
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.cache.SystemCache;

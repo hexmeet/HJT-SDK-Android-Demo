@@ -1,12 +1,10 @@
 package com.hexmeet.hjt.service;
 
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.HandlerThread;
 import android.os.Message;
+
 import com.hexmeet.hjt.AppCons;
-import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.event.AvatarUploadEvent;
 import com.hexmeet.hjt.login.LoginService;
@@ -14,6 +12,7 @@ import com.hexmeet.hjt.model.LoginParams;
 import com.hexmeet.hjt.sdk.ChannelStatList;
 import com.hexmeet.hjt.sdk.MakeCallParam;
 import com.hexmeet.hjt.sdk.SdkManager;
+
 import org.apache.log4j.Logger;
 import org.greenrobot.eventbus.EventBus;
 

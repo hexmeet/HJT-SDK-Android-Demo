@@ -8,11 +8,11 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
+
 import com.hexmeet.hjt.CallState;
 import com.hexmeet.hjt.FullscreenActivity;
 import com.hexmeet.hjt.HjtApp;
@@ -23,6 +23,7 @@ import com.hexmeet.hjt.event.CallEvent;
 import com.hexmeet.hjt.utils.ResourceUtils;
 import com.hexmeet.hjt.utils.Utils;
 import com.hexmeet.hjt.widget.PulseView;
+
 import org.apache.log4j.Logger;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

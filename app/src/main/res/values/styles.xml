@@ -138,6 +138,8 @@
         <item name="android:windowIsFloating">true</item>
     </style>
     <style name="NoDarkEdgeTheme.Light" parent="android:Theme.Holo.Light.DarkActionBar">
-         <item name="android:windowNoTitle">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 </resources>

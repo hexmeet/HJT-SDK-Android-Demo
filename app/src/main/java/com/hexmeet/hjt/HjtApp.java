@@ -7,7 +7,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -16,7 +15,6 @@ import android.view.OrientationEventListener;
 
 import com.alibaba.sdk.android.man.MANService;
 import com.alibaba.sdk.android.man.MANServiceProvider;
-
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.call.CallIncomingActivity;
 import com.hexmeet.hjt.call.ConnectActivity;
@@ -26,12 +24,14 @@ import com.hexmeet.hjt.service.MeetingWindowService;
 import com.hexmeet.hjt.utils.ConfigureLog4J;
 import com.hexmeet.hjt.utils.NetworkUtil;
 import com.hexmeet.hjt.utils.Utils;
+
 import org.apache.log4j.Logger;
+
 import java.lang.ref.WeakReference;
 import java.util.Iterator;
 import java.util.Locale;
+
 import de.mindpipe.android.logging.log4j.LogConfigurator;
-import ev.common.EVFactory;
 
 public class HjtApp extends Application {
     private static HjtApp instance;

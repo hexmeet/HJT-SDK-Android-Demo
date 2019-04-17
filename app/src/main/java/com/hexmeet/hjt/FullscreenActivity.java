@@ -14,12 +14,14 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.login.LoginService;
 import com.hexmeet.hjt.login.LoginSettings;
 import com.hexmeet.hjt.sdk.CopyAssets;
 
 import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

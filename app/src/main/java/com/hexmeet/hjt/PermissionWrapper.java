@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import com.hexmeet.hjt.utils.Utils;
 
 import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 

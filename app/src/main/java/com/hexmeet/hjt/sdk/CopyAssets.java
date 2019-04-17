@@ -8,7 +8,6 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.os.RemoteException;
 import android.util.Log;
 
 import com.hexmeet.hjt.HjtApp;
@@ -16,7 +15,6 @@ import com.hexmeet.hjt.R;
 
 import org.apache.log4j.Logger;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

@@ -17,18 +17,19 @@ import android.webkit.JavascriptInterface;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.SslErrorHandler;
-import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
+
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.conf.ConferenceListFrag;
 import com.hexmeet.hjt.utils.NetworkUtil;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
+
 import org.apache.log4j.Logger;
 
 public class ConfManageWindow {

@@ -7,9 +7,7 @@ import android.text.TextUtils;
 
 import com.hexmeet.hjt.HjtApp;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 public class RecentPreference {
     private static final String LOGIN_SETTINGS = "recent_settings";

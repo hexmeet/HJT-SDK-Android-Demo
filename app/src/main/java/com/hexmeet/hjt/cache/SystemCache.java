@@ -2,6 +2,7 @@ package com.hexmeet.hjt.cache;
 
 import android.os.SystemClock;
 import android.text.TextUtils;
+
 import com.hexmeet.hjt.AppSettings;
 import com.hexmeet.hjt.CallState;
 import com.hexmeet.hjt.RegisterState;
@@ -19,6 +20,7 @@ import com.hexmeet.hjt.model.RestLoginResp;
 import com.hexmeet.hjt.sdk.MessageOverlayInfo;
 import com.hexmeet.hjt.sdk.Peer;
 import com.hexmeet.hjt.sdk.SvcLayoutInfo;
+
 import org.apache.log4j.Logger;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

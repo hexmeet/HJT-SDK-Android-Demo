@@ -6,11 +6,11 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import com.hexmeet.hjt.BaseActivity;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
@@ -18,6 +18,7 @@ import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.event.UserPasswordEvent;
 import com.hexmeet.hjt.login.LoginSettings;
 import com.hexmeet.hjt.utils.Utils;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;

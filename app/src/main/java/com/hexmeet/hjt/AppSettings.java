@@ -3,7 +3,6 @@ package com.hexmeet.hjt;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.text.TextUtils;
 import android.util.Log;
 
 public class AppSettings {

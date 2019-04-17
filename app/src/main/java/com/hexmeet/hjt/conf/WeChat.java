@@ -7,10 +7,7 @@ import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 
 import com.hexmeet.hjt.BuildConfig;
-import com.hexmeet.hjt.HjtApp;
-import com.hexmeet.hjt.login.LoginSettings;
 import com.hexmeet.hjt.R;
-import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.utils.Utils;
 import com.hexmeet.hjt.wxapi.WXEntryActivity;
 import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
@@ -18,8 +15,6 @@ import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
-
-import java.text.SimpleDateFormat;
 
 public class WeChat {
 
