@@ -1,5 +1,7 @@
 # 会捷通客户端 SDK (Android 版) Demo
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a59fba3a8b474a1786d4d9645dfd7e93)](https://app.codacy.com/app/HexMeet/HJT-SDK-Android-Demo?utm_source=github.com&utm_medium=referral&utm_content=hexmeet/HJT-SDK-Android-Demo&utm_campaign=Badge_Grade_Dashboard)
+
 ![android-sdk](./speaker-view.png)
 
 
