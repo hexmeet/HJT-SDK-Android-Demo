@@ -27,6 +27,9 @@ public class StateUtil {
     public static int screenWidth;
     public static int screenHeight;
     public static int navigationHeight = 0;
+    private static final String KEY_MIUI_VERSION_CODE = "ro.miui.ui.version.code";
+    private static final String KEY_MIUI_VERSION_NAME = "ro.miui.ui.version.name";
+    private static final String KEY_MIUI_INTERNAL_STORAGE = "ro.miui.internal.storage";
 
     private static DisplayMetrics mMetrics;
     public static final String HOME_CURRENT_TAB_POSITION = "HOME_CURRENT_TAB_POSITION";
@@ -163,9 +166,7 @@ public class StateUtil {
         }
     }
 
-    private static final String KEY_MIUI_VERSION_CODE = "ro.miui.ui.version.code";
-    private static final String KEY_MIUI_VERSION_NAME = "ro.miui.ui.version.name";
-    private static final String KEY_MIUI_INTERNAL_STORAGE = "ro.miui.internal.storage";
+
 
     /**
      * 判断手机是否是小米

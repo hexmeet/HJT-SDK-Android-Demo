@@ -68,6 +68,7 @@ public class HexMeet extends BaseActivity implements OnClickListener {
     private BroadcastReceiver screenReceiver;
     private boolean screenReceiverRegistered = false;
     private RelativeLayout.LayoutParams contentLp;
+    private int tabAvatarSize = ScreenUtil.dp_to_px(26);
 
     public static void actionStart(Context context) {
         Intent intent = new Intent(context, HexMeet.class);
@@ -477,7 +478,7 @@ public class HexMeet extends BaseActivity implements OnClickListener {
         transaction.commitAllowingStateLoss();
     }
 
-    private int tabAvatarSize = ScreenUtil.dp_to_px(26);
+
 
     private void selectTabLabel(TextView tab, int avatarId) {
         Drawable drawable = getResources().getDrawable(avatarId);

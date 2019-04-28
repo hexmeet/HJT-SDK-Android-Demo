@@ -35,6 +35,7 @@ public class CopyAssets {
     private AudioManager mAudioManager;
 
     private boolean isBTPHeadSetConnected = false;
+    private boolean mCountDownTimerStarted = false;
 
     public static final int EVENT_START = 1;
     public static final int EVENT_STOP = 0;
@@ -329,7 +330,7 @@ public class CopyAssets {
         }
     };
 
-    private boolean mCountDownTimerStarted = false;
+
 
     private String processAudioRouteEventBluetoothConnection(int value){
         if(EVENT_START == value){ // bluetooth connected

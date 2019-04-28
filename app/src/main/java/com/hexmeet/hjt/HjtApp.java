@@ -38,7 +38,7 @@ public class HjtApp extends Application {
     private AppService appService;
     private Logger LOG = Logger.getLogger(HjtApp.class);
     private Activity conversation;
-
+    private WeakReference<Activity> topActivity;
     private boolean isFloatServiceStart = false;
 
     public synchronized static HjtApp getInstance() {
@@ -135,14 +135,14 @@ public class HjtApp extends Application {
 
     private static boolean isGSMCalling = false;
 
-    public static synchronized boolean IsGSMCalling() {
+    public static synchronized boolean isGSMCalling() {
         return isGSMCalling;
     }
 
     public static synchronized void setGSMCalling(boolean isMute) {
         isGSMCalling = isMute;
     }
-    private WeakReference<Activity> topActivity;
+
 
     public Activity getTopActivity() {
         if (topActivity != null) {
@@ -267,11 +267,10 @@ public class HjtApp extends Application {
                         return;
                     }
 
-                    if (Math.abs(oldDirection - orientation) >= 50) {
-                        if (direction != oldDirection) {
-                            onNewDirection(direction);
-                            oldDirection = direction;
-                        }
+                    if (Math.abs(oldDirection - orientation) >= 50 && direction != oldDirection) {
+                        onNewDirection(direction);
+                        oldDirection = direction;
+
                     }
                 }
 
