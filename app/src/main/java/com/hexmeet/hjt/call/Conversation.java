@@ -311,9 +311,11 @@ public class Conversation extends FullscreenActivity {
         LOG.info("onStart");
         LOG.info("onStart MicrophoneMute : "+audio.isMicrophoneMute());
         super.onStart();
+
         setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
         audio.setMode(AudioManager.MODE_IN_COMMUNICATION);
         audio.setMicrophoneMute(false);
+
         HjtApp.getInstance().getAppService().startAudioMode(true);
         HjtApp.getInstance().getAppService().cancelFloatIndicator();
         // frontend, start video
@@ -326,7 +328,7 @@ public class Conversation extends FullscreenActivity {
         boolean isLocalMicMuted = EVFactory.createEngine().micEnabled();
         //boolean isLocalMicMuted = SystemCache.getInstance().isUserMuteMic();
         controller.muteMic(!isLocalMicMuted);
-        HjtApp.getInstance().getAppService().muteMic(!isLocalMicMuted);
+       // HjtApp.getInstance().getAppService().muteMic(!isLocalMicMuted);
 
     }
 

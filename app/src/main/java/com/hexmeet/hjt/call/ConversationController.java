@@ -204,12 +204,10 @@ public class ConversationController implements View.OnClickListener{
             case R.id.toolbar_local_mute:
                 boolean mute = !((ViewGroup)v).getChildAt(0).isSelected();
                 LOG.info("mute onClick : "+mute+",micEnabled : "+EVFactory.createEngine().micEnabled());
-                SystemCache.getInstance().setUserMuteMic(mute);
                 if(mute ^ !EVFactory.createEngine().micEnabled()){
                     EVFactory.createEngine().enableMic(!mute);
                 }
                 muteMic(!EVFactory.createEngine().micEnabled());
-               /* HjtApp.getInstance().getAppService().muteMic(mute);*/
                 break;
             case R.id.toolbar_layout_mode:
                 if(SystemCache.getInstance().isLayoutModeEnable()) {

@@ -350,7 +350,7 @@ public class AppService extends Service {
     }
 
     public void loginInLoop(boolean start) {
-        //LOG.error("JavaScript: updateToken error : url not load finished-------------666----------------");
+
         mSdkHandler.removeMessages(SdkHandler.HANDLER_AUTO_LOGIN);
         if(start) {
             mSdkHandler.sendEmptyMessageDelayed(SdkHandler.HANDLER_AUTO_LOGIN, 1000);

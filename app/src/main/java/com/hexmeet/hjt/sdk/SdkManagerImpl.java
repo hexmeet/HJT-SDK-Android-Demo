@@ -150,6 +150,7 @@ public class SdkManagerImpl implements SdkManager {
 
     @Override
     public void setDeviceRotation(int deviceRotation) {
+        LOG.info("setDeviceRotation: ["+deviceRotation+"]");
         engine.setDeviceRotation(deviceRotation);
     }
 
@@ -575,7 +576,7 @@ public class SdkManagerImpl implements SdkManager {
                         LoginSettings.getInstance().setLoginState(LoginSettings.LOGIN_STATE_IDLE, true);
                         EventBus.getDefault().post(new LoginResultEvent(LoginResultEvent.LOGIN_ANONYMOUS_FAILED, "No callBack in response", true));
                     }else {
-                        SystemCache.getInstance().setCloudLogin(false);
+
                         SdkManagerImpl.handlerError(err.code, err.msg ,err.arg);
 
                     }
@@ -586,7 +587,7 @@ public class SdkManagerImpl implements SdkManager {
                         event.setEndReason(ResourceUtils.getInstance().getCallFailedReason(err.code));
                         EventBus.getDefault().post(event);
                     }else {
-                        SystemCache.getInstance().setCloudLogin(false);
+
                         if(err.code != LOGIN_ERROR_9){
                             SdkManagerImpl.handlerError(err.code, err.msg ,err.arg);
                         }
@@ -688,7 +689,7 @@ public class SdkManagerImpl implements SdkManager {
 
         @Override
         public void onCallEnd(CallInfo info) {
-            LOG.info("CallBack onCallEnd"+info.toString());
+            LOG.info("CallBack onCallEnd: "+info.toString());
             if (info.err.code == CALL_ERROR_2015 ) {
                 LOG.info("CallBack. CallEnd Password empty or wrong");
                 CallEvent event = new CallEvent(CallState.AUTHORIZATION);
@@ -778,8 +779,8 @@ public class SdkManagerImpl implements SdkManager {
 
         @Override
         public void onMuteSpeakingDetected() {//提示打开声音
-            LOG.info("CallBack onMuteSpeakingDetected isUserMuteMic  : YES");
-            if(SystemCache.getInstance().isUserMuteMic()){
+            LOG.info("CallBack onMuteSpeakingDetected isUserMuteMic  : YES"+engine.micEnabled());
+            if(!engine.micEnabled()){
                 EventBus.getDefault().post(new MuteSpeaking(true));
             }
         }

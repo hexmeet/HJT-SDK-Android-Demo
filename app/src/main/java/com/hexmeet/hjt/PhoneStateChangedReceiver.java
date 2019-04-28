@@ -13,6 +13,8 @@ import com.hexmeet.hjt.sdk.CopyAssets;
 
 import org.apache.log4j.Logger;
 
+import ev.common.EVFactory;
+
 public class PhoneStateChangedReceiver extends BroadcastReceiver {
     private Logger LOG = Logger.getLogger(PhoneStateChangedReceiver.class);
     @SuppressLint("LongLogTag")
@@ -42,12 +44,13 @@ public class PhoneStateChangedReceiver extends BroadcastReceiver {
             LOG.info("hexmeet PhoneStateChangedReceiver : audioInterruption 0, isSpeakerOn: " + HjtApp.isSpeakerOn());
             HjtApp.getInstance().getAppService().enableSpeaker(true);
             HjtApp.getInstance().getAppService().phoneStateChange(false);
-            LOG.info("hexmeet PhoneStateChangedReceiver ：call hunged. App.IsUserMuteVideo: " + SystemCache.getInstance().isUserMuteVideo());
-            if(SystemCache.getInstance().isUserMuteVideo()) {
-                    HjtApp.getInstance().getAppService().muteMic(true);//video mute
+            LOG.info("hexmeet PhoneStateChangedReceiver ：call hunged. App.IsUserMuteVideo: " + EVFactory.createEngine().micEnabled());
+            if(EVFactory.createEngine().micEnabled()) {
+                HjtApp.getInstance().getAppService().muteMic(false);
             } else {
-                    HjtApp.getInstance().getAppService().muteMic(false);
-                }
+                HjtApp.getInstance().getAppService().muteMic(true);//video mute
+
+            }
                 if(CopyAssets.getInstance().isBluetoothConnected()){
                     LOG.info("hexmeet PhoneStateChangedReceiver : route to Bluetooth");
                     Handler postHandler = new Handler();

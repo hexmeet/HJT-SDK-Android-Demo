@@ -21,6 +21,7 @@ import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.model.LoginParams;
+import com.hexmeet.hjt.utils.Utils;
 
 import org.apache.log4j.Logger;
 
@@ -205,8 +206,13 @@ public class LoginFragment extends Fragment {
             SystemCache.getInstance().setCloudLogin(loginType == LOGIN_TYPE_CLOUD);
 
             if(loginType == LOGIN_TYPE_CLOUD_ANONYMOUS || loginType == LOGIN_TYPE_PRIVATE_ANONYMOUS) {
-                setAnonymousConfig();
-                callback.dialOut();
+                if(TextUtils.getTrimmedLength(input_conf_name.getText().toString().trim())>16){
+                    Utils.showToast(getActivity(), R.string.displayname_max_length);
+                    setLoginBtnEnable(true);
+                }else {
+                    setAnonymousConfig();
+                    callback.dialOut();
+                }
             }else {
                 callback.doLogin(params, https, port);
             }
@@ -225,6 +231,8 @@ public class LoginFragment extends Fragment {
         }
 
         String displayName = input_conf_name.getText().toString().trim();
+        int trimmedLength = TextUtils.getTrimmedLength(displayName);
+        LOG.info("displayName length : "+trimmedLength);
         if(TextUtils.isEmpty(displayName)) {
             displayName = Build.MODEL;
         }
@@ -234,7 +242,6 @@ public class LoginFragment extends Fragment {
         SystemCache.getInstance().getJoinMeetingParam().setDisplayName(displayName);
         SystemCache.getInstance().getJoinMeetingParam().setCloud(loginType == LOGIN_TYPE_CLOUD_ANONYMOUS);
 
-        SystemCache.getInstance().setUserMuteMic(closeMic.isChecked());
         SystemCache.getInstance().setUserMuteVideo(closeCamera.isChecked());
         HjtApp.getInstance().getAppService().muteMic(closeMic.isChecked());
         setLoginBtnEnable(true);

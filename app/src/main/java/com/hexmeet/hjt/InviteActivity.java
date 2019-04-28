@@ -85,6 +85,9 @@ public class InviteActivity extends BaseActivity{
                     String displayName = displayNameEdit.getText().toString().trim();
                     if(TextUtils.isEmpty(displayName)) {
                         displayName = Build.MODEL;
+                    }else if (TextUtils.getTrimmedLength(displayName)>16){
+                        Utils.showToast(InviteActivity.this, R.string.displayname_max_length);
+                        return;
                     }else {
                         LoginSettings.getInstance().setInviteUserName(displayName);
                     }

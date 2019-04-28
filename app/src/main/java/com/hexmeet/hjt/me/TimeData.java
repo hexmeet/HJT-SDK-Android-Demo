@@ -17,10 +17,6 @@ public class TimeData {
     private TimeData() {}
 
     static byte UPDATE_REASON_UNKNOWN = 0;
-    static byte UPDATE_REASON_MANUAL = 1;
-    static byte UPDATE_REASON_EXTERNAL_REF = (1 << 1);
-    static byte UPDATE_REASON_TIME_ZONE_CHANGE = (1 << 2);
-    static byte UPDATE_REASON_DAYLIGHT_SAVING = (1 << 3);
 
     static byte[] exactTime256WithUpdateReason(Calendar time, byte updateReason) {
         // See https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.characteristic.current_time.xml

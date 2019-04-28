@@ -452,4 +452,5 @@
 
     <string name="meeting_progress">The meeting is in progress.</string>
     <string name="meeting_click">Click to enter the meeting</string>
+    <string name="displayname_max_length">The length of username can not exceed 16</string>
 </resources>

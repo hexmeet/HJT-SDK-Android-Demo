@@ -454,4 +454,5 @@
 
     <string name="meeting_progress">会议正在进行中</string>
     <string name="meeting_click">点击进入会议</string>
+    <string name="displayname_max_length">会议中显示的用户名的长度不能超过16</string>
 </resources>
