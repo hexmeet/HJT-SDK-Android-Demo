@@ -3,8 +3,10 @@ package com.hexmeet.hjt.call;
 import android.content.Context;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 import com.hexmeet.hjt.HjtApp;
+import com.hexmeet.hjt.R;
 
 import org.apache.log4j.Logger;
 
@@ -19,6 +21,7 @@ public class LocalBox {
 
     public LocalBox(Context context) {
         surfaceView = EVFactory.createWindow(context, EVEngine.WindowType.LocalVideoWindow);
+        surfaceView.setBackgroundResource(R.drawable.bg_localbox_border);
         surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
