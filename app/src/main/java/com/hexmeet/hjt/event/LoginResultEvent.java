@@ -8,6 +8,7 @@ public class LoginResultEvent {
     public static final int LOGIN_MANUAL_TRY= -4;
     public static final int LOGIN_ANONYMOUS_FAILED = -5;
     public static final int LOGIN_WRONG_INVALID_NAME = -6;
+    public static final int LOGIN_WRONG_LOCATION_SERVER = -7;
     private int code;
     private String message;
     private boolean isAnonymous = false;

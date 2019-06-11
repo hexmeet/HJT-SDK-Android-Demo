@@ -25,6 +25,7 @@ public class BaseActivity extends android.support.v4.app.FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         LOG.info("onCreate()");
         StateUtil.setStatusBar(this,true,false);
+        StateUtil.setStatusTextColor(true,this);
         super.onCreate(savedInstanceState);
         SystemCache.getInstance().setNetworkConnected(NetworkUtil.isNetConnected(this));
     }

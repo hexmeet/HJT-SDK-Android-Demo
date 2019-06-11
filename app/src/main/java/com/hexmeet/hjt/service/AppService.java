@@ -524,11 +524,6 @@ public class AppService extends Service {
             isHeadsetBroadCastRegistered = false;
         }
     }
-    public void stopAudioMode(boolean isVideoCall){
-        CopyAssets.getInstance().processAudioRouteEvent(
-                isVideoCall ? CopyAssets.CONVERSATION_EVENT : CopyAssets.CONVERSATION_AUDIOONLY_EVENT,
-                CopyAssets.EVENT_STOP);
-    }
     public void startAudioMode(boolean isVideoCall){
         CopyAssets.getInstance().processAudioRouteEvent(
                 isVideoCall ? CopyAssets.CONVERSATION_EVENT : CopyAssets.CONVERSATION_AUDIOONLY_EVENT,

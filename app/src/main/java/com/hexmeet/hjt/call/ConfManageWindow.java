@@ -26,7 +26,6 @@ import android.widget.RelativeLayout;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.cache.SystemCache;
-import com.hexmeet.hjt.conf.ConferenceListFrag;
 import com.hexmeet.hjt.utils.NetworkUtil;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 
@@ -42,6 +41,7 @@ public class ConfManageWindow {
     private View progressLayout;
     private boolean isWebLoadComplete = false;
     private ViewGroup loadFailedInfo;
+    public final static String SCRIPT_INTERFACE_NAME = "callbackObj";
 
     @RequiresApi(api = Build.VERSION_CODES.FROYO)
     public ConfManageWindow(Conversation activity) {
@@ -186,7 +186,7 @@ public class ConfManageWindow {
                 return super.onJsBeforeUnload(view, url, message, result);
             }
         });
-        webView.addJavascriptInterface(new ConferenceJavaScriptInterface() , ConferenceListFrag.SCRIPT_INTERFACE_NAME);
+        webView.addJavascriptInterface(new ConferenceJavaScriptInterface() , SCRIPT_INTERFACE_NAME);
     }
 
     public boolean isShowing() {

@@ -37,7 +37,7 @@ public class VideoBoxGroup {
         initLayoutParams();
     }
 
-    public void buildDefaultCells() {
+    public void buildDefaultCells(boolean localMute) {
         localBox = new LocalBox(rootView.getContext());
         remoteBox = new RemoteBox(rootView.getContext());
         remoteBox.setSvcListener(new RemoteBox.SvcSurfaceListener() {
@@ -68,6 +68,17 @@ public class VideoBoxGroup {
         });
         rootView.addView(message, 4, messagePara);
         message.setVisibility(View.GONE);
+
+        rootView.addView(localBox.getLocalCellInfoView(rootView.getContext()), 5, localBox.getCellInfoLayoutParams());
+        updateLocalMute(localMute);
+
+    }
+
+    public void updateLocalMute(boolean localMute){
+        LOG.info("MUTE : "+localMute);
+        if(localBox != null){
+            localBox.updateCellMuteState(localMute);
+        }
     }
 
     public void release() {
