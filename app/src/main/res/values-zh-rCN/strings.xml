@@ -221,13 +221,14 @@
     <string name="port">端口（可选）</string>
     <string name="login_timeout">登录超时，请检查网络</string>
     <string name="login_failed">登录失败: 服务器不可用,请检查网络设置</string>
+    <string name="cannot_connect_location_server">不能连接到定位服务器</string>
     <string name="invalid_username_or_password">无效的用户</string>
     <string name="error_account_or_password">账号或密码错误</string>
     <string name="password_changed">密码已更改,请重新登录</string>
     <string name="login_again">登录失败，请稍后再试</string>
     <string name="login_first">请先登录%s</string>
     <string name="connot_start_new_conference">你已经在会议中，不能开始新的会议</string>
-    <string name="again_exit">再按一次退出HexMeet</string>
+    <string name="again_exit">再按一次退出会捷通</string>
     <string name="cloud_unreachable">登录服务器不可达</string>
     <string name="caught_exception_then_exit">很抱歉，程序遭遇异常，已记入日志，即将退出...</string>
     <string name="hangup_call_request_again">再按一次挂断呼叫请求</string>

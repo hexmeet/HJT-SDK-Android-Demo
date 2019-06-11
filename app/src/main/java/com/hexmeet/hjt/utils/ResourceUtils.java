@@ -98,7 +98,7 @@ public class ResourceUtils {
     }
 
     public String getCallFailedReason(int code) {
-        if(code == CALL_ERROR_1001 || code == CALL_ERROR_10009) {
+        if(code == CALL_ERROR_1001 ) {
             return HjtApp.getInstance().getString(R.string.call_error_1001);
         } else if(code == CALL_ERROR_2005) {
             return HjtApp.getInstance().getString(R.string.call_error_2005);

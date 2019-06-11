@@ -221,6 +221,7 @@
     <string name="port">Port (Optional)</string>
     <string name="login_timeout">Login timed out. Please check your network connection.</string>
     <string name="login_failed">Login failed. Server is not accessible. Please check network setting</string>
+    <string name="cannot_connect_location_server">Cannot connect to the location server</string>
     <string name="invalid_username_or_password">Invalid user</string>
     <string name="error_account_or_password">Incorrect account or password</string>
     <string name="password_changed">Password changed, login again</string>

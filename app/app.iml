@@ -122,8 +122,8 @@
     <orderEntry type="library" name="Gradle: com.aliyun.ams:alicloud-android-beacon:1.0.1@jar" level="project" />
     <orderEntry type="library" name="Gradle: pl.droidsonroids.gif:android-gif-drawable:1.2.15@aar" level="project" />
     <orderEntry type="library" name="Gradle: __local_aars__:/Users/linlinli/huicom/ep/swep-evsdk-android-phone/source/android/hexmeet/app/libs/android-logging-log4j-1.0.2.jar:unspecified@jar" level="project" />
+    <orderEntry type="library" name="Gradle: __local_aars__:/Users/linlinli/.gradle/caches/transforms-1/files-1.1/evsdk.aar/bfec055d4338725dd97230afea133da1:unspecified@jar" level="project" />
     <orderEntry type="library" name="Gradle: __local_aars__:/Users/linlinli/huicom/ep/swep-evsdk-android-phone/source/android/hexmeet/app/libs/httpmime-4.5.2.jar:unspecified@jar" level="project" />
-    <orderEntry type="library" name="Gradle: __local_aars__:/Users/linlinli/.gradle/caches/transforms-1/files-1.1/evsdk.aar/36e1a6f2a4ec799ea19431d79378326a:unspecified@jar" level="project" />
     <orderEntry type="library" name="Gradle: __local_aars__:/Users/linlinli/huicom/ep/swep-evsdk-android-phone/source/android/hexmeet/app/libs/eventbus-3.1.0-RC.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="Gradle: __local_aars__:/Users/linlinli/huicom/ep/swep-evsdk-android-phone/source/android/hexmeet/app/libs/logging-interceptor-3.4.1.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.squareup.picasso:picasso:2.5.2@jar" level="project" />

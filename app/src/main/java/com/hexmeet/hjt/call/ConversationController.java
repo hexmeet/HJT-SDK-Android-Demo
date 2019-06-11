@@ -46,6 +46,7 @@ public class ConversationController implements View.OnClickListener{
         void showLocalCamera(boolean show);
         void showConferenceManager();
         void updateMarginTopForMessageOverlay(int margin);
+        void updateCellLocalMuteState(boolean isMute);
     }
 
     public ConversationController(View rootView, final IController iController, int width) {
@@ -133,6 +134,7 @@ public class ConversationController implements View.OnClickListener{
         micMuteBtn.getChildAt(0).setSelected(mute);
         TextView title = (TextView) micMuteBtn.getChildAt(1);
         title.setText(mute ? R.string.unmute :  R.string.mute);
+        iController.updateCellLocalMuteState(mute);
     }
 
     public void muteVideo(boolean mute) {

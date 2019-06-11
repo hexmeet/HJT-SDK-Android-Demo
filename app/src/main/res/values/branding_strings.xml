@@ -6,7 +6,7 @@
     <string name="company">Beijing ZhongChuang</string>
     <string name="copyright1">Copyright © 2019 Beijing Zhong Chuang Shi Xun Technology Co., Ltd.</string>
 
-    <string name="need_float_window_permission">Please open floating window permission for HJT</string>
+    <string name="need_float_window_permission">Please open floating window permission for %1$s</string>
 
 
 </resources>
