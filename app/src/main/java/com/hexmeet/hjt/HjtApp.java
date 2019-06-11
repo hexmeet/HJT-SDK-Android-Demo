@@ -203,8 +203,6 @@ public class HjtApp extends Application {
         int largeHeap = activityManager.getLargeMemoryClass();
         LOG.info("max heap size=" + normalHeap + "M, larger heap size=" + largeHeap + "M");
 
-        SSLCertificateHandler.nuke();
-
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityStopped(Activity activity) {

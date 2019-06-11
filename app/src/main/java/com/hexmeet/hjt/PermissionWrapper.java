@@ -81,7 +81,7 @@ public class PermissionWrapper {
 //        return Build.VERSION.SDK_INT < Build.VERSION_CODES.M || PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(activity, Manifest.permission.SYSTEM_ALERT_WINDOW);
         boolean ok = Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(HjtApp.getInstance().getContext());
         if(!ok && turnToSettings) {
-            Utils.showToast(activity, R.string.need_float_window_permission);
+            Utils.showToast(activity, activity.getString(R.string.need_float_window_permission, activity.getString(R.string.app_name)));
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
             intent.setData(Uri.parse("package:" + activity.getPackageName()));
             activity.startActivityForResult(intent, REQUEST_PERMISSIONS_FLOAT_WINDOW);

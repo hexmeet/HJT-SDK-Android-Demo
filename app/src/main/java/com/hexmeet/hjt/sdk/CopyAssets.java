@@ -221,7 +221,7 @@ public class CopyAssets {
     }
 
     private void routeAudioToSpeakerHelper(boolean speakerOn) {
-        LOG.info("hexmeet Manager - routeAudioToSpeakerHelper  "+speakerOn);
+        LOG.info("hexmeet Manager - routeAudioToSpeakerHelper  "+speakerOn +",bluetooth : "+isUsingBluetooth());
         Log.w("Routing audio to : ",speakerOn ? "speaker" : "earpiece" );
         //BluetoothManager.getInstance().disableBluetoothSCO();
         if(isUsingBluetooth())
@@ -235,7 +235,7 @@ public class CopyAssets {
         isBTPHeadSetConnected = isOn;
         LOG.info("setBluetoothMonoState "+isOn+"  sdk int :"+android.os.Build.VERSION.SDK_INT);
         if (isOn) {
-            mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION); // After API level >= 11
+            mAudioManager.setMode(AudioManager.MODE_NORMAL); // After API level >= 11
             mAudioManager.startBluetoothSco();
             mAudioManager.setBluetoothScoOn(true);
             mAudioManager.setSpeakerphoneOn(false);
@@ -244,7 +244,6 @@ public class CopyAssets {
             mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
             mAudioManager.setBluetoothScoOn(false);
             mAudioManager.stopBluetoothSco();
-
             mAudioManager.setSpeakerphoneOn(true);
         }
         LOG.info("hexmeet isSetBluetoothScoOn : "+mAudioManager.isBluetoothScoOn());

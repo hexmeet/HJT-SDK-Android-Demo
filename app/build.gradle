@@ -2,25 +2,23 @@ apply plugin: 'com.android.application'
 
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId System.getenv("APPLICATION_ID") as String ?: "com.hexmeet.hjtsdkdemo"
         minSdkVersion 21
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode System.getenv("BUILD_CODE") as Integer ?: 0
         versionName System.getenv("BUILD_VERSION") as String ?: "0.0"
 
         def appFileProviderAuth = applicationId + (".fileprovider")
         def wxAppId = System.getenv("WX_APPID") as String ?: "wx_id_of_your_company"
-
-        // your would want to change the following URLs to the ones of your company
         def trialApplicationURL = System.getenv("TRIAL_APPLICATION_URL") as String ?: "http://www.hjtcloud.com/try"
         def cloudLocationServerAddr = System.getenv("CLOUD_LOCATION_SERVER_ADDR") as String ?: "cloudcenter.hexmeet.com"
         def cloudServerAddr = System.getenv("CLOUD_SERVER_ADDR") as String ?: "cloud.hexmeet.com"
+        def cloudServerProtoHttps = System.getenv("CLOUD_SERVER_PROTOCOL_HTTPS") as String ?: "true"
 
-        // it will be used in the AndroidManifest.xml file
         manifestPlaceholders = [APP_FILE_PROVIDER_AUTH: appFileProviderAuth]
 
 
@@ -28,6 +26,7 @@ android {
         buildConfigField("String", "TRIAL_APPLICATION_URL", '"' + trialApplicationURL + '"')
         buildConfigField("String", "CLOUD_LOCATION_SERVER_ADDR", '"' + cloudLocationServerAddr + '"')
         buildConfigField("String", "CLOUD_SERVER_ADDR", '"' + cloudServerAddr + '"')
+        buildConfigField("boolean", "CLOUD_SERVER_PROTOCOL_HTTPS", cloudServerProtoHttps)
 
 
         def archiveVersionName = ((System.getenv("ARCHIVE_NAME") as String ?: "HJT_SDKDEMO-") +
@@ -86,7 +85,6 @@ repositories {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    // the following line is critical as it requires the HJT SDK AAR files
     implementation fileTree(include: ['*.aar'], dir: 'libs')
     implementation('com.android.support:support-v4:24.0.0')
     implementation('com.android.support:gridlayout-v7:24.0.0')
@@ -98,4 +96,5 @@ dependencies {
     implementation 'com.aliyun.ams:alicloud-android-man:1.2.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.15'
+    //implementation(name:'evsdk', ext:'aar')
 }
