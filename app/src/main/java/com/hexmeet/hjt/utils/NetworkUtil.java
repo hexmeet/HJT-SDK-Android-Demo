@@ -97,27 +97,6 @@ public class NetworkUtil extends android.support.v4.app.FragmentActivity {
         }
     }
 
-    public static String getLocalHostIp() {
-        String ipaddress = "";
-        try {
-            Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();
-            while (en.hasMoreElements()) {
-                NetworkInterface nif = en.nextElement();
-                Enumeration<InetAddress> inet = nif.getInetAddresses();
-                while (inet.hasMoreElements()) {
-                    InetAddress ip = inet.nextElement();
-                    if (!ip.isLoopbackAddress() && InetAddressUtils.isIPv4Address(ip.getHostAddress())) {
-                        return ip.getHostAddress();
-                    }
-                }
-            }
-        } catch (SocketException e) {
-            LOG.error(e.getMessage(), e);
-        }
-
-        return ipaddress;
-    }
-
     public static boolean isCloudReachable(Context context) {
         if (!SystemCache.getInstance().isNetworkConnected()) {
             LOG.warn("App.isNetworkConnected()=false");

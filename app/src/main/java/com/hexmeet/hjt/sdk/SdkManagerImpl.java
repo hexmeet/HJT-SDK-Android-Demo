@@ -75,12 +75,16 @@ public class SdkManagerImpl implements SdkManager {
     public static final int CODE_SUCCESS = 0;
     static final  int LOGIN_ERROR_1101 = 1101;
     static final  int LOGIN_ERROR_10009 = 10009;
+    static final  int LOGIN_ERROR_8 = 8;
+    public static final int LOGIN_ERROR_9 = 9;
+
 
     @Override
     public void initSDK() {
         LOG.info("initSDK");
         Context appContext = HjtApp.getInstance().getContext();
         engine = EVFactory.createEngine();
+        LOG.info("init engine ->" + engine.toString());
         CopyAssets.getInstance().createAndStart(appContext);
         String path = appContext.getFilesDir().getAbsolutePath();
         engine.setLog("EasyVideo", path, "evsdk", 1024 * 1024 * 10);
@@ -218,7 +222,9 @@ public class SdkManagerImpl implements SdkManager {
 
     @Override
     public boolean isCalling() {
-        return  engine.getCallInfo()!=null;
+        //+ (engine == null), new Exception()
+       LOG.info("isCalling engine = null? ");
+       return  engine.getCallInfo()!=null;
     }
 
     @SuppressLint("StringFormatInvalid")
@@ -231,7 +237,7 @@ public class SdkManagerImpl implements SdkManager {
                 error = HjtApp.getInstance().getString(R.string.server_unavailable);
 
             } else if (error.contains("Invalid user name or password") || error.contains("Did not find this username")) {
-                error = HjtApp.getInstance().getString(R.string.error_account_or_password);
+                error = HjtApp.getInstance().getString(R.string.invalid_username_or_password);
                 errorCode = LoginResultEvent.LOGIN_WRONG_PASSWORD;
                 needRetry = false;
             } else if (error.contains("Your account has been temporarily locked, please try again later or contact the administrator")) {
@@ -247,7 +253,11 @@ public class SdkManagerImpl implements SdkManager {
                 errorCode=LoginResultEvent.LOGIN_WRONG_INVALID_NAME;
                 error = HjtApp.getInstance().getString(R.string.invalid_username_or_password);
                 needRetry = false;
-            } else if (error.contains("400 Bad Request")) {
+            } else if (errorCode == LOGIN_ERROR_8 || errorCode == LOGIN_ERROR_9) {
+                errorCode=LoginResultEvent.LOGIN_WRONG_LOCATION_SERVER;
+                error = HjtApp.getInstance().getString(R.string.cannot_connect_location_server);
+                needRetry = false;
+            }else if (error.contains("400 Bad Request")) {
                 errorCode = LoginResultEvent.LOGIN_WRONG_NET;
                 error = HjtApp.getInstance().getString(R.string.server_port_unavailable);
             } else {
@@ -277,7 +287,15 @@ public class SdkManagerImpl implements SdkManager {
     @Override
     public void makeCall(MakeCallParam param) {
         LOG.info(" makeCall " + param.uri+" : "+param.displayName+" : "+param.password);
-        engine.joinConference(param.uri,SystemCache.getInstance().getLoginResponse().displayName,param.password);
+        int code = engine.joinConference(param.uri, SystemCache.getInstance().getLoginResponse().displayName, param.password);
+        LOG.info(" makeCall code "+ code);
+
+        if(code!=0){
+            CallEvent event = new CallEvent(CallState.IDLE);
+            event.setEndReason(ResourceUtils.getInstance().getCallFailedReason(code));
+            EventBus.getDefault().post(event);
+            return;
+        }
 
         Peer peer = new Peer(Peer.DIRECT_OUT);
         peer.setNumber(param.uri);
@@ -395,10 +413,8 @@ public class SdkManagerImpl implements SdkManager {
         for (StreamStats streamStats :stats) {
             signalStat.encryption = streamStats.isEncrypted;
             String streamType = streamStats.type.toString();
-            LOG.info(" streamStats.type : "+streamType);
+            LOG.info(" streamStats.type : "+streamStats.toString());
             if(streamType.equals("Audio")){
-
-                LOG.info("Audio name : "+streamType.toString());
 
                 LOG.info(" streamStats.dir : "+streamStats.dir.value());
                 int value = streamStats.dir.value();
@@ -428,8 +444,6 @@ public class SdkManagerImpl implements SdkManager {
 
                 }
             }else if(streamType.equals("Video")){
-
-                LOG.info("Video name : "+streamType.toString());
                 LOG.info(" streamStats.dir : "+streamStats.dir.value());
                 String codec = "";
                 String payloadType = streamStats.payloadType;
@@ -448,7 +462,7 @@ public class SdkManagerImpl implements SdkManager {
                     pvrx.frameRate = (int)streamStats.fps;
                     pvrx.resolution = streamStats.resolution.width +"x" +streamStats.resolution.height;
                     pvrx.encrypted = streamStats.isEncrypted;
-                    pvrx.pipeName = streamStats.name +"-"+streamStats.ssrc;
+                    pvrx.pipeName = streamStats.name;
                     pvrxList.add(pvrx);
 
                 }else {
@@ -563,7 +577,6 @@ public class SdkManagerImpl implements SdkManager {
 
     class EVListenr extends EVEventListener {
         public static final int CALL_ERROR_2015 = 2015;
-        public static final int LOGIN_ERROR_9 = 9;
         @Override
         public void onError(EVError err) {
             LOG.info("CallBack onError code：" + err.toString());
@@ -576,9 +589,7 @@ public class SdkManagerImpl implements SdkManager {
                         LoginSettings.getInstance().setLoginState(LoginSettings.LOGIN_STATE_IDLE, true);
                         EventBus.getDefault().post(new LoginResultEvent(LoginResultEvent.LOGIN_ANONYMOUS_FAILED, "No callBack in response", true));
                     }else {
-
                         SdkManagerImpl.handlerError(err.code, err.msg ,err.arg);
-
                     }
 
                 }else if(err.type.toString()== ErrorType.EVErrorTypeSdk){
@@ -587,11 +598,7 @@ public class SdkManagerImpl implements SdkManager {
                         event.setEndReason(ResourceUtils.getInstance().getCallFailedReason(err.code));
                         EventBus.getDefault().post(event);
                     }else {
-
-                        if(err.code != LOGIN_ERROR_9){
-                            SdkManagerImpl.handlerError(err.code, err.msg ,err.arg);
-                        }
-
+                        SdkManagerImpl.handlerError(err.code, err.msg ,err.arg);
                     }
                 }else if(err.type.toString()== ErrorType.EVErrorTypeCall){
                     //TODO
@@ -704,10 +711,10 @@ public class SdkManagerImpl implements SdkManager {
 
         @Override
         public void onLayoutIndication(LayoutIndication layout) {//布局内容发生变化
-
+            LOG.info("CallBack. onLayoutIndication toString "+layout.toString());
             if(layout != null){
                 SvcLayoutInfo info = new SvcLayoutInfo();
-                info.setLayoutMode(layout.mode.toString());
+                info.setLayoutMode(layout.mode.toString());//画廊模式
                 info.setSpeakerName(layout.speakerName);
                 List<Site> sites = layout.sites;
                 SystemCache.getInstance().setLayoutModeEnable(layout.modeSettable);
@@ -717,7 +724,7 @@ public class SdkManagerImpl implements SdkManager {
                         LOG.info(" CallBack  onLayoutIndication: " + sit.toString());
                         info.addSuit(sit.name);
                         info.addWindowIdx((Integer) sit.window);
-                        info.addDeviceId(String.valueOf(sit.deviceId));
+                        info.addDeviceId(String.valueOf(sit.deviceId));//gradle 分配号 服务器分配给我们的
                         if(sit.isLocal){
                             if(SystemCache.getInstance().isRemoteMuted() ^ sit.remoteMuted) {
 
@@ -753,7 +760,7 @@ public class SdkManagerImpl implements SdkManager {
         }
 
         @Override
-        public void onLayoutSpeakerIndication(LayoutSpeakerIndication speaker) {
+        public void onLayoutSpeakerIndication(LayoutSpeakerIndication speaker) {//发言者信息
             LOG.info("onLayoutSpeakerIndication: speakerIndex :" + speaker.speakerIndex +" speakerName"+speaker.speakerName);
             if (speaker != null) {
                 SvcSpeakerEvent event = new SvcSpeakerEvent(speaker.speakerIndex, speaker.speakerName);
@@ -788,7 +795,7 @@ public class SdkManagerImpl implements SdkManager {
         @Override
         public void onRecordingIndication(RecordingInfo state) {//录制false / 直播true
             if (state != null && state.states != null) {
-                LOG.info("CallBack onRecordingIndication: " +  state.live);
+                LOG.info("CallBack onRecordingIndication: " +  state.live+",state "+state.states);
                 SystemCache.getInstance().setRecording(state.live);
                 EventBus.getDefault().post(new LiveEvent(state.live));
                 if(state.states ==state.states.On) {

@@ -17,6 +17,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.andreabaccega.widget.FormEditText;
+import com.hexmeet.hjt.BuildConfig;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.cache.SystemCache;
@@ -132,6 +133,17 @@ public class LoginFragment extends Fragment {
             input_server.setText(LoginSettings.getInstance().getPrivateLoginServer());
             input_name.setText(LoginSettings.getInstance().getUserName(false));
             input_password.setText(LoginSettings.getInstance().getPassword(false));
+        }else if(loginType == LOGIN_TYPE_CLOUD_ANONYMOUS ){
+            input_conf_id.setText(LoginSettings.getInstance().getCloudNumberId());
+            input_conf_name.setText(LoginSettings.getInstance().getCloudDisplayName());
+            closeCamera.setChecked(LoginSettings.getInstance().isMuteVideo(true));
+            closeMic.setChecked(LoginSettings.getInstance().isMuteMic(true));
+        }else if(loginType == LOGIN_TYPE_PRIVATE_ANONYMOUS){
+            input_server.setText(LoginSettings.getInstance().getPrivateJoinMeetingServer());
+            input_conf_id.setText(LoginSettings.getInstance().getPrivateJoinMeetingNumberId());
+            input_conf_name.setText(LoginSettings.getInstance().getPrivateJoinMeetingDisplayName());
+            closeCamera.setChecked(LoginSettings.getInstance().isMuteVideo(false));
+            closeMic.setChecked(LoginSettings.getInstance().isMuteMic(false));
         }
     }
 
@@ -192,7 +204,8 @@ public class LoginFragment extends Fragment {
         }
 
         String port = null;
-        boolean https = true;
+        boolean https = BuildConfig.CLOUD_SERVER_PROTOCOL_HTTPS;
+
         if(loginType == LOGIN_TYPE_PRIVATE) {
             https = LoginSettings.getInstance().useHttps();
             port = LoginSettings.getInstance().getPrivatePort();
@@ -244,6 +257,23 @@ public class LoginFragment extends Fragment {
 
         SystemCache.getInstance().setUserMuteVideo(closeCamera.isChecked());
         HjtApp.getInstance().getAppService().muteMic(closeMic.isChecked());
+
+        if(loginType == LOGIN_TYPE_CLOUD_ANONYMOUS ){
+            LoginSettings.getInstance().setCloudNumberId(numberWithoutPassword);
+            LoginSettings.getInstance().setCloudDisplayName(displayName);
+
+            LoginSettings.getInstance().setCloudMuteVideo(closeCamera.isChecked());
+            LoginSettings.getInstance().setCloudMuteMic(closeMic.isChecked());
+        }else if(loginType == LOGIN_TYPE_PRIVATE_ANONYMOUS){
+            LoginSettings.getInstance().setPrivateJoinMeetingServer(input_server.getText().toString().trim());
+            LoginSettings.getInstance().setPrivateJoinMeetingNumberId(numberWithoutPassword);
+            LoginSettings.getInstance().setPrivateJoinMeetingDisplayName(displayName);
+            LoginSettings.getInstance().setPrivateJoinMeetingPort(SystemCache.getInstance().getJoinMeetingParam().getPort());
+            LoginSettings.getInstance().setJoinMeetingHttps(SystemCache.getInstance().getJoinMeetingParam().isUseHttps());
+
+            LoginSettings.getInstance().setPrivateMuteVideo(closeCamera.isChecked());
+            LoginSettings.getInstance().setPrivateMuteMic(closeMic.isChecked());
+        }
         setLoginBtnEnable(true);
     }
 

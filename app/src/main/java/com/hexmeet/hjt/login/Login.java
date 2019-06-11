@@ -214,6 +214,8 @@ public class Login extends BaseActivity implements LoginFragmentCallback{
                 Utils.showToastWithCustomLayout(Login.this, event.getMessage());
             }else if(event.getCode() == LoginResultEvent.LOGIN_WRONG_NET){
                 Utils.showToastWithCustomLayout(Login.this, event.getMessage());
+            }else if(event.getCode() == LoginResultEvent.LOGIN_WRONG_LOCATION_SERVER){
+                Utils.showToastWithCustomLayout(Login.this, event.getMessage());
             } else {
                 Utils.showToastWithCustomLayout(Login.this, event.getMessage());
             }

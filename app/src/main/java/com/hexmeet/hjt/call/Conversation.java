@@ -233,7 +233,7 @@ public class Conversation extends FullscreenActivity {
     private Runnable buildTask = new Runnable() {
         @Override
         public void run() {
-            videoBoxGroup.buildDefaultCells();
+            videoBoxGroup.buildDefaultCells(!EVFactory.createEngine().micEnabled());
         }
     };
 
@@ -293,6 +293,12 @@ public class Conversation extends FullscreenActivity {
                 videoBoxGroup.updateMessageView(margin);
             }
         }
+
+        @Override
+        public void updateCellLocalMuteState(boolean isMute) {
+            LOG.info("updateCellLocalMuteState : "+isMute);
+            videoBoxGroup.updateLocalMute(isMute);
+        }
     };
 
     private boolean isEarphoneOn() {
@@ -315,6 +321,8 @@ public class Conversation extends FullscreenActivity {
         setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
         audio.setMode(AudioManager.MODE_IN_COMMUNICATION);
         audio.setMicrophoneMute(false);
+        /*int i = audio.requestAudioFocus(audioFocusChangeListener, AudioManager.MODE_IN_COMMUNICATION, AudioManager.AUDIOFOCUS_GAIN);
+        LOG.info("onStart ： "+i);*/
 
         HjtApp.getInstance().getAppService().startAudioMode(true);
         HjtApp.getInstance().getAppService().cancelFloatIndicator();
@@ -326,10 +334,7 @@ public class Conversation extends FullscreenActivity {
         }
 
         boolean isLocalMicMuted = EVFactory.createEngine().micEnabled();
-        //boolean isLocalMicMuted = SystemCache.getInstance().isUserMuteMic();
         controller.muteMic(!isLocalMicMuted);
-       // HjtApp.getInstance().getAppService().muteMic(!isLocalMicMuted);
-
     }
 
     @Override
@@ -499,8 +504,10 @@ public class Conversation extends FullscreenActivity {
         if(event.isMuteFromMru()) {
             Log.i("Indication ；conv  ",event.isMuteFromMru()+"");
             Toast.makeText(Conversation.this, R.string.speaking_forbidden, Toast.LENGTH_SHORT).show();
+            videoBoxGroup.updateLocalMute(true);
         } else {
             Toast.makeText(Conversation.this, R.string.allowed_speak, Toast.LENGTH_SHORT).show();
+            videoBoxGroup.updateLocalMute(false);
         }
         if(controller != null) {
             controller.updateHandUpMenu(event.isMuteFromMru());
@@ -843,4 +850,12 @@ public class Conversation extends FullscreenActivity {
             return false;
         }
     }
+
+  /*  AudioManager.OnAudioFocusChangeListener audioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener(){
+
+        @Override
+        public void onAudioFocusChange(int focusChange) {
+            LOG.info("AudioManager "+focusChange);
+        }
+    };*/
 }
