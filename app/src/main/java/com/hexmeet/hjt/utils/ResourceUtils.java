@@ -24,7 +24,7 @@ public class ResourceUtils {
     public static final int CALL_ERROR = 0;
     public static final int CALL_ERROR_9 = 9;
     public static final int CALL_ERROR_1001 = 1001;
-    public static final int CALL_ERROR_10009 = 10009;
+    public static final int CALL_ERROR_1 = 1;
     public static final int CALL_ERROR_2001 = 2001;
     public static final int CALL_ERROR_2005 = 2005;
     public static final int CALL_ERROR_2023 = 2023;
@@ -114,6 +114,8 @@ public class ResourceUtils {
             return HjtApp.getInstance().getString(R.string.call_error_2035);
         }else if(code == CALL_ERROR || code == CALL_ERROR_9){
             return null;
+        }else if(code == CALL_ERROR_1){
+            return HjtApp.getInstance().getString(R.string.server_unavailable);
         } else {
             /*int startIndex = message.indexOf("[");
             if(startIndex >= 0) {

@@ -235,7 +235,7 @@ public class HexMeet extends BaseActivity implements OnClickListener {
                 @Override
                 public void run() {
                     isBackOncePressed = true;
-                    Utils.showToast(HexMeet.this, getString(R.string.again_exit));
+                    Utils.showToast(HexMeet.this, getApplication().getString(R.string.again_exit,getApplication().getString(R.string.app_name)));
                     new Handler().postDelayed(new Runnable(){
                         @Override
                         public void run() {

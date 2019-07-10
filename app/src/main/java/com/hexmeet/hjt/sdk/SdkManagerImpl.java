@@ -87,12 +87,14 @@ public class SdkManagerImpl implements SdkManager {
         LOG.info("init engine ->" + engine.toString());
         CopyAssets.getInstance().createAndStart(appContext);
         String path = appContext.getFilesDir().getAbsolutePath();
-        engine.setLog("EasyVideo", path, "evsdk", 1024 * 1024 * 10);
+        engine.setLog("EasyVideo", path, "evsdk", 1024 * 1024 * 20);
         engine.enableLog(true);
         engine.setRootCA(path);
         engine.initialize(path, "config");
         engine.setMaxRecvVideo(AppCons.MAX_RECEIVE_STREAM);
         engine.setBandwidth(AppCons.DEFAULT_BITRATE);
+        //engine.enablePreviewFrameCb(StreamType.Video, true);
+        //engine.enablePreviewFrameCb(StreamType.Content, true);
         engine.addEventListener(new EVListenr());
         SystemCache.getInstance().setSdkReady(true);
 
@@ -251,7 +253,7 @@ public class SdkManagerImpl implements SdkManager {
                 needRetry = false;
             }else if (errorCode == LOGIN_ERROR_10009) {
                 errorCode=LoginResultEvent.LOGIN_WRONG_INVALID_NAME;
-                error = HjtApp.getInstance().getString(R.string.invalid_username_or_password);
+                error = HjtApp.getInstance().getString(R.string.cannot_connect_location_server);
                 needRetry = false;
             } else if (errorCode == LOGIN_ERROR_8 || errorCode == LOGIN_ERROR_9) {
                 errorCode=LoginResultEvent.LOGIN_WRONG_LOCATION_SERVER;
@@ -291,20 +293,26 @@ public class SdkManagerImpl implements SdkManager {
         LOG.info(" makeCall code "+ code);
 
         if(code!=0){
-            CallEvent event = new CallEvent(CallState.IDLE);
-            event.setEndReason(ResourceUtils.getInstance().getCallFailedReason(code));
-            EventBus.getDefault().post(event);
+           /* CallCodeEvent callCodeEvent = new CallCodeEvent();
+            callCodeEvent.setEndReason(ResourceUtils.getInstance().getCallFailedReason(code));
+            EventBus.getDefault().post(callCodeEvent);*/
+            CallEvent events = new CallEvent(CallState.IDLE);
+            events.setEndReason(ResourceUtils.getInstance().getCallFailedReason(code));
+            EventBus.getDefault().post(events);
+            engine.leaveConference();
             return;
         }
 
-        Peer peer = new Peer(Peer.DIRECT_OUT);
-        peer.setNumber(param.uri);
-        peer.setName(param.displayName);
-        peer.setPassword(param.password);
-        peer.setVideoCall(param.callType == 1);
-        CallEvent event = new CallEvent(CallState.CONNECTING);
-        event.setPeer(peer);
-        EventBus.getDefault().post(event);
+            Peer peer = new Peer(Peer.DIRECT_OUT);
+            peer.setNumber(param.uri);
+            peer.setName(param.displayName);
+            peer.setPassword(param.password);
+            peer.setVideoCall(param.callType == 1);
+            CallEvent event = new CallEvent(CallState.CONNECTING);
+            event.setPeer(peer);
+            EventBus.getDefault().post(event);
+
+
     }
 
     @Override
@@ -690,8 +698,8 @@ public class SdkManagerImpl implements SdkManager {
         public void onCallConnected(CallInfo info) {
             LOG.info("CallBack CallConnected=="+info.toString());
 
-            CallEvent event = new CallEvent(CallState.CONNECTED);
-            EventBus.getDefault().post(event);
+         CallEvent event = new CallEvent(CallState.CONNECTED);
+         EventBus.getDefault().post(event);
         }
 
         @Override
@@ -786,7 +794,7 @@ public class SdkManagerImpl implements SdkManager {
 
         @Override
         public void onMuteSpeakingDetected() {//提示打开声音
-            LOG.info("CallBack onMuteSpeakingDetected isUserMuteMic  : YES"+engine.micEnabled());
+            LOG.info("CallBack onMuteSpeakingDetected isUserMuteMic  : YES ? "+engine.micEnabled());
             if(!engine.micEnabled()){
                 EventBus.getDefault().post(new MuteSpeaking(true));
             }
@@ -836,5 +844,15 @@ public class SdkManagerImpl implements SdkManager {
             SystemCache.getInstance().setParticipant(number+"");
             EventBus.getDefault().post(new PeopleNumberEvent(number+""));
          }
+
+
+        /*public void onVideoPreviewFrame(byte[] frame) {
+             LOG.info("onVideoPreviewFrame: "+ frame.length);
+         }
+
+
+        public void onContentPreviewFrame(byte[] frame) {
+            LOG.info("onVideoPreviewFrame: "+ frame.length);
+        }*/
     }
 }
