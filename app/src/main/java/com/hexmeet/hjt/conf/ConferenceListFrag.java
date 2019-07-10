@@ -305,4 +305,5 @@ public class ConferenceListFrag extends Fragment {
             return false;
         }
     }
+
 }

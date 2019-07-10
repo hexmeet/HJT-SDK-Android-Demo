@@ -23,7 +23,7 @@
     <color name="call_statistics_divider">#99313131</color>
     <color name="call_statistics_window_bg">#CCFFFFFF</color>
     <color name="call_statistics_title_bg">#5000FA9A</color>
-    <color name="call_statistics_item_bg_1">#80696969</color>
+    <color name="call_statistics_item_bg_1">#80c9c9c9</color>
     <color name="call_statistics_item_bg_2">#00000000</color>
 
     <color name="text_hang_up">#C3252E</color>

@@ -79,7 +79,8 @@
             android:padding="10dp"
             android:text="@string/join"
             android:textColor="@color/White"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:textAllCaps="false"/>
         <Button
             android:id="@+id/no_btn"
             android:layout_width="match_parent"
@@ -93,7 +94,8 @@
             android:padding="10dp"
             android:text="@string/cancel"
             android:textColor="@color/font_color_313131"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:textAllCaps="false"/>
 
         <CheckBox
             android:id="@+id/invite_camera"

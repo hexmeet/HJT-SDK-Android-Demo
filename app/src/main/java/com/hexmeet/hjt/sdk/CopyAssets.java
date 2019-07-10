@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.res.Resources;
 import android.media.AudioManager;
+import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -235,16 +236,17 @@ public class CopyAssets {
         isBTPHeadSetConnected = isOn;
         LOG.info("setBluetoothMonoState "+isOn+"  sdk int :"+android.os.Build.VERSION.SDK_INT);
         if (isOn) {
+           // mAudioManager.requestAudioFocus(afChangeListener,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN);
             mAudioManager.setMode(AudioManager.MODE_NORMAL); // After API level >= 11
             mAudioManager.startBluetoothSco();
             mAudioManager.setBluetoothScoOn(true);
-            mAudioManager.setSpeakerphoneOn(false);
+            //mAudioManager.setSpeakerphoneOn(false);
         }
         else {
             mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
             mAudioManager.setBluetoothScoOn(false);
             mAudioManager.stopBluetoothSco();
-            mAudioManager.setSpeakerphoneOn(true);
+         //   mAudioManager.setSpeakerphoneOn(true);
         }
         LOG.info("hexmeet isSetBluetoothScoOn : "+mAudioManager.isBluetoothScoOn());
     }
@@ -568,5 +570,13 @@ public class CopyAssets {
         }
         return mCurrentAudioRoute;
     }
+
+    OnAudioFocusChangeListener afChangeListener = new OnAudioFocusChangeListener() {
+        @Override
+        public void onAudioFocusChange(int focusChange) {
+            LOG.error("focusChange : "+focusChange);
+        }
+    };
+
 
 }

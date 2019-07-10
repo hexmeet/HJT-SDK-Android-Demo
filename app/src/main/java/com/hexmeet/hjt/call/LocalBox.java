@@ -70,7 +70,7 @@ public class LocalBox {
         textView.setTextColor(Color.WHITE);
         textView.setPadding(3, 0, 3, 2);
         textView.setMaxLines(1);
-        textView.setText(R.string.tab_me);
+        textView.setText(EVFactory.createEngine().getDisplayName());
 
         infoContainer.addView(textView);
     }
