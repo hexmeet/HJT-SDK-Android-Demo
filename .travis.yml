@@ -11,4 +11,8 @@ android:
 
     # The SDK version used to compile your project
     - android-28
+  licenses:
+    - android-sdk-preview-license-.+
+    - android-sdk-license-.+
+    - google-gdk-license-.+  
 script: ./gradlew assembleDebug
