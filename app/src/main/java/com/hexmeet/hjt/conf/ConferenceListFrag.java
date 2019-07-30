@@ -297,13 +297,13 @@ public class ConferenceListFrag extends Fragment {
         }
     }
 
-    public boolean onBackClick(boolean isNavBottomBarHide) {
+    /*public boolean onBackClick(boolean isNavBottomBarHide) {
         if(this.webView.canGoBack() && isNavBottomBarHide){
             this.webView.goBack();
             return true;
         } else {
             return false;
         }
-    }
+    }*/
 
 }

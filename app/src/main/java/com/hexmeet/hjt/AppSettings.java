@@ -12,7 +12,7 @@ public class AppSettings {
     private SharedPreferences sp;
     private boolean isSpeakerMode;
     private boolean autoAnswer;
-
+    private boolean hardwareDecoding;
     private AppSettings() {
         init(HjtApp.getInstance().getContext());
     }
@@ -20,6 +20,7 @@ public class AppSettings {
     interface Key {
         String SPEAKER_LAYOUT = "layout_mode_speaker";
         String AUTO_ANSWER = "auto_answer";
+        String HARDWAREDECODING = "hardware_decoding";
     }
 
     public static AppSettings getInstance() {
@@ -33,6 +34,7 @@ public class AppSettings {
         sp = context.getSharedPreferences(APP_SETTINGS, Context.MODE_PRIVATE);
         isSpeakerMode = sp.getBoolean(Key.SPEAKER_LAYOUT, false);
         autoAnswer = sp.getBoolean(Key.AUTO_ANSWER, false);
+        hardwareDecoding = sp.getBoolean(Key.HARDWAREDECODING,false);
     }
 
     public boolean isSpeakerMode() {
@@ -55,6 +57,17 @@ public class AppSettings {
         if (this.autoAnswer ^ autoAnswer) {
             this.autoAnswer = autoAnswer;
             sp.edit().putBoolean(Key.AUTO_ANSWER, autoAnswer).apply();
+        }
+    }
+
+    public boolean isHardwareDecoding() {
+        return hardwareDecoding;
+    }
+
+    public void setHardwareDecoding(boolean hardwareDecoding) {
+        if (this.hardwareDecoding ^ hardwareDecoding) {
+            this.hardwareDecoding = hardwareDecoding;
+            sp.edit().putBoolean(Key.HARDWAREDECODING, hardwareDecoding).apply();
         }
     }
 

@@ -77,7 +77,7 @@ public class Login extends BaseActivity implements LoginFragmentCallback{
             Utils.showToastWithCustomLayout(Login.this, errorMessage);
         }
         if (HjtApp.getInstance().getAppService() != null) {
-            Log.i("isCalling", HjtApp.getInstance().getAppService().isCalling() + "");
+          //  Log.i("isCalling", HjtApp.getInstance().getAppService().isCalling() + "");
 
             if (!HjtApp.getInstance().getAppService().isCalling()) {
                 handleWebInvite(getIntent());

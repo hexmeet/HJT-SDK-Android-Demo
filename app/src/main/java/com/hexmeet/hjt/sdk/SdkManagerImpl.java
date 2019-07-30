@@ -226,7 +226,12 @@ public class SdkManagerImpl implements SdkManager {
     public boolean isCalling() {
         //+ (engine == null), new Exception()
        LOG.info("isCalling engine = null? ");
-       return  engine.getCallInfo()!=null;
+        if(engine!=null && engine.getCallInfo()!=null){
+            return true;
+        }else {
+            return  false;
+        }
+
     }
 
     @SuppressLint("StringFormatInvalid")

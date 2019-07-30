@@ -23,6 +23,7 @@ import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -266,7 +267,9 @@ public class Conversation extends FullscreenActivity {
 
         @Override
         public void onVideoSwitchClick(boolean isVideo) {
+           LOG.info("ISVIDEO : "+isVideo);
             videoBoxGroup.updateContent(!isVideo);
+            isRecordVisible(!isVideo);
         }
 
         @Override
@@ -305,6 +308,24 @@ public class Conversation extends FullscreenActivity {
             videoBoxGroup.updateLocalMute(isMute);
         }
     };
+
+    private void isRecordVisible(boolean isVideo){
+        LOG.info("isvideo : "+isVideo);
+        if(recordView.getVisibility()==View.VISIBLE && isVideo){
+            ViewGroup.LayoutParams layoutParams = recordView.getLayoutParams();
+            layoutParams.width=0;
+            layoutParams.height=0;
+            recordView.setLayoutParams(layoutParams);
+
+        }else if(recordView.getVisibility()==View.VISIBLE && !isVideo) {
+            ViewGroup.LayoutParams layoutParams = recordView.getLayoutParams();
+            layoutParams.width=180;
+            layoutParams.height=90;
+
+            recordView.setLayoutParams(layoutParams);
+
+        }
+    }
 
     private boolean isEarphoneOn() {
         AudioManager am = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
@@ -665,6 +686,7 @@ public class Conversation extends FullscreenActivity {
                             controller.showSwitchAsContent(msg.arg1 == 1);
                             HjtApp.getInstance().getAppService().setContentViewToSdk(msg.arg1 == 1 ? videoBoxGroup.getContentSurface() : null);
                             videoBoxGroup.updateContent(msg.arg1 == 1);
+                            isRecordVisible(msg.arg1 == 1);
                         }
                         break;
 

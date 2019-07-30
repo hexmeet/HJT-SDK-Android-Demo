@@ -237,16 +237,16 @@ public class CopyAssets {
         LOG.info("setBluetoothMonoState "+isOn+"  sdk int :"+android.os.Build.VERSION.SDK_INT);
         if (isOn) {
            // mAudioManager.requestAudioFocus(afChangeListener,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN);
-            mAudioManager.setMode(AudioManager.MODE_NORMAL); // After API level >= 11
+            mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION); // After API level >= 11
             mAudioManager.startBluetoothSco();
             mAudioManager.setBluetoothScoOn(true);
-            //mAudioManager.setSpeakerphoneOn(false);
+            mAudioManager.setSpeakerphoneOn(false);
         }
         else {
-            mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+            mAudioManager.setMode(AudioManager.MODE_NORMAL);
             mAudioManager.setBluetoothScoOn(false);
             mAudioManager.stopBluetoothSco();
-         //   mAudioManager.setSpeakerphoneOn(true);
+            mAudioManager.setSpeakerphoneOn(true);
         }
         LOG.info("hexmeet isSetBluetoothScoOn : "+mAudioManager.isBluetoothScoOn());
     }
