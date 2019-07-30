@@ -67,6 +67,17 @@ public class ParametersActivity extends BaseActivity {
                 AppSettings.getInstance().setAutoAnswer(isChecked);
             }
         });
+
+        Switch hardwareDecoding =(Switch) findViewById(R.id.hardware_decoding_switch);
+        hardwareDecoding.setChecked(AppSettings.getInstance().isHardwareDecoding());
+        hardwareDecoding.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                AppSettings.getInstance().setHardwareDecoding(isChecked);
+            }
+        });
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

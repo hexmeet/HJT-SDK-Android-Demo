@@ -34,20 +34,21 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
         LOG.info("WX Share resp: ["+resp.errCode+"]");
         switch (resp.errCode) {
             case BaseResp.ErrCode.ERR_OK:
-                result = getString(R.string.share_success);
+               // result = getString(R.string.share_success);
                 break;
             case BaseResp.ErrCode.ERR_USER_CANCEL:
-                result = getString(R.string.share_canceled);
+               // result = getString(R.string.share_canceled);
                 break;
             case BaseResp.ErrCode.ERR_AUTH_DENIED:
                 result = getString(R.string.auth_error);
+                Utils.showToast(this, result);
                 break;
             default:
                 result = getString(R.string.unknown_reason_error);
+                Utils.showToast(this, result);
                 break;
         }
 
-        Utils.showToast(this, result);
 
         finish();
     }

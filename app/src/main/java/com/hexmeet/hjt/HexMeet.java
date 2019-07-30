@@ -177,7 +177,7 @@ public class HexMeet extends BaseActivity implements OnClickListener {
         ResourceUtils.getInstance().initScreenSize();
         HjtApp.getInstance().checkCallScreen();
 
-        if(HjtApp.getInstance().getAppService().isCalling()) {
+        if(HjtApp.getInstance().getAppService().isCalling() && SystemCache.getInstance().getPeer()!=null) {
             LOG.info("onResume: Resume Call");
             HjtApp.getInstance().stopFloatService();
             Intent intent = new Intent();
@@ -217,9 +217,9 @@ public class HexMeet extends BaseActivity implements OnClickListener {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             contentLp = (RelativeLayout.LayoutParams) findViewById(R.id.content).getLayoutParams();
-            if(conferenceListFrag.isResumed() && conferenceListFrag.onBackClick(contentLp.bottomMargin == 0)) {
+           /* if(conferenceListFrag.isResumed() && conferenceListFrag.onBackClick(contentLp.bottomMargin == 0)) {
                 return true;
-            }
+            }*/
 
             if (isBackOncePressed) {
                 handler.removeMessages(0);

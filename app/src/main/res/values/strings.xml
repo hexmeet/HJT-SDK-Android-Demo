@@ -48,7 +48,7 @@
     <string name="speaker_mode">Speaker View</string>
     <string name="gallery_mode">Gallery View</string>
     <string name="reverse_camera">Switch</string>
-    <string name="mute_speaking">MicroPhone Mute</string>
+    <string name="mute_speaking">Microphone Muted</string>
     <string name="request_speak_is_sent">Speech request has been sent</string>
     <string name="allowed_speak">Your voice is being sent now</string>
     <string name="speaking_forbidden">You have been muted by meeting manager</string>
@@ -212,7 +212,7 @@
     <string name="layout_mode_disable">Can not change layout for this call</string>
     <string name="enter_join_meeting">join the meeting</string>
     <string name="call_error_1001">Invalid meeting ID</string>
-    <string name="call_error_2005">The meeting has not started yet</string>
+    <string name="call_error_2005">Invalid meeting ID or meeting has not started yet, please double check.</string>
     <string name="call_error_2001">The called cloud platform is not activated</string>
 
     <string name="call_error_2023">The number of participants has reached the limit</string>
@@ -224,4 +224,5 @@
     <string name="meeting_progress">The meeting is in progress.</string>
     <string name="meeting_click">Click to enter the meeting</string>
     <string name="displayname_max_length">The length of username can not exceed 16</string>
+    <string name="call_hardware_decoding">Enable hardware decoding</string>
 </resources>

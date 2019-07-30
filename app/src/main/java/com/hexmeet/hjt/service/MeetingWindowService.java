@@ -91,6 +91,9 @@ public class MeetingWindowService extends Service {
 
     @SuppressLint("ClickableViewAccessibility")
     private void createFloatView() {
+
+        //HjtApp.getInstance().getAppService().startAudioMode(true);
+
         wmParams = new WindowManager.LayoutParams();
         //获取的是WindowManagerImpl.CompatModeWrapper
         mWindowManager = (WindowManager) getApplication().getSystemService(getApplication().WINDOW_SERVICE);
