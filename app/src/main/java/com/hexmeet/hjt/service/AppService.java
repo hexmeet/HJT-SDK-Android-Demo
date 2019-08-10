@@ -74,6 +74,7 @@ public class AppService extends Service {
         sdkThread.start();
         mSdkHandler = new SdkHandler(sdkThread, sdkManager);
         mSdkHandler.sendEmptyMessageDelayed(SdkHandler.HANDLER_SDK_INIT, 200);
+        hardwareDecoding(AppSettings.getInstance().isHardwareDecoding());
         registerNetworkReceiver();
     }
 
@@ -421,10 +422,17 @@ public class AppService extends Service {
         msg.sendToTarget();
     }
 
-    public void NetworkQuality(){
+    public void networkQuality(){
         Message msg = Message.obtain(mSdkHandler);
         msg.what = SdkHandler.HANDLER_NETWORK_STATUS;
         msg.sendToTarget();
+    }
+
+    public void hardwareDecoding(boolean isHardwareDecoding){
+        Message message = Message.obtain();
+        message.what = SdkHandler.HANDLER_SDK_HARD_DECODING;
+        message.arg1 = isHardwareDecoding ? 1 : 0;
+        mSdkHandler.sendMessage(message);
     }
 
     public boolean isCalling(){
@@ -518,9 +526,9 @@ public class AppService extends Service {
     public void uninitAudioMode(boolean isVideoCall) {
         if(isHeadsetBroadCastRegistered) {
             unregisterReceiver(headsetPlugReceiver);
-            CopyAssets.getInstance().processAudioRouteEvent(
+            /*CopyAssets.getInstance().processAudioRouteEvent(
                     isVideoCall ? CopyAssets.CONVERSATION_EVENT : CopyAssets.CONVERSATION_AUDIOONLY_EVENT,
-                    CopyAssets.EVENT_STOP);
+                    CopyAssets.EVENT_STOP);*/
             isHeadsetBroadCastRegistered = false;
         }
     }

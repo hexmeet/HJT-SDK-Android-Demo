@@ -26,6 +26,7 @@ public class AboutActivity extends BaseActivity {
 
         TextView version = (TextView) findViewById(R.id.version);
         version.setText(Utils.getVersion());
+        LOG.info("APP version : "+Utils.getVersion());
 
         TextView copyright1 = (TextView) findViewById(R.id.copyright1);
         copyright1.setTextSize(HjtApp.isEnVersion() ? 10 : 12);

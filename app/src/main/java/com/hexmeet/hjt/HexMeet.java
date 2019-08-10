@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -137,6 +138,7 @@ public class HexMeet extends BaseActivity implements OnClickListener {
             return;
         }
         setContentView(com.hexmeet.hjt.R.layout.hexmeet);
+
         //ScreenUtil.initStatusBar(this);
         fragmentManager = getSupportFragmentManager();
         initViews();
@@ -170,6 +172,8 @@ public class HexMeet extends BaseActivity implements OnClickListener {
     protected void onResume() {
         super.onResume();
 //        showUpgradeHint(UpgradeActivity.isShowUpgradeHintOnMe());
+        AudioManager systemService = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        LOG.info("Audio Manager: "+ systemService.getMode());
         doResumeProcess();
     }
 

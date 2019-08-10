@@ -16,6 +16,4 @@ android:
     - android-sdk-license-.+
     - google-gdk-license-.+  
     - android-license-.+  
-
-
 script: ./gradlew assembleDebug

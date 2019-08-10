@@ -39,6 +39,7 @@ class SdkHandler extends BaseSafelyHandler<SdkManager> {
     final static int HANDLER_SDK_SAVE_USER_IMAGE = 10026;
     final static int HANDLER_SDK_USER_IMAGE = 10027;
     final static int HANDLER_SDK_USER_SPEAKER = 10028;
+    final static int HANDLER_SDK_HARD_DECODING = 10029;
 
     final static int HANDLER_LOGIN = 20001;
     final static int HANDLER_LOGOUT = 20002;
@@ -179,6 +180,9 @@ class SdkHandler extends BaseSafelyHandler<SdkManager> {
                     break;
                 case HANDLER_SDK_USER_SPEAKER:
                     ref.onEnableSpeaker(msg.arg1 == 1);
+                    break;
+                case HANDLER_SDK_HARD_DECODING:
+                    ref.isHardDecoding(msg.arg1 == 1);
                     break;
                 default:
                     break;
