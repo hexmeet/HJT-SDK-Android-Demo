@@ -211,18 +211,19 @@
     <string name="server_port_unavailable">Unable to connect to the server. Please check your network connection, server address and port.</string>
     <string name="layout_mode_disable">Can not change layout for this call</string>
     <string name="enter_join_meeting">join the meeting</string>
-    <string name="call_error_1001">Invalid meeting ID</string>
+    <string name="call_error_1001">Invalid meeting ID.</string>
     <string name="call_error_2005">Invalid meeting ID or meeting has not started yet, please double check.</string>
-    <string name="call_error_2001">The called cloud platform is not activated</string>
+    <string name="call_error_2001">The called cloud platform is not activated.</string>
 
-    <string name="call_error_2023">The number of participants has reached the limit</string>
-    <string name="call_error_2031">Only conference room owners are allowed to activate conference rooms</string>
-    <string name="call_error_2033">Anonymous calls are not allowed at this meeting</string>
-    <string name="call_error_2035">Trial expired</string>
-    <string name="call_again">Join failed, please retry</string>
+    <string name="call_error_2023">The number of participants has reached the limit.</string>
+    <string name="call_error_2031">Only conference room owners are allowed to activate conference rooms.</string>
+    <string name="call_error_2033">Anonymous calls are not allowed at this meeting.</string>
+    <string name="call_error_2035">Trial expired.</string>
+    <string name="call_again">Join failed, please retry.</string>
 
     <string name="meeting_progress">The meeting is in progress.</string>
     <string name="meeting_click">Click to enter the meeting</string>
     <string name="displayname_max_length">The length of username can not exceed 16</string>
     <string name="call_hardware_decoding">Enable hardware decoding</string>
+    <string name="login_error_code_1112">Administrator is not allowed to access app. Please use user account.</string>
 </resources>

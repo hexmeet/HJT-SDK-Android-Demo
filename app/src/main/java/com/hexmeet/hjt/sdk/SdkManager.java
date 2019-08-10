@@ -75,4 +75,5 @@ public interface  SdkManager {
 
     boolean isCalling();
 
+    void isHardDecoding(boolean hardDecoding);
 }

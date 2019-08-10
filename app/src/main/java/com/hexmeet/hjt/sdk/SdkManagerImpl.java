@@ -75,6 +75,7 @@ public class SdkManagerImpl implements SdkManager {
     public static final int CODE_SUCCESS = 0;
     static final  int LOGIN_ERROR_1101 = 1101;
     static final  int LOGIN_ERROR_10009 = 10009;
+    static final  int LOGIN_ERROR_1112 = 1112;
     static final  int LOGIN_ERROR_8 = 8;
     public static final int LOGIN_ERROR_9 = 9;
 
@@ -97,7 +98,6 @@ public class SdkManagerImpl implements SdkManager {
         //engine.enablePreviewFrameCb(StreamType.Content, true);
         engine.addEventListener(new EVListenr());
         SystemCache.getInstance().setSdkReady(true);
-
     }
 
 
@@ -234,6 +234,12 @@ public class SdkManagerImpl implements SdkManager {
 
     }
 
+    @Override
+    public void isHardDecoding(boolean hardDecoding) {
+        LOG.info("isHardDecoding : "+hardDecoding);
+        engine.enableHardDecoding(hardDecoding);
+    }
+
     @SuppressLint("StringFormatInvalid")
     public static void handlerError(int errorCode, String error, ArrayList<String> time) {
         boolean needRetry = true;
@@ -258,7 +264,7 @@ public class SdkManagerImpl implements SdkManager {
                 needRetry = false;
             }else if (errorCode == LOGIN_ERROR_10009) {
                 errorCode=LoginResultEvent.LOGIN_WRONG_INVALID_NAME;
-                error = HjtApp.getInstance().getString(R.string.cannot_connect_location_server);
+                error = HjtApp.getInstance().getString(R.string.invalid_username_or_password);
                 needRetry = false;
             } else if (errorCode == LOGIN_ERROR_8 || errorCode == LOGIN_ERROR_9) {
                 errorCode=LoginResultEvent.LOGIN_WRONG_LOCATION_SERVER;
@@ -267,6 +273,10 @@ public class SdkManagerImpl implements SdkManager {
             }else if (error.contains("400 Bad Request")) {
                 errorCode = LoginResultEvent.LOGIN_WRONG_NET;
                 error = HjtApp.getInstance().getString(R.string.server_port_unavailable);
+            }else if (errorCode == LOGIN_ERROR_1112) {
+                errorCode=LoginResultEvent.LOGIN_WRONG_NO_PERMISSION;
+                error = HjtApp.getInstance().getString(R.string.login_error_code_1112);
+                needRetry = false;
             } else {
                 error = HjtApp.getInstance().getString(R.string.login_again) + " [" + errorCode + "]";
             }

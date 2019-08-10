@@ -97,13 +97,15 @@ public class Login extends BaseActivity implements LoginFragmentCallback{
     @Override
     protected void onResume() {
         super.onResume();
-        HjtApp.getInstance().getAppService().setUserInLogin(false);
-        if(HjtApp.getInstance().getAppService().isCalling()) {
-            LOG.info("onResume: Resume Call");
-            Intent intent = new Intent();
-            intent.setClass(Login.this, Conversation.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            startActivity(intent);
+        if (HjtApp.getInstance().getAppService() != null) {
+            HjtApp.getInstance().getAppService().setUserInLogin(false);
+            if (HjtApp.getInstance().getAppService().isCalling()) {
+                LOG.info("onResume: Resume Call");
+                Intent intent = new Intent();
+                intent.setClass(Login.this, Conversation.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(intent);
+            }
         }
     }
 
@@ -215,6 +217,8 @@ public class Login extends BaseActivity implements LoginFragmentCallback{
             }else if(event.getCode() == LoginResultEvent.LOGIN_WRONG_NET){
                 Utils.showToastWithCustomLayout(Login.this, event.getMessage());
             }else if(event.getCode() == LoginResultEvent.LOGIN_WRONG_LOCATION_SERVER){
+                Utils.showToastWithCustomLayout(Login.this, event.getMessage());
+            }else if(event.getCode() == LoginResultEvent.LOGIN_WRONG_NO_PERMISSION){
                 Utils.showToastWithCustomLayout(Login.this, event.getMessage());
             } else {
                 Utils.showToastWithCustomLayout(Login.this, event.getMessage());

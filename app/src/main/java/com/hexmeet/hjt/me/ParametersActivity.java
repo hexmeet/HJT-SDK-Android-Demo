@@ -73,7 +73,7 @@ public class ParametersActivity extends BaseActivity {
         hardwareDecoding.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
+                HjtApp.getInstance().getAppService().hardwareDecoding(isChecked);
                 AppSettings.getInstance().setHardwareDecoding(isChecked);
             }
         });
