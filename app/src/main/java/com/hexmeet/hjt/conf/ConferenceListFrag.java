@@ -17,6 +17,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.SslErrorHandler;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -44,6 +45,9 @@ public class ConferenceListFrag extends Fragment {
     private boolean isWebLoadComplete = false;
     private ViewGroup loadFailedInfo;
     private boolean tokenExpired = false;
+    private final String IP = "172.20.0.25:3000";
+   // private final String DEBUG_IP_ADDRESS = "http://"+IP+"/#/conferences?token=";
+    private final String DEBUG_IP_ADDRESS = "";
 
     @SuppressLint({"JavascriptInterface", "SetJavaScriptEnabled"})
     @Override
@@ -191,10 +195,10 @@ public class ConferenceListFrag extends Fragment {
             LOG.info("JavaScript: tokenExpired");
             if(!SystemCache.getInstance().isAnonymousMakeCall() && isResumed()) {
                HjtApp.getInstance().getAppService().loginInLoop(true);
-
             } else {
                 tokenExpired = true;
             }
+
         }
 
         @JavascriptInterface
@@ -217,16 +221,7 @@ public class ConferenceListFrag extends Fragment {
             LOG.error("JavaScript: updateToken error : url not load finished");
             return;
         }
-        final String token = SystemCache.getInstance().getLoginResponse().getToken();
-        LOG.info("JavaScript: updateToken ["+token+"]");
-        webView.post(new Runnable() {
-            @Override
-            public void run() {
-                webView.evaluateJavascript("javascript:updateToken("+token+")", null);
-                //LOG.error("JavaScript: updateToken error : url not load finished-------------333----------------");
-                loadConference();
-            }
-        });
+        updateToken();
 
     }
 
@@ -250,7 +245,6 @@ public class ConferenceListFrag extends Fragment {
         webView.resumeTimers();
         if(tokenExpired) {
             HjtApp.getInstance().getAppService().loginInLoop(true);
-            //LOG.error("JavaScript: updateToken error : url not load finished-------------444----------------");
         } else {
             loadConference();
         }
@@ -265,10 +259,14 @@ public class ConferenceListFrag extends Fragment {
 
     @Override
     public void onDestroy() {
+        if(webView!=null) {
+            webView.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
+            webView.clearHistory();
+            webView.clearCache(true);
+            webView.removeAllViews();
+            webView.destroy();
+        }
         super.onDestroy();
-        webView.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
-        webView.clearHistory();
-        webView.destroy();
     }
 
     private void loadConference() {
@@ -279,8 +277,12 @@ public class ConferenceListFrag extends Fragment {
             webView.setVisibility(View.VISIBLE);
            // webView.clearCache(true);
             StringBuilder sb = new StringBuilder();
-            sb.append(restLoginResp.customizedH5UrlPrefix);
-            sb.append("/mobile/#/conferences?token=");
+            if("".equals(DEBUG_IP_ADDRESS)) {
+                sb.append(restLoginResp.customizedH5UrlPrefix);
+                sb.append("/mobile/#/conferences?token=");
+            }else {
+                sb.append(DEBUG_IP_ADDRESS);
+            }
             sb.append(restLoginResp.getToken());
            if(!TextUtils.isEmpty(restLoginResp.getDoradoVersion())) {
                 sb.append("&v="+restLoginResp.getDoradoVersion());
@@ -295,6 +297,25 @@ public class ConferenceListFrag extends Fragment {
             loadFailedInfo.setVisibility(View.VISIBLE);
             webView.setVisibility(View.GONE);
         }
+    }
+
+    private void updateToken(){
+        final String token = SystemCache.getInstance().getLoginResponse().getToken();
+
+        webView.post(new Runnable() {
+            @Override
+            public void run() {
+                LOG.info("JavaScript: new token ["+token+"]");
+                webView.evaluateJavascript("javascript:updateToken('" + token + "')", new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String value) {
+                        LOG.info("JavaScript: new token,return value: "+value);
+                    }
+                });
+                //LOG.error("JavaScript: updateToken error : url not load finished-------------333----------------");
+                // loadConference();
+            }
+        });
     }
 
     /*public boolean onBackClick(boolean isNavBottomBarHide) {

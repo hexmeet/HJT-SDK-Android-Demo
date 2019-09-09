@@ -22,7 +22,7 @@ public class ScreenReceiver extends BroadcastReceiver {
 
         if (Intent.ACTION_SCREEN_ON.equals(intent.getAction())) {
             LOG.info("action screen on : "+intent.getAction());
-            LoginService.getInstance().autoLogin();
+            //LoginService.getInstance().autoLogin();
         } else if (Intent.ACTION_USER_PRESENT.equals(intent.getAction())) {
             HjtApp.setScreenLocked(false);
         } else if (Intent.ACTION_SCREEN_OFF.equals(intent.getAction())) {

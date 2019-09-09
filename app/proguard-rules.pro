@@ -186,3 +186,17 @@
 }
 
 -keep class org.linphone.**{*;}
+-keep class com.huawei.hms.**{*;}
+
+-dontwarn com.xiaomi.push.**
+-keep class com.xiaomi.push.**{*;}
+
+-dontwarn com.coloros.mcsdk.**
+-keep class com.coloros.mcsdk.** { *; }
+
+-dontwarn com.vivo.push.**
+-keep class com.vivo.push.**{*; }
+-keep class com.vivo.vms.**{*; }
+
+-dontwarn com.meizu.cloud.**
+-keep class com.meizu.cloud.** { *; }

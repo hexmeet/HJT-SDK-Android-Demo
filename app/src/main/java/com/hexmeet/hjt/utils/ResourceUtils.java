@@ -26,11 +26,17 @@ public class ResourceUtils {
     public static final int CALL_ERROR_1001 = 1001;
     public static final int CALL_ERROR_1 = 1;
     public static final int CALL_ERROR_2001 = 2001;
+    public static final int CALL_ERROR_2007 = 2007;
+    public static final int CALL_ERROR_2009 = 2009;
+    public static final int CALL_ERROR_2011 = 2011;
     public static final int CALL_ERROR_2005 = 2005;
     public static final int CALL_ERROR_2023 = 2023;
+    public static final int CALL_ERROR_2024 = 2024;
+    public static final int CALL_ERROR_2025 = 2025;
     public static final int CALL_ERROR_2031 = 2031;
     public static final int CALL_ERROR_2033 = 2033;
     public static final int CALL_ERROR_2035 = 2035;
+    public static final int CALL_ERROR_10009 = 10009;
     public static ResourceUtils getInstance() {
         if (instance == null) {
             instance = new ResourceUtils();
@@ -98,14 +104,24 @@ public class ResourceUtils {
     }
 
     public String getCallFailedReason(int code) {
-        if(code == CALL_ERROR_1001 ) {
+        if(code == CALL_ERROR_1001 || code == CALL_ERROR_10009 ) {
             return HjtApp.getInstance().getString(R.string.call_error_1001);
         } else if(code == CALL_ERROR_2005) {
             return HjtApp.getInstance().getString(R.string.call_error_2005);
         } else if(code == CALL_ERROR_2001) {
             return HjtApp.getInstance().getString(R.string.call_error_2001);
+        } else if(code == CALL_ERROR_2007) {
+            return HjtApp.getInstance().getString(R.string.call_error_2007);
+        } else if(code == CALL_ERROR_2009) {
+            return HjtApp.getInstance().getString(R.string.call_error_2009);
+        } else if(code == CALL_ERROR_2011) {
+            return HjtApp.getInstance().getString(R.string.call_error_2011);
         } else if(code == CALL_ERROR_2023) {
             return HjtApp.getInstance().getString(R.string.call_error_2023);
+        } else if(code == CALL_ERROR_2024) {
+            return HjtApp.getInstance().getString(R.string.call_error_2024);
+        }else if(code == CALL_ERROR_2025) {
+            return HjtApp.getInstance().getString(R.string.call_error_2025);
         }else if(code == CALL_ERROR_2031){
             return HjtApp.getInstance().getString(R.string.call_error_2031);
         }else if(code == CALL_ERROR_2033){

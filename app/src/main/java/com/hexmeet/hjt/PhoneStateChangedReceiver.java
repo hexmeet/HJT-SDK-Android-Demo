@@ -8,7 +8,6 @@ import android.media.AudioManager;
 import android.os.Handler;
 import android.telephony.TelephonyManager;
 
-import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.sdk.CopyAssets;
 
 import org.apache.log4j.Logger;

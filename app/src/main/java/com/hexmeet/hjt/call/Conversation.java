@@ -123,7 +123,6 @@ public class Conversation extends FullscreenActivity {
         audio.setMode(AudioManager.MODE_IN_COMMUNICATION);
         audio.setMicrophoneMute(false);
 
-
         recordView.setVisibility(SystemCache.getInstance().isRecordingOn() ? View.VISIBLE : View.GONE);
         recordView.setText(SystemCache.getInstance().isRecording() ? "LIVE" : "REC");
         controller = new ConversationController(findViewById(R.id.control_layout), iController, getScreenWidth());
@@ -353,6 +352,7 @@ public class Conversation extends FullscreenActivity {
         // frontend, start video
         if (isVideoCall) {
             boolean isLocalVideoMuted = SystemCache.getInstance().isUserMuteVideo();
+            LOG.info("isLocalVideoMuted : "+isLocalVideoMuted);
             controller.muteVideo(isLocalVideoMuted);
             HjtApp.getInstance().getAppService().enableVideo(!isLocalVideoMuted);
         }
@@ -375,6 +375,7 @@ public class Conversation extends FullscreenActivity {
         if (isVideoCall && HjtApp.getInstance().getAppService().isCalling()) {
             controller.muteVideo(true);
             HjtApp.getInstance().getAppService().enableVideo(false);
+            SystemCache.getInstance().setUserMuteVideo(false);
             HjtApp.getInstance().getAppService().showFloatIndicator();
         }
     }

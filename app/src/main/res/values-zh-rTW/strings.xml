@@ -99,7 +99,7 @@
     <string name="client_not_installed">您还未安装微信客户端</string>
     <string name="format">格式 123456或123456*888888</string>
     <string name="passwords_donot_match">两次填写的密码不一致</string>
-    <string name="password_format_error">密码格式错误，请输入4-16位字符，且不要包含空格。</string>
+    <string name="password_format_error">密码格式错误，请输入4-16位字符，且不要包含空格</string>
     <string name="error_password">原密码输入错误</string>
     <string name="name_not_empty">名字不能为空，请重新输入</string>
     <string name="problem_diagnosis"> (Android)问题诊断</string>
@@ -213,16 +213,20 @@
     <string name="call_error_1001">无效的会议号码</string>
     <string name="call_error_2005">呼叫失败，会议号码不存在或者此会议还未开始，请检查后重试</string>
     <string name="call_error_2001">您呼叫的云平台尚未激活</string>
-
+    <string name="call_error_2007">呼叫超时，请重试</string>
+    <string name="call_error_2009">您呼叫的群组尚未绑定云会议室</string>
+    <string name="call_error_2011">您呼叫的云会议室已过期</string>
     <string name="call_error_2023">当前入会人数已达上限</string>
+    <string name="call_error_2024">当前与会人数已达组织端口上限</string>
+    <string name="call_error_2025">当前与会人数已达平台会议端口上限</string>
     <string name="call_error_2031">只允许会议室拥有者激活会议室</string>
-    <string name="call_error_2033">本会议不允许匿名呼叫</string>
-    <string name="call_error_2035">试用期已过期</string>
+    <string name="call_error_2033">该会议不允许匿名呼叫</string>
+    <string name="call_error_2035">试用已过期</string>
     <string name="call_again">入会失败,请重试</string>
 
     <string name="meeting_progress">会议正在进行中</string>
     <string name="meeting_click">点击进入会议</string>
     <string name="displayname_max_length">会议中显示的用户名的长度不能超过16</string>
     <string name="call_hardware_decoding">支持硬件解码</string>
-    <string name="login_error_code_1112">系统管理员无登录应用权限，请使用用户账号登录.</string>
+    <string name="login_error_code_1112">系统管理员无登录应用权限，请使用用户账号登录</string>
 </resources>

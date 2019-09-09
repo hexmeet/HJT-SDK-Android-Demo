@@ -33,6 +33,7 @@ import android.widget.TextView;
 import com.hexmeet.hjt.BaseActivity;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
+import com.hexmeet.hjt.TagAliasOperatorHelper;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.call.PasswordDialog;
 import com.hexmeet.hjt.event.AvatarUploadEvent;
@@ -122,6 +123,7 @@ public class MeDetailActivity extends BaseActivity {
             public void onItemClick(MenuItem item, int position) {
                 if (position == 0) {
                     setResult(13);
+                    TagAliasOperatorHelper.setAlias(getApplicationContext(),SystemCache.getInstance().getLoginResponse().getDisplayName(),false);
                     HjtApp.getInstance().getAppService().logout();
                     LOG.info("android sdk : "+Build.VERSION.SDK_INT);
                     if(Build.VERSION.SDK_INT<=19){

@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
-import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.utils.ResourceUtils;
 
 import org.apache.log4j.Logger;

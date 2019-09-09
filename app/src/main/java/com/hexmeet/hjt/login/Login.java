@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.hexmeet.hjt.AppCons;
 import com.hexmeet.hjt.BaseActivity;
@@ -14,6 +13,7 @@ import com.hexmeet.hjt.HexMeet;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.PermissionWrapper;
 import com.hexmeet.hjt.R;
+import com.hexmeet.hjt.TagAliasOperatorHelper;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.call.AnonymousJoinMeetActivity;
 import com.hexmeet.hjt.call.Conversation;
@@ -206,8 +206,10 @@ public class Login extends BaseActivity implements LoginFragmentCallback{
                 LOG.debug("login - start hexmeet without data intent");
                 HexMeet.actionStart(Login.this);
             }
+            TagAliasOperatorHelper.setAlias(getApplicationContext(),SystemCache.getInstance().getLoginResponse().getUsername(),true);
             finish();
         }else {
+            LOG.info("Logon failure "+event.getCode());
             if(event.getCode() == LoginResultEvent.LOGIN_WRONG_PASSWORD || event.getCode() == LoginResultEvent.LOGIN_MANUAL_TRY){
                 Utils.showToastWithCustomLayout(Login.this, event.getMessage());
             }else if(event.getCode() == LoginResultEvent.LOGIN_WRONG_PASSWORD_TIME){
