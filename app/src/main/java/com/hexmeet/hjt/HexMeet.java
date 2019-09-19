@@ -138,7 +138,6 @@ public class HexMeet extends BaseActivity implements OnClickListener {
             return;
         }
         setContentView(com.hexmeet.hjt.R.layout.hexmeet);
-
         //ScreenUtil.initStatusBar(this);
         fragmentManager = getSupportFragmentManager();
         initViews();

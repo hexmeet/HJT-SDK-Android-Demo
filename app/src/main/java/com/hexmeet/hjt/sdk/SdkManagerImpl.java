@@ -37,6 +37,7 @@ import com.hexmeet.hjt.utils.NetworkUtil;
 import com.hexmeet.hjt.utils.ResourceUtils;
 import com.hexmeet.hjt.utils.Utils;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.log4j.Logger;
 import org.greenrobot.eventbus.EventBus;
 
@@ -78,7 +79,8 @@ public class SdkManagerImpl implements SdkManager {
     static final  int LOGIN_ERROR_1112 = 1112;
     static final  int LOGIN_ERROR_8 = 8;
     public static final int LOGIN_ERROR_9 = 9;
-
+    public static final int SWITCH_AUDIO_MODE = 0;
+    public static final int SWITCH_VIDEO_MODE = 3;
 
     @Override
     public void initSDK() {
@@ -118,16 +120,14 @@ public class SdkManagerImpl implements SdkManager {
 
     @Override
     public void login(LoginParams params, boolean https, String port) {
-        LOG.info("login : " + params.toString());
-
         engine.enableSecure(https);
         String password = engine.encryptPassword(params.getPassword());
         int loginPort = 0;
         if (!TextUtils.isEmpty(port)) {
             loginPort = Integer.parseInt(port);
         }
-        LOG.info("login : " + params.getServerAddress()+", loginPort : "+loginPort+", User_name: "+ params.getUser_name()+",password:"+password);
-        engine.loginWithLocation(params.getServerAddress(), loginPort, params.getUser_name(), password);
+        LOG.info("login : " + params.getServerAddress()+", loginPort : "+loginPort+", User_name: "+ params.getUser_name());
+       engine.loginWithLocation(params.getServerAddress(), loginPort, params.getUser_name(), password);
     }
 
     @Override
@@ -138,6 +138,9 @@ public class SdkManagerImpl implements SdkManager {
         if (!TextUtils.isEmpty(params.getPort())) {
             loginPort = Integer.parseInt(params.getPort());
         }
+
+        isFrontCamera();
+
         LOG.info("anonymousLogin : "+params.getServer() +","+ loginPort+","+ params.getConferenceNumber()+","+params.getDisplayName()+","+params.getPassword());
         engine.joinConferenceWithLocation(params.getServer(),loginPort,params.getConferenceNumber(),params.getDisplayName(),params.getPassword());
 
@@ -156,7 +159,7 @@ public class SdkManagerImpl implements SdkManager {
 
     @Override
     public void setDeviceRotation(int deviceRotation) {
-        LOG.info("setDeviceRotation: ["+deviceRotation+"]");
+       // LOG.info("setDeviceRotation: ["+deviceRotation+"]");
         engine.setDeviceRotation(deviceRotation);
     }
 
@@ -240,6 +243,38 @@ public class SdkManagerImpl implements SdkManager {
         engine.enableHardDecoding(hardDecoding);
     }
 
+    @Override
+    public void isFrontCamera() {
+        EVEngine.Device current_device = engine.getDevice(EVEngine.DeviceType.VideoCapture);
+        if(current_device==null || current_device.name == null || !current_device.name.endsWith("f")){
+            LOG.info("current device is not front camera. device: " + current_device);
+            List<EVEngine.Device> devices = engine.getDevices(EVEngine.DeviceType.VideoCapture);
+            if(devices != null && devices.size() > 0) {
+                for(int i = 0; i < devices.size(); i++) {
+                    EVEngine.Device device = devices.get(i);
+                    if(device != null && device.name != null && device.name.endsWith("f")) {
+                        engine.setDevice(EVEngine.DeviceType.VideoCapture, device.id);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void isVideoActive(boolean mode) {
+
+        if(!mode){
+            engine.setVideoActive(SWITCH_AUDIO_MODE);
+            engine.setUserImage(CopyAssets.getInstance().mBackgroundFile,null);
+        }else {
+            engine.setVideoActive(SWITCH_VIDEO_MODE);
+            engine.setUserImage(CopyAssets.getInstance().mBackgroundFile,CopyAssets.getInstance().mUserFile);
+        }
+
+        LOG.info("isVideoActive "+mode+",.."+engine.videoActive());
+    }
+
     @SuppressLint("StringFormatInvalid")
     public static void handlerError(int errorCode, String error, ArrayList<String> time) {
         boolean needRetry = true;
@@ -304,6 +339,7 @@ public class SdkManagerImpl implements SdkManager {
     @Override
     public void makeCall(MakeCallParam param) {
         LOG.info(" makeCall " + param.uri+" : "+param.displayName+" : "+param.password);
+        isFrontCamera();
         int code = engine.joinConference(param.uri, SystemCache.getInstance().getLoginResponse().displayName, param.password);
         LOG.info(" makeCall code "+ code);
 
@@ -333,6 +369,7 @@ public class SdkManagerImpl implements SdkManager {
     @Override
     public void answerCall(MakeCallParam param) {
         LOG.info(" answerCall " + param.uri+" : "+param.displayName+" : "+param.password);
+        isFrontCamera();
         engine.joinConference(param.uri,SystemCache.getInstance().getLoginResponse().displayName,param.password);
 
     }
@@ -784,7 +821,7 @@ public class SdkManagerImpl implements SdkManager {
 
         @Override
         public void onLayoutSpeakerIndication(LayoutSpeakerIndication speaker) {//发言者信息
-            LOG.info("onLayoutSpeakerIndication: speakerIndex :" + speaker.speakerIndex +" speakerName"+speaker.speakerName);
+            LOG.info("onLayoutSpeakerIndication: speakerIndex :" + speaker.speakerIndex +" speakerName : "+speaker.speakerName);
             if (speaker != null) {
                 SvcSpeakerEvent event = new SvcSpeakerEvent(speaker.speakerIndex, speaker.speakerName);
                 EventBus.getDefault().post(event);

@@ -37,7 +37,7 @@
     <string name="password_not_empty">Empty password is not allowed, please input again.</string>
     <string name="warning_4g_message">You are in a celluar network, would you like to continue?</string>
     <string name="video">Video</string>
-    <string name="conf_password">Passcode</string>
+    <string name="conf_password">Meeting Password</string>
     <string name="call_statistics">Media Statistics</string>
     <string name="mute">Mute</string>
     <string name="unmute">Unmute</string>
@@ -214,10 +214,14 @@
     <string name="call_error_1001">Invalid meeting ID.</string>
     <string name="call_error_2005">Invalid meeting ID or meeting has not started yet, please double check.</string>
     <string name="call_error_2001">The called cloud platform is not activated.</string>
-
+    <string name="call_error_2007">Call timeout, please retry.</string>
+    <string name="call_error_2009">There is no meeting room bound to the called group.</string>
+    <string name="call_error_2011">Meeting room expired.</string>
     <string name="call_error_2023">The number of participants has reached the limit.</string>
-    <string name="call_error_2031">Only conference room owners are allowed to activate conference rooms.</string>
-    <string name="call_error_2033">Anonymous calls are not allowed at this meeting.</string>
+    <string name="call_error_2024">The number of participants has reached the organization limit.</string>
+    <string name="call_error_2025">The number of participants has reached the platform limit.</string>
+    <string name="call_error_2031">Only the owner can activate the meeting room.</string>
+    <string name="call_error_2033">This meeting room does not allow anonymous calls.</string>
     <string name="call_error_2035">Trial expired.</string>
     <string name="call_again">Join failed, please retry.</string>
 
@@ -226,4 +230,7 @@
     <string name="displayname_max_length">The length of username can not exceed 16</string>
     <string name="call_hardware_decoding">Enable hardware decoding</string>
     <string name="login_error_code_1112">Administrator is not allowed to access app. Please use user account.</string>
+    <string name="voice_mode">Switch audio mode</string>
+    <string name="video_mode">Switch video mode</string>
+    <string name="speaking">is speaking</string>
 </resources>

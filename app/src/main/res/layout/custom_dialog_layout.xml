@@ -69,7 +69,9 @@
             android:gravity="center"
             android:text="@string/cancel"
             android:textColor="@drawable/popup_key_label"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textAllCaps="false"
+            />
 
         <Button
             android:id="@+id/positiveButton"
@@ -81,7 +83,9 @@
             android:gravity="center"
             android:text="@string/join"
             android:textColor="@drawable/color_text_join"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textAllCaps="false"
+            />
     </LinearLayout>
 
 </LinearLayout>

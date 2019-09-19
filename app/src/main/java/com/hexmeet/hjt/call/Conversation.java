@@ -98,6 +98,7 @@ public class Conversation extends FullscreenActivity {
     private TextView recordView,mytoast;
     private LinearLayout toast_layout;
     private AudioManager audio;
+    private TextView audioMode;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -117,12 +118,13 @@ public class Conversation extends FullscreenActivity {
         recordView = (TextView)findViewById(R.id.record_view);
         mytoast = (TextView)findViewById(R.id.mytoast);
         toast_layout = (LinearLayout)findViewById(R.id.layout_toast);
+        audioMode =(TextView) findViewById(R.id.audio_name);
+
 
         audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
         audio.setMode(AudioManager.MODE_IN_COMMUNICATION);
         audio.setMicrophoneMute(false);
-
 
         recordView.setVisibility(SystemCache.getInstance().isRecordingOn() ? View.VISIBLE : View.GONE);
         recordView.setText(SystemCache.getInstance().isRecording() ? "LIVE" : "REC");
@@ -307,6 +309,16 @@ public class Conversation extends FullscreenActivity {
             LOG.info("updateCellLocalMuteState : "+isMute);
             videoBoxGroup.updateLocalMute(isMute);
         }
+
+        @Override
+        public void switchVoiceMode(boolean isVoiceMode) {
+            SystemCache.getInstance().setUserVoiceMode(isVoiceMode);
+            HjtApp.getInstance().getAppService().isVideoMode(isVoiceMode);
+            audioMode.setVisibility(isVoiceMode ? View.GONE :  View.VISIBLE );
+            if(videoBoxGroup != null) {
+              //  videoBoxGroup.isVoiceMode(isVoiceMode);
+            }
+        }
     };
 
     private void isRecordVisible(boolean isVideo){
@@ -353,6 +365,7 @@ public class Conversation extends FullscreenActivity {
         // frontend, start video
         if (isVideoCall) {
             boolean isLocalVideoMuted = SystemCache.getInstance().isUserMuteVideo();
+            LOG.info("isLocalVideoMuted : "+isLocalVideoMuted);
             controller.muteVideo(isLocalVideoMuted);
             HjtApp.getInstance().getAppService().enableVideo(!isLocalVideoMuted);
         }
@@ -375,6 +388,7 @@ public class Conversation extends FullscreenActivity {
         if (isVideoCall && HjtApp.getInstance().getAppService().isCalling()) {
             controller.muteVideo(true);
             HjtApp.getInstance().getAppService().enableVideo(false);
+            SystemCache.getInstance().setUserMuteVideo(false);
             HjtApp.getInstance().getAppService().showFloatIndicator();
         }
     }
@@ -500,7 +514,17 @@ public class Conversation extends FullscreenActivity {
 
     @Subscribe(threadMode = ThreadMode.POSTING)
     public void onSvcSpeakerChangedEvent(SvcSpeakerEvent event) {
+        LOG.info("SvcSpeakerEvent : "+event.getSiteName());
         svcHandler.removeMessages(ON_SVC_SPEAKER_CHANGED);
+        if(!SystemCache.getInstance().isUserVoiceMode()){
+            if(event.getSiteName().equals("")){
+                audioMode.setVisibility(View.GONE);
+            }else {
+                audioMode.setText(event.getSiteName()+getApplicationContext().getString(R.string.speaking));
+            }
+
+            return;
+        }
         Message msg = Message.obtain();
         msg.what = ON_SVC_SPEAKER_CHANGED;
         msg.arg1 = event.getIndex();
