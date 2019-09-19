@@ -128,4 +128,21 @@ public class RestLoginResp {
         this.token = token;
         this.doradoVersion = doradoVersion;
     }
+
+    @Override
+    public String toString() {
+        return "RestLoginResp{" +
+                "username='" + username + '\'' +
+                ", displayName='" + displayName + '\'' +
+                ", org='" + org + '\'' +
+                ", email='" + email + '\'' +
+                ", cellphone='" + cellphone + '\'' +
+                ", telephone='" + telephone + '\'' +
+                ", dept='" + dept + '\'' +
+                ", everChangedPasswd=" + everChangedPasswd +
+                ", customizedH5UrlPrefix='" + customizedH5UrlPrefix + '\'' +
+                ", token='" + token + '\'' +
+                ", doradoVersion='" + doradoVersion + '\'' +
+                '}';
+    }
 }

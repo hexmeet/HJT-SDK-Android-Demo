@@ -152,6 +152,7 @@ public class MeetingWindowService extends Service {
 
             @Override
             public void onClick(View v) {
+                LOG.info("floutLayout onclick "+isMoved);
                 if (isMoved) {
                     return;
                 }

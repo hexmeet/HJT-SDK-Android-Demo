@@ -54,6 +54,7 @@ public class SystemCache {
     private boolean isUserMuteMic = false;
     private boolean isUserShowLocalCamera = true;
     private boolean isRemoteMuted = false;
+    private boolean isUserVoiceMode= true;
 
     private JoinMeetingParam joinMeetingParam;
     private boolean isAnonymousLogin = false;
@@ -163,6 +164,7 @@ public class SystemCache {
             isUserMuteMic = false;
             loginResponse = null;
             isUserShowLocalCamera = true;
+            isUserVoiceMode=true;
         }
     }
     public void resetLoginCache() {
@@ -173,6 +175,7 @@ public class SystemCache {
         isUserShowLocalCamera = true;
         downloadUserImage = null;
         department=null;
+        isUserVoiceMode = true;
     }
 
     public RegisterState getRegisterState() {
@@ -288,6 +291,15 @@ public class SystemCache {
 
     public void setUserShowLocalCamera(boolean show) {
         isUserShowLocalCamera = show;
+    }
+
+
+    public boolean isUserVoiceMode() {
+        return isUserVoiceMode;
+    }
+
+    public void setUserVoiceMode(boolean show) {
+        isUserVoiceMode = show;
     }
 
     public JoinMeetingParam getJoinMeetingParam() {

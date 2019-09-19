@@ -7,15 +7,10 @@ import android.net.NetworkInfo;
 import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.cache.SystemCache;
 
-import org.apache.http.conn.util.InetAddressUtils;
 import org.apache.log4j.Logger;
 
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.NetworkInterface;
 import java.net.Socket;
-import java.net.SocketException;
-import java.util.Enumeration;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 

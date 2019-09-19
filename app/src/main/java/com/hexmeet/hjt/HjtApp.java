@@ -31,6 +31,7 @@ import java.lang.ref.WeakReference;
 import java.util.Iterator;
 import java.util.Locale;
 
+import cn.jpush.android.api.JPushInterface;
 import de.mindpipe.android.logging.log4j.LogConfigurator;
 
 public class HjtApp extends Application {
@@ -197,7 +198,8 @@ public class HjtApp extends Application {
 
         manService.getMANAnalytics().init(this, getApplicationContext());
 
-
+       // JPushInterface.setDebugMode(true); //正式环境时去掉此行代码
+        JPushInterface.init(this);
         ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         int normalHeap = activityManager.getMemoryClass();
         int largeHeap = activityManager.getLargeMemoryClass();
