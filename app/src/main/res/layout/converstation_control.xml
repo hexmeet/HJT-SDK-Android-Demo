@@ -100,8 +100,7 @@
 
         <LinearLayout
             android:id="@+id/toolbar_local_mute"
-            android:layout_weight="1"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@drawable/bg_menu_converstation"
             android:gravity="center"
@@ -123,8 +122,7 @@
 
         <LinearLayout
             android:id="@+id/toolbar_local_camera"
-            android:layout_weight="1"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@drawable/bg_menu_converstation"
             android:gravity="center"
@@ -147,8 +145,7 @@
 
         <LinearLayout
             android:id="@+id/toolbar_conference"
-            android:layout_weight="1"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@drawable/bg_menu_converstation"
             android:gravity="center"
@@ -186,8 +183,7 @@
 
         <LinearLayout
             android:id="@+id/toolbar_layout_mode"
-            android:layout_weight="1"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@drawable/bg_menu_converstation"
             android:gravity="center"
@@ -209,8 +205,7 @@
 
         <LinearLayout
             android:id="@+id/toolbar_more"
-            android:layout_weight="1"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@drawable/bg_menu_converstation"
             android:gravity="center"
@@ -260,16 +255,6 @@
             android:gravity="center"
             android:textColor="@drawable/color_handup"
             android:text="@string/handup"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/switch_voice_mode"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/bg_menu_converstation"
-            android:gravity="center"
-            android:textColor="@color/White"
-            android:text="@string/voice_mode"
             android:textSize="15sp" />
 
     </LinearLayout>

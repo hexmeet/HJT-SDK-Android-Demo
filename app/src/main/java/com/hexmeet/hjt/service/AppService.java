@@ -439,10 +439,6 @@ public class AppService extends Service {
       return   sdkManager.isCalling();
     }
 
-    public void isVideoMode(boolean mode){
-        sdkManager.isVideoActive(mode);
-    }
-
 
     public void zoomVideoByStreamType(EVEngine.StreamType type,float factor,float cx,float cy){
         sdkManager.zoomVideoByStreamType(type,factor,cx,cy);

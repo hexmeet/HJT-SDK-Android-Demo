@@ -229,7 +229,4 @@
     <string name="displayname_max_length">会议中显示的用户名的长度不能超过16</string>
     <string name="call_hardware_decoding">支持硬件解码</string>
     <string name="login_error_code_1112">系统管理员无登录应用权限，请使用用户账号登录</string>
-    <string name="voice_mode">切换语音模式</string>
-    <string name="video_mode">切换视频模式</string>
-    <string name="speaking">正在说话</string>
 </resources>

@@ -47,7 +47,6 @@ public class ConversationController implements View.OnClickListener{
         void showConferenceManager();
         void updateMarginTopForMessageOverlay(int margin);
         void updateCellLocalMuteState(boolean isMute);
-        void switchVoiceMode(boolean isVoiceMode);
     }
 
     public ConversationController(View rootView, final IController iController, int width) {
@@ -81,7 +80,6 @@ public class ConversationController implements View.OnClickListener{
         moreBtn.setOnClickListener(this);
         moreDetail.getChildAt(0).setOnClickListener(this);
         moreDetail.getChildAt(1).setOnClickListener(this);
-        moreDetail.getChildAt(2).setOnClickListener(this);
         updateHandUpMenu(SystemCache.getInstance().isRemoteMuted());
         moreBtn.setOnClickListener(this);
 
@@ -244,22 +242,9 @@ public class ConversationController implements View.OnClickListener{
                 showLocalCamera(!SystemCache.getInstance().isUserShowLocalCamera());
                 moreDetail.setVisibility(View.GONE);
                 break;
-            case R.id.switch_voice_mode:
-                showVoicMode(!SystemCache.getInstance().isUserVoiceMode());
-                moreDetail.setVisibility(View.GONE);
-                break;
             default:
                 break;
         }
-    }
-
-    private void showVoicMode(boolean isVoiceMode) {
-        ((TextView)moreDetail.getChildAt(2)).setText(isVoiceMode ? R.string.voice_mode : R.string.video_mode);
-        iController.switchVoiceMode(isVoiceMode);
-        iController.showLocalCamera(isVoiceMode);
-        ((TextView)moreDetail.getChildAt(0)).setVisibility(isVoiceMode ? View.VISIBLE : View.GONE);
-        localVideoBtn.setVisibility(isVoiceMode ? View.VISIBLE : View.GONE);
-        layoutModeBtn.setVisibility(isVoiceMode ? View.VISIBLE : View.GONE);
     }
 
     private void showLocalCamera(boolean show) {

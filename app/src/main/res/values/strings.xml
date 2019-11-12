@@ -230,7 +230,4 @@
     <string name="displayname_max_length">The length of username can not exceed 16</string>
     <string name="call_hardware_decoding">Enable hardware decoding</string>
     <string name="login_error_code_1112">Administrator is not allowed to access app. Please use user account.</string>
-    <string name="voice_mode">Switch audio mode</string>
-    <string name="video_mode">Switch video mode</string>
-    <string name="speaking">is speaking</string>
 </resources>

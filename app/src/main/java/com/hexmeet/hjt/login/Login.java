@@ -225,7 +225,7 @@ public class Login extends BaseActivity implements LoginFragmentCallback{
             } else {
                 Utils.showToastWithCustomLayout(Login.this, event.getMessage());
             }
-           // HjtApp.getInstance().getAppService().logout();
+            HjtApp.getInstance().getAppService().logout();
         }
     }
 

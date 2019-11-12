@@ -78,6 +78,4 @@ public interface  SdkManager {
     void isHardDecoding(boolean hardDecoding);
 
     void isFrontCamera();
-
-    void isVideoActive(boolean mode);
 }

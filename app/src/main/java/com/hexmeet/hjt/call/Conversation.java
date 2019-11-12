@@ -98,7 +98,6 @@ public class Conversation extends FullscreenActivity {
     private TextView recordView,mytoast;
     private LinearLayout toast_layout;
     private AudioManager audio;
-    private TextView audioMode;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -118,8 +117,6 @@ public class Conversation extends FullscreenActivity {
         recordView = (TextView)findViewById(R.id.record_view);
         mytoast = (TextView)findViewById(R.id.mytoast);
         toast_layout = (LinearLayout)findViewById(R.id.layout_toast);
-        audioMode =(TextView) findViewById(R.id.audio_name);
-
 
         audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
@@ -308,16 +305,6 @@ public class Conversation extends FullscreenActivity {
         public void updateCellLocalMuteState(boolean isMute) {
             LOG.info("updateCellLocalMuteState : "+isMute);
             videoBoxGroup.updateLocalMute(isMute);
-        }
-
-        @Override
-        public void switchVoiceMode(boolean isVoiceMode) {
-            SystemCache.getInstance().setUserVoiceMode(isVoiceMode);
-            HjtApp.getInstance().getAppService().isVideoMode(isVoiceMode);
-            audioMode.setVisibility(isVoiceMode ? View.GONE :  View.VISIBLE );
-            if(videoBoxGroup != null) {
-              //  videoBoxGroup.isVoiceMode(isVoiceMode);
-            }
         }
     };
 
@@ -514,17 +501,7 @@ public class Conversation extends FullscreenActivity {
 
     @Subscribe(threadMode = ThreadMode.POSTING)
     public void onSvcSpeakerChangedEvent(SvcSpeakerEvent event) {
-        LOG.info("SvcSpeakerEvent : "+event.getSiteName());
         svcHandler.removeMessages(ON_SVC_SPEAKER_CHANGED);
-        if(!SystemCache.getInstance().isUserVoiceMode()){
-            if(event.getSiteName().equals("")){
-                audioMode.setVisibility(View.GONE);
-            }else {
-                audioMode.setText(event.getSiteName()+getApplicationContext().getString(R.string.speaking));
-            }
-
-            return;
-        }
         Message msg = Message.obtain();
         msg.what = ON_SVC_SPEAKER_CHANGED;
         msg.arg1 = event.getIndex();

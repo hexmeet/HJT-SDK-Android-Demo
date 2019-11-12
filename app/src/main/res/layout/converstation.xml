@@ -56,13 +56,4 @@
         android:id="@+id/control_layout"
         layout="@layout/converstation_control" />
 
-    <TextView
-        android:id="@+id/audio_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text=""
-        android:textColor="@color/White"
-        />
-
 </RelativeLayout>
