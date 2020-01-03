@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/White"
+    android:orientation="vertical">
+
+    <WebView
+        android:id="@+id/contacts_web"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/contacts_progress_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/White"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center">
+
+        <com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
+            android:id="@+id/contacts_progressBar"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:mlpb_enable_circle_background="false"
+            app:mlpb_inner_radius="32dp"
+            app:mlpb_max="100"
+            app:mlpb_progress_color="@color/Blue"
+            app:mlpb_progress_stoke_width="5dp"
+            app:mlpb_progress_text_color="@color/Blue"
+            app:mlpb_progress_text_size="16sp"
+            app:mlpb_progress_text_visibility="visible"
+            app:mlpb_show_arrow="false" />
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/contacts_no_network"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/contact_page_nonetwork"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_width="220dp"
+            android:layout_height="200dp"
+            android:src="@drawable/default_page_nonetwork" />
+
+        <TextView
+            android:id="@+id/contact_load_failed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/load_failed"
+            android:layout_marginTop="20dp"
+            android:textSize="16sp"
+            android:textColor="@color/sub_title_bar"
+            android:layout_centerInParent="true"
+            android:layout_below="@id/contact_page_nonetwork"/>
+
+        <Button
+            android:id="@+id/contacts_reload"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:background="@drawable/btn_private_login"
+            android:text="@string/reload"
+            android:layout_marginTop="20dp"
+            android:textSize="17sp"
+            android:textColor="@color/White"
+            android:layout_centerInParent="true"
+            android:layout_below="@id/contact_load_failed"/>
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/contacts_close_window"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:padding="10dp"
+        android:visibility="gone"
+        android:src="@drawable/btn_closed"/>
+
+    <LinearLayout
+        android:id="@+id/waiting_p2p"
+        android:background="@drawable/bg_p2p_item"
+        android:orientation="horizontal"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:padding="15dp"
+        android:visibility="gone"
+        >
+
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/invite_gif"
+            android:src="@drawable/invite_loading"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/wait_moment"
+            android:textSize="18dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/White"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>

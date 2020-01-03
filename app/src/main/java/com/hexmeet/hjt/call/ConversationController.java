@@ -16,14 +16,14 @@ import android.widget.Toast;
 import com.hexmeet.hjt.AppSettings;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
+import com.hexmeet.hjt.cache.EmMessageCache;
 import com.hexmeet.hjt.cache.SystemCache;
+import com.hexmeet.hjt.model.FeatureSupport;
 import com.hexmeet.hjt.utils.ResourceUtils;
 import com.hexmeet.hjt.utils.ScreenUtil;
 import com.hexmeet.hjt.utils.Utils;
 
 import org.apache.log4j.Logger;
-
-import ev.common.EVFactory;
 
 public class ConversationController implements View.OnClickListener{
     private Logger LOG = Logger.getLogger(Conversation.class);
@@ -38,16 +38,20 @@ public class ConversationController implements View.OnClickListener{
     private int screenWidthWithoutNavigationBar;
     private LinearLayout videoSwitchBtn, videoSwitchIndicator;
     private ViewGroup moreDetail;
+    private final LinearLayout layoutChatBtn;
+    private final TextView handUp;
 
     public interface IController{
         void updateCellsAsLayoutModeChanged();
-        void onVideoSwitchClick(boolean isVideo);
         void showMediaStatistics();
+        void onVideoSwitchClick(boolean isVideo);
         void showLocalCamera(boolean show);
         void showConferenceManager();
         void updateMarginTopForMessageOverlay(int margin);
         void updateCellLocalMuteState(boolean isMute);
         void switchVoiceMode(boolean isVoiceMode);
+        void showChat();
+        void changeUserName();
     }
 
     public ConversationController(View rootView, final IController iController, int width) {
@@ -66,11 +70,16 @@ public class ConversationController implements View.OnClickListener{
         layoutModeBtn = (ViewGroup) rootView.findViewById(R.id.toolbar_layout_mode);
         moreBtn = (ViewGroup) rootView.findViewById(R.id.toolbar_more);
         moreDetail = (ViewGroup) rootView.findViewById(R.id.more_detail);
+        layoutChatBtn = (LinearLayout) rootView.findViewById(R.id.toolbar_layout_chat);
+        handUp = (TextView) rootView.findViewById(R.id.hand_up);;
+
 
         adjustBottomButtons();
         adjustHangUp();
-        setLayoutMode(!SystemCache.getInstance().isLayoutModeEnable() || AppSettings.getInstance().isSpeakerMode());
-        HjtApp.getInstance().getAppService().setLayoutMode(!SystemCache.getInstance().isLayoutModeEnable() || AppSettings.getInstance().isSpeakerMode() ? 2 : 1);
+        setLayoutMode(AppSettings.getInstance().isSpeakerMode());
+        if(HjtApp.getInstance().getAppService()!=null && SystemCache.getInstance().isLayoutModeEnable()) {
+            HjtApp.getInstance().getAppService().setLayoutMode(false ? 2 : 1);
+        }
 
         cameraSwitchBtn.setOnClickListener(this);
         hangUpBtn.setOnClickListener(this);
@@ -78,10 +87,13 @@ public class ConversationController implements View.OnClickListener{
         localVideoBtn.setOnClickListener(this);
         manageMeetingBtn.setOnClickListener(this);
         layoutModeBtn.setOnClickListener(this);
+        layoutChatBtn.setOnClickListener(this);
         moreBtn.setOnClickListener(this);
+
         moreDetail.getChildAt(0).setOnClickListener(this);
         moreDetail.getChildAt(1).setOnClickListener(this);
         moreDetail.getChildAt(2).setOnClickListener(this);
+        moreDetail.getChildAt(3).setOnClickListener(this);
         updateHandUpMenu(SystemCache.getInstance().isRemoteMuted());
         moreBtn.setOnClickListener(this);
 
@@ -104,6 +116,13 @@ public class ConversationController implements View.OnClickListener{
         signalLevel.setOnClickListener(callStatisticsClick);
 
         showLocalCamera(SystemCache.getInstance().isUserShowLocalCamera());
+        //是否支持会话、音频模式
+        FeatureSupport featureSupport = SystemCache.getInstance().getLoginResponse().getFeatureSupport();
+        if(featureSupport!=null){
+            layoutChatBtn.setVisibility(featureSupport.isChatInConference() &&  EmMessageCache.getInstance().isIMAddress() ? View.VISIBLE : View.GONE);
+            ((TextView)moreDetail.getChildAt(2)).setVisibility(featureSupport.isSwitchingToAudioConference() ? View.VISIBLE : View.GONE);
+            ((TextView)moreDetail.getChildAt(3)).setVisibility(featureSupport.isSitenameIsChangeable() ? View.VISIBLE : View.GONE);
+        }
     }
 
     public float getTopBarHeight() {
@@ -111,7 +130,12 @@ public class ConversationController implements View.OnClickListener{
     }
 
     public void updateHandUpMenu(boolean remoteMute) {
-        moreDetail.getChildAt(1).setEnabled(remoteMute);
+        handUp.setVisibility(remoteMute ? View.VISIBLE : View.GONE );
+       if(!SystemCache.getInstance().isUserVideoMode() && remoteMute && moreBtn.getVisibility()==View.GONE){
+            moreBtn.setVisibility(View.VISIBLE);
+        }else if(!SystemCache.getInstance().isUserVideoMode() && !remoteMute && moreBtn.getVisibility()==View.VISIBLE){
+            moreBtn.setVisibility(View.GONE);
+        }
     }
 
     public void setRoomNum(String num) {
@@ -133,6 +157,7 @@ public class ConversationController implements View.OnClickListener{
     }
 
     public void muteMic(boolean mute) {
+        LOG.info("muteMic icon: "+mute);
         micMuteBtn.getChildAt(0).setSelected(mute);
         TextView title = (TextView) micMuteBtn.getChildAt(1);
         title.setText(mute ? R.string.unmute :  R.string.mute);
@@ -154,8 +179,6 @@ public class ConversationController implements View.OnClickListener{
     public void setLayoutMode(boolean isSpeaker) {
         LOG.info("isSpeaker : "+isSpeaker);
         layoutModeBtn.getChildAt(0).setSelected(isSpeaker);
-        TextView title = (TextView) layoutModeBtn.getChildAt(1);
-        title.setText(isSpeaker ?  R.string.gallery_mode : R.string.speaker_mode);
         iController.updateCellsAsLayoutModeChanged();
     }
 
@@ -206,12 +229,12 @@ public class ConversationController implements View.OnClickListener{
                 HjtApp.getInstance().getAppService().switchCamera();
                 break;
             case R.id.toolbar_local_mute:
-                boolean mute = !((ViewGroup)v).getChildAt(0).isSelected();
-                LOG.info("mute onClick : "+mute+",micEnabled : "+EVFactory.createEngine().micEnabled());
-                if(mute ^ !EVFactory.createEngine().micEnabled()){
-                    EVFactory.createEngine().enableMic(!mute);
+              boolean mute = !((ViewGroup)v).getChildAt(0).isSelected();
+                LOG.info("mute onClick : "+mute+",micEnabled : "+HjtApp.getInstance().getAppService().micEnabled());
+                if(mute ^ !HjtApp.getInstance().getAppService().micEnabled()){
+                    HjtApp.getInstance().getAppService().muteMic(mute);
                 }
-                muteMic(!EVFactory.createEngine().micEnabled());
+                muteMic(!HjtApp.getInstance().getAppService().micEnabled());
                 break;
             case R.id.toolbar_layout_mode:
                 if(SystemCache.getInstance().isLayoutModeEnable()) {
@@ -244,8 +267,15 @@ public class ConversationController implements View.OnClickListener{
                 showLocalCamera(!SystemCache.getInstance().isUserShowLocalCamera());
                 moreDetail.setVisibility(View.GONE);
                 break;
-            case R.id.switch_voice_mode:
-                showVoicMode(!SystemCache.getInstance().isUserVoiceMode());
+            case R.id.switch_vadio_mode:
+                showVideoMode(!SystemCache.getInstance().isUserVideoMode());
+                moreDetail.setVisibility(View.GONE);
+                break;
+            case R.id.toolbar_layout_chat:
+                iController.showChat();
+                break;
+            case R.id.update_user_name:
+                iController.changeUserName();
                 moreDetail.setVisibility(View.GONE);
                 break;
             default:
@@ -253,13 +283,25 @@ public class ConversationController implements View.OnClickListener{
         }
     }
 
-    private void showVoicMode(boolean isVoiceMode) {
-        ((TextView)moreDetail.getChildAt(2)).setText(isVoiceMode ? R.string.voice_mode : R.string.video_mode);
-        iController.switchVoiceMode(isVoiceMode);
-        iController.showLocalCamera(isVoiceMode);
-        ((TextView)moreDetail.getChildAt(0)).setVisibility(isVoiceMode ? View.VISIBLE : View.GONE);
-        localVideoBtn.setVisibility(isVoiceMode ? View.VISIBLE : View.GONE);
-        layoutModeBtn.setVisibility(isVoiceMode ? View.VISIBLE : View.GONE);
+    public void showVideoMode(boolean isVideoMode) {
+        ((TextView)moreDetail.getChildAt(2)).setVisibility(isVideoMode ?View.VISIBLE : View.GONE);
+        iController.switchVoiceMode(isVideoMode);
+        iController.showLocalCamera(isVideoMode);
+        ((TextView)moreDetail.getChildAt(0)).setVisibility(isVideoMode ? View.VISIBLE : View.GONE);
+        //隐藏本地视频
+        localVideoBtn.setVisibility(isVideoMode ? View.VISIBLE : View.GONE);
+        //隐藏视图模式
+        layoutModeBtn.setVisibility(isVideoMode ? View.VISIBLE : View.GONE);
+        //视频模式下 判断是否启用本地视频
+        if(SystemCache.getInstance().isUserMuteVideo() &&  localVideoBtn.getVisibility()==View.VISIBLE){
+            HjtApp.getInstance().getAppService().enableVideo(false);
+        }
+        //判断申请发言是否开启，如果没开启隐藏 ，开启则显示
+        if(!isVideoMode && handUp.getVisibility()==View.GONE){
+            moreBtn.setVisibility(View.GONE);
+        }else {
+            moreBtn.setVisibility(View.VISIBLE);
+        }
     }
 
     private void showLocalCamera(boolean show) {

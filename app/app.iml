@@ -19,7 +19,7 @@
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res" />
-        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/src/main/res;file://$MODULE_DIR$/build/generated/res/resValues/debug" />
+        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/src/main/res;file://$MODULE_DIR$/build/generated/res/emas-services/debug;file://$MODULE_DIR$/build/generated/res/resValues/debug" />
         <option name="TEST_RES_FOLDERS_RELATIVE_PATH" value="" />
         <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/src/main/assets" />
       </configuration>
@@ -34,6 +34,7 @@
       <sourceFolder url="file://$MODULE_DIR$/build/generated/aidl_source_output_dir/debug/compileDebugAidl/out" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/debug" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/renderscript_source_output_dir/debug/compileDebugRenderscript/out" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/emas-services/debug" type="java-resource" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/debug" type="java-resource" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/debug" type="java-resource" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/ap_generated_sources/debugAndroidTest/out" isTestSource="true" generated="true" />
@@ -91,13 +92,16 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Gradle: __local_aars__:/Users/linlinli/huicom/ep/swep-evsdk-android-phone/source/android/hexmeet/app/libs/commons-lang3-3.2.1.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="Gradle: __local_aars__:/Users/linlinli/huicom/ep/swep-evsdk-android-phone/source/android/hexmeet/app/libs/log4j-1.2.17.jar:unspecified@jar" level="project" />
-    <orderEntry type="library" name="Gradle: __local_aars__:/Users/linlinli/huicom/ep/swep-evsdk-android-phone/source/android/hexmeet/app/libs/android-support-v7-recyclerview.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="Gradle: __local_aars__:/Users/linlinli/huicom/ep/swep-evsdk-android-phone/source/android/hexmeet/app/libs/libammsdk.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="Gradle: __local_aars__:/Users/linlinli/huicom/ep/swep-evsdk-android-phone/source/android/hexmeet/app/libs/android-logging-log4j-1.0.2.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="Gradle: __local_aars__:/Users/linlinli/huicom/ep/swep-evsdk-android-phone/source/android/hexmeet/app/libs/logging-interceptor-3.4.1.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="Gradle: __local_aars__:/Users/linlinli/huicom/ep/swep-evsdk-android-phone/source/android/hexmeet/app/libs/converter-gson-2.1.0.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="Gradle: __local_aars__:/Users/linlinli/huicom/ep/swep-evsdk-android-phone/source/android/hexmeet/app/libs/httpmime-4.5.2.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="Gradle: __local_aars__:/Users/linlinli/huicom/ep/swep-evsdk-android-phone/source/android/hexmeet/app/libs/eventbus-3.1.0-RC.jar:unspecified@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.aliyun.ams:alicloud-android-utils:1.1.5@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.aliyun.ams:alicloud-android-ut:5.4.2@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.aliyun.ams:alicloud-android-beacon:1.0.3@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.aliyun.ams:alicloud-android-utdid:1.1.5.4@jar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.collection:collection:1.0.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.lifecycle:lifecycle-common:2.0.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.arch.core:core-common:2.0.0@jar" level="project" />
@@ -105,21 +109,34 @@
     <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.8.5@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.squareup.okhttp3:okhttp:3.10.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.squareup.okio:okio:1.14.0@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.aliyun.ams:alicloud-android-utils:1.1.1@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.aliyun.ams:alicloud-android-ut:5.4.1@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.aliyun.ams:alicloud-android-utdid:1.1.5.3@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.aliyun.ams:alicloud-android-beacon:1.0.1@jar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.constraintlayout:constraintlayout-solver:1.1.3@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.bumptech.glide:disklrucache:4.10.0@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.bumptech.glide:annotations:4.10.0@jar" level="project" />
+    <orderEntry type="library" name="Gradle: joda-time:joda-time:2.9.5:no-tzdb@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.tencent.mm.opensdk:wechat-sdk-android-without-mta:5.5.8@jar" level="project" />
+    <orderEntry type="library" name="Gradle: __local_aars__:/Users/linlinli/huicom/ep/swep-evsdk-android-phone/source/android/hexmeet/app/libs/AndroidEmoji-1.0.0.aar:unspecified@jar" level="project" />
+    <orderEntry type="library" name="Gradle: __local_aars__:/Users/linlinli/huicom/ep/swep-evsdk-android-phone/source/android/hexmeet/app/libs/emsdk.aar:unspecified@jar" level="project" />
+    <orderEntry type="library" name="Gradle: __local_aars__:/Users/linlinli/huicom/ep/swep-evsdk-android-phone/source/android/hexmeet/app/libs/emojicon.aar:unspecified@jar" level="project" />
     <orderEntry type="library" name="Gradle: __local_aars__:/Users/linlinli/huicom/ep/swep-evsdk-android-phone/source/android/hexmeet/app/libs/evsdk.aar:unspecified@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.aliyun.ams:alicloud-android-man:1.2.4@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.aliyun.ams:alicloud-android-push:3.1.6@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.w446108264:XhsEmoticonsKeyboard:2.0.4@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.legacy:legacy-support-v4:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.gridlayout:gridlayout:1.0.0@aar" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.media:media:1.0.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.jcodecraeer:xrecyclerview:1.5.9@aar" level="project" />
+    <orderEntry type="library" name="Gradle: cn.yc:YCStatusBarLib:1.4.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.material:material:1.0.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.recyclerview:recyclerview:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.lsjwzh:materialloadingprogressbar:0.5.8-RELEASE@aar" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.appcompat:appcompat:1.0.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.appcompat:appcompat:1.0.2@aar" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.media:media:1.0.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.bumptech.glide:glide:4.10.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.fragment:fragment:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.vectordrawable:vectordrawable-animated:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.legacy:legacy-support-core-ui:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.legacy:legacy-support-core-utils:1.0.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.transition:transition:1.0.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.vectordrawable:vectordrawable:1.0.1@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.loader:loader:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.viewpager:viewpager:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.coordinatorlayout:coordinatorlayout:1.0.0@aar" level="project" />
@@ -128,32 +145,34 @@
     <orderEntry type="library" name="Gradle: androidx.customview:customview:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.swiperefreshlayout:swiperefreshlayout:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.asynclayoutinflater:asynclayoutinflater:1.0.0@aar" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.vectordrawable:vectordrawable:1.0.0@aar" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.core:core:1.0.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.core:core:1.0.1@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.squareup.picasso:picasso:2.71828@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.exifinterface:exifinterface:1.0.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.bumptech.glide:gifdecoder:4.10.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.cardview:cardview:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.versionedparcelable:versionedparcelable:1.0.0@aar" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.lifecycle:lifecycle-runtime:2.0.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.cursoradapter:cursoradapter:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.documentfile:documentfile:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.localbroadcastmanager:localbroadcastmanager:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.print:print:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.interpolator:interpolator:1.0.0@aar" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.cursoradapter:cursoradapter:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.lifecycle:lifecycle-viewmodel:2.0.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.lifecycle:lifecycle-runtime:2.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.lifecycle:lifecycle-livedata:2.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.lifecycle:lifecycle-livedata-core:2.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.arch.core:core-runtime:2.0.0@aar" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.multidex:multidex:2.0.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.multidex:multidex:2.0.1@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.andreabaccega:android-form-edittext:1.3.5@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.aliyun.ams:alicloud-android-man:1.2.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.constraintlayout:constraintlayout:1.1.3@aar" level="project" />
     <orderEntry type="library" name="Gradle: pl.droidsonroids.gif:android-gif-drawable:1.2.15@aar" level="project" />
     <orderEntry type="library" name="Gradle: cn.jiguang.sdk:jpush:3.3.4@aar" level="project" />
     <orderEntry type="library" name="Gradle: cn.jiguang.sdk:jcore:2.1.2@aar" level="project" />
-    <orderEntry type="library" name="Gradle: cn.jiguang.sdk.plugin:huawei:3.3.4@aar" level="project" />
-    <orderEntry type="library" name="Gradle: cn.jiguang.sdk.plugin:xiaomi:3.3.4@aar" level="project" />
-    <orderEntry type="library" name="Gradle: cn.jiguang.sdk.plugin:oppo:3.3.4@aar" level="project" />
-    <orderEntry type="library" name="Gradle: cn.jiguang.sdk.plugin:meizu:3.2.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.inuker.bluetooth:library:1.4.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: net.danlew:android.joda:2.9.5@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.aliyun.ams:alicloud-android-third-push:3.0.9@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.aliyun.ams:huawei-push:2.6.3.305@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.aliyun.ams:huawei-push-base:2.6.3.305@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.aliyun.ams:meizu-push:3.8.3-fix@aar" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.http.legacy-android-29" level="project" />
   </component>
 </module>

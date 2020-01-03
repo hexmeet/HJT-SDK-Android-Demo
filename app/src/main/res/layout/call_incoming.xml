@@ -1,60 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@color/White"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
-    android:padding="20dp">
-
-
-    <TextView
-        android:id="@+id/conference_join"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:layout_gravity="center_horizontal"
-        android:textColor="@color/font_color_313131"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dial_notify_View"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
     <LinearLayout
-        android:id="@+id/bottom_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/btn_hangup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btn_select_reject"
+        <RelativeLayout
             android:gravity="center"
-            android:paddingBottom="10dp"
-            android:paddingLeft="40dp"
-            android:paddingRight="40dp"
-            android:paddingTop="10dp"
-            android:text="@string/reject_svc"
-            android:textColor="@color/White"
-            android:textSize="16sp" />
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2">
 
-        <TextView
-            android:id="@+id/btn_video"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:background="@drawable/btn_select_accept"
+            <com.hexmeet.hjt.widget.PulseView
+                android:id="@+id/conference_pulse_view"
+                android:layout_width="280dp"
+                android:layout_height="280dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerInParent="true"
+                android:drawingCacheQuality="high"
+                app:pv_alpha="95"
+                app:pv_color="#FFFFFF"
+                app:pv_count="2"
+                app:pv_icon="@drawable/connecting"
+                app:pv_icon_height="92dp"
+                app:pv_icon_width="92dp"
+                app:pv_interpolator="@android:anim/accelerate_decelerate_interpolator"
+                app:pv_measure="width"
+                app:pv_spawn_period="800" />
+
+            <ImageView
+                android:id="@+id/called_avatar"
+                android:layout_width="93dp"
+                android:layout_height="93dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerInParent="true"
+                android:visibility="gone"
+                />
+
+            <TextView
+                android:id="@+id/conference_join"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:text=""
+                android:ellipsize="end"
+                android:maxEms="14"
+                android:singleLine="true"
+                android:textColor="@color/White"
+                android:textSize="23sp"
+                android:layout_marginBottom="100dp"
+                />
+
+            <TextView
+                android:id="@+id/conference_from"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:text=""
+                android:textColor="@color/White"
+                android:textSize="14sp"
+                android:layout_marginBottom="60dp"
+                />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/bottom_btn"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:gravity="center"
-            android:paddingBottom="10dp"
-            android:paddingLeft="40dp"
-            android:paddingRight="40dp"
-            android:paddingTop="10dp"
-            android:text="@string/accept"
-            android:textColor="@color/White"
-            android:textSize="16sp" />
+            >
+
+            <LinearLayout
+                android:id="@+id/btn_hangup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+
+                >
+
+                <ImageView
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/btn_reject" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/hangup"
+                    android:textColor="@color/White" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/btn_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:layout_marginLeft="70dp"
+                >
+
+                <ImageView
+                    android:id="@+id/video_icon"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/btn_video" />
+
+                <TextView
+                    android:id="@+id/video_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/video_reception"
+                    android:textColor="@color/White" />
+            </LinearLayout>
+
+        </LinearLayout>
+
     </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>

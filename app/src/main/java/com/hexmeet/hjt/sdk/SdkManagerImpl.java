@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.SurfaceView;
 
 import com.hexmeet.hjt.AppCons;
+import com.hexmeet.hjt.AppSettings;
 import com.hexmeet.hjt.CallState;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
@@ -19,6 +20,7 @@ import com.hexmeet.hjt.event.LiveEvent;
 import com.hexmeet.hjt.event.LogPathEvent;
 import com.hexmeet.hjt.event.LoginResultEvent;
 import com.hexmeet.hjt.event.LoginRetryEvent;
+import com.hexmeet.hjt.event.MicMuteChangeEvent;
 import com.hexmeet.hjt.event.MuteSpeaking;
 import com.hexmeet.hjt.event.NetworkEvent;
 import com.hexmeet.hjt.event.NetworkStatusEvent;
@@ -26,18 +28,20 @@ import com.hexmeet.hjt.event.ParticipantsMicMuteEvent;
 import com.hexmeet.hjt.event.PeopleNumberEvent;
 import com.hexmeet.hjt.event.RecordingEvent;
 import com.hexmeet.hjt.event.RemoteMuteEvent;
+import com.hexmeet.hjt.event.RemoteNameUpdateEvent;
 import com.hexmeet.hjt.event.RenameEvent;
 import com.hexmeet.hjt.event.SvcSpeakerEvent;
+import com.hexmeet.hjt.event.UserInfoEvent;
 import com.hexmeet.hjt.event.UserPasswordEvent;
 import com.hexmeet.hjt.login.JoinMeetingParam;
 import com.hexmeet.hjt.login.LoginSettings;
+import com.hexmeet.hjt.model.FeatureSupport;
 import com.hexmeet.hjt.model.LoginParams;
 import com.hexmeet.hjt.model.RestLoginResp;
 import com.hexmeet.hjt.utils.NetworkUtil;
 import com.hexmeet.hjt.utils.ResourceUtils;
 import com.hexmeet.hjt.utils.Utils;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.log4j.Logger;
 import org.greenrobot.eventbus.EventBus;
 
@@ -86,6 +90,7 @@ public class SdkManagerImpl implements SdkManager {
     public void initSDK() {
         LOG.info("initSDK");
         Context appContext = HjtApp.getInstance().getContext();
+
         engine = EVFactory.createEngine();
         LOG.info("init engine ->" + engine.toString());
         CopyAssets.getInstance().createAndStart(appContext);
@@ -93,7 +98,8 @@ public class SdkManagerImpl implements SdkManager {
         engine.setLog("EasyVideo", path, "evsdk", 1024 * 1024 * 20);
         engine.enableLog(true);
         engine.setRootCA(path);
-        engine.initialize(path, "config");
+        engine.initialize(appContext,path, "config");
+        engine.setUserAgent("HexMeet", Utils.getVersion());
         engine.setMaxRecvVideo(AppCons.MAX_RECEIVE_STREAM);
         engine.setBandwidth(AppCons.DEFAULT_BITRATE);
         //engine.enablePreviewFrameCb(StreamType.Video, true);
@@ -139,9 +145,10 @@ public class SdkManagerImpl implements SdkManager {
             loginPort = Integer.parseInt(params.getPort());
         }
 
-        isFrontCamera();
+        setVideoActive(true);//设置视频模式
+        isFrontCamera();//判断是否是视频输入
 
-        LOG.info("anonymousLogin : "+params.getServer() +","+ loginPort+","+ params.getConferenceNumber()+","+params.getDisplayName()+","+params.getPassword());
+        LOG.info("anonymousLogin : "+params.getServer() +","+ loginPort+","+ params.getConferenceNumber()+","+params.getDisplayName());
         engine.joinConferenceWithLocation(params.getServer(),loginPort,params.getConferenceNumber(),params.getDisplayName(),params.getPassword());
 
         Peer peer = new Peer(Peer.DIRECT_OUT);
@@ -159,7 +166,7 @@ public class SdkManagerImpl implements SdkManager {
 
     @Override
     public void setDeviceRotation(int deviceRotation) {
-       // LOG.info("setDeviceRotation: ["+deviceRotation+"]");
+        LOG.info("setDeviceRotation: ["+deviceRotation+"]");
         engine.setDeviceRotation(deviceRotation);
     }
 
@@ -173,25 +180,8 @@ public class SdkManagerImpl implements SdkManager {
     public void getUserInfo() {
         UserInfo user = engine.getUserInfo();
         if(user!=null){
-
-
-        LOG.info("getUserInfo : "+user.toString());
-        RestLoginResp restLoginResp = new RestLoginResp();
-        restLoginResp.setUsername(user.username);
-        restLoginResp.setDisplayName(user.displayName);
-        restLoginResp.setOrg(user.org);
-        restLoginResp.setEmail(user.email);
-        restLoginResp.setCellphone(user.cellphone);
-        restLoginResp.setTelephone(user.telephone);
-        restLoginResp.setDept(user.dept);
-        restLoginResp.setEverChangedPasswd(user.everChangedPasswd);
-        restLoginResp.setCustomizedH5UrlPrefix(user.customizedH5UrlPrefix);
-        restLoginResp.setToken(user.token);
-        restLoginResp.setDoradoVersion(user.doradoVersion);
-        SystemCache.getInstance().setLoginResponse(restLoginResp);
-
-        EventBus.getDefault().post(new RestLoginResp(user.username,user.displayName,user.org,user.email,user.cellphone,user.telephone,user.dept,user.everChangedPasswd,user.customizedH5UrlPrefix
-        ,user.token,user.doradoVersion));
+        LOG.info("getUserInfoList : "+user.toString());
+        getUserInfoList(user,true);
         }
     }
 
@@ -262,17 +252,54 @@ public class SdkManagerImpl implements SdkManager {
     }
 
     @Override
-    public void isVideoActive(boolean mode) {
-
-        if(!mode){
-            engine.setVideoActive(SWITCH_AUDIO_MODE);
-            engine.setUserImage(CopyAssets.getInstance().mBackgroundFile,null);
-        }else {
+    public void setVideoActive(boolean mode) {
+        if(mode){
             engine.setVideoActive(SWITCH_VIDEO_MODE);
-            engine.setUserImage(CopyAssets.getInstance().mBackgroundFile,CopyAssets.getInstance().mUserFile);
+        }else {
+            engine.setVideoActive(SWITCH_AUDIO_MODE);
         }
+        LOG.info("setVideoActive "+mode+",videoActive : "+engine.videoActive());
+    }
 
-        LOG.info("isVideoActive "+mode+",.."+engine.videoActive());
+    @Override
+    public boolean micEnabled() {
+        return engine.micEnabled();
+    }
+
+    @Override
+    public void refuseP2PMeeting(String number) {
+        LOG.info("refuseP2PMeeting : "+number);
+        engine.declineIncommingCall(number);
+    }
+
+    @Override
+    public void setConfDisplayName(String displayName) {
+        LOG.info("setConfDisplayName : "+displayName);
+        engine.setConfDisplayName(displayName);
+    }
+
+    @Override
+    public String getDisplayName() {
+        LOG.info("getDisplayName : "+engine.getDisplayName());
+        return engine.getDisplayName();
+    }
+
+    @Override
+    public String getIMAddress() {
+        LOG.info("getImAddress : "+engine.getImAddress());
+        return engine.getImAddress();
+    }
+
+    @Override
+    public String getIMGroupId() {
+        return engine.getImGroupId();
+    }
+
+    @Override
+    public EVEngine.ContactInfo getIMContactInfo(String userId) {
+        LOG.info("getIMContactInfo userId ： "+userId);
+        EVEngine.ContactInfo contactInfo = engine.getContactInfo(userId, 1);
+        return contactInfo;
     }
 
     @SuppressLint("StringFormatInvalid")
@@ -344,21 +371,19 @@ public class SdkManagerImpl implements SdkManager {
         LOG.info(" makeCall code "+ code);
 
         if(code!=0){
-           /* CallCodeEvent callCodeEvent = new CallCodeEvent();
-            callCodeEvent.setEndReason(ResourceUtils.getInstance().getCallFailedReason(code));
-            EventBus.getDefault().post(callCodeEvent);*/
             CallEvent events = new CallEvent(CallState.IDLE);
             events.setEndReason(ResourceUtils.getInstance().getCallFailedReason(code));
             EventBus.getDefault().post(events);
             engine.leaveConference();
             return;
         }
-
+            setVideoActive(true);
             Peer peer = new Peer(Peer.DIRECT_OUT);
             peer.setNumber(param.uri);
             peer.setName(param.displayName);
             peer.setPassword(param.password);
             peer.setVideoCall(param.callType == 1);
+            peer.setP2P(param.isP2pCall);
             CallEvent event = new CallEvent(CallState.CONNECTING);
             event.setPeer(peer);
             EventBus.getDefault().post(event);
@@ -367,8 +392,17 @@ public class SdkManagerImpl implements SdkManager {
     }
 
     @Override
+    public void p2pMakeCall(MakeCallParam param) {
+        setVideoActive(true);
+        isFrontCamera();
+        LOG.info("p2pMakeCall userid :" + param.uri+",name : "+param.displayName+" ,password: "+param.password);
+        engine.joinConference(param.uri, SystemCache.getInstance().getLoginResponse().displayName,param.password,EVEngine.CallType.SvcCallP2P);
+    }
+
+    @Override
     public void answerCall(MakeCallParam param) {
         LOG.info(" answerCall " + param.uri+" : "+param.displayName+" : "+param.password);
+        setVideoActive(true);
         isFrontCamera();
         engine.joinConference(param.uri,SystemCache.getInstance().getLoginResponse().displayName,param.password);
 
@@ -410,6 +444,7 @@ public class SdkManagerImpl implements SdkManager {
 
     @Override
     public void reLoadCamera() {
+        LOG.info("reLoadCamera()");
         engine.reloadVideoDevices();
     }
 
@@ -428,16 +463,19 @@ public class SdkManagerImpl implements SdkManager {
 
     @Override
     public void setLocalSurface(SurfaceView view) {
+        LOG.info("setLocalSurface()");
         engine.setLocalVideoWindow(view);
     }
 
     @Override
     public void setRemoteSurface(Object[] surfaces) {
+        LOG.info("setRemoteSurface()");
         engine.setRemoteVideoWindow(Arrays.asList(surfaces));
     }
 
     @Override
     public void setPreSurface(SurfaceView view) {
+        LOG.info("setPreSurface");
         engine.setPreviewVideoWindow(view);
     }
 
@@ -609,8 +647,8 @@ public class SdkManagerImpl implements SdkManager {
     public void rename(final String name) {
         int code = engine.changeDisplayName(name);
         if (code == CODE_SUCCESS) {
-            SystemCache.getInstance().updateUserDisplayName(name);
-            EventBus.getDefault().post(new RenameEvent(true, "success"));
+          //  SystemCache.getInstance().updateUserDisplayName(name);
+            EventBus.getDefault().post(new RenameEvent(true, name));
         } else {
             EventBus.getDefault().post(new RenameEvent(false, "fail"));
         }
@@ -618,7 +656,6 @@ public class SdkManagerImpl implements SdkManager {
 
     @Override
     public void updatePassword(String oldPassword, String newPassword) {
-        LOG.info("updatePassword  oldPassword : " +oldPassword +"  newpassword : "+ newPassword);
         String oldPass = engine.encryptPassword(oldPassword);
         String newPass = engine.encryptPassword(newPassword);
         int code = engine.changePassword(oldPass, newPass);
@@ -633,6 +670,38 @@ public class SdkManagerImpl implements SdkManager {
             EventBus.getDefault().post(new UserPasswordEvent(false, "fail"));
         }
         LOG.info("changePassword  : " + code );
+    }
+
+
+
+    public static void getUserInfoList(UserInfo info, boolean isObtain){
+        EVEngine.EVFeatureSupport feature = info.featureSupport;
+        RestLoginResp restLoginResp = new RestLoginResp();
+        FeatureSupport featureSupport = new FeatureSupport();
+        restLoginResp.setUserId(info.userId);
+        restLoginResp.setUsername(info.username);
+        restLoginResp.setDisplayName(info.displayName);
+        restLoginResp.setOrg(info.org);
+        restLoginResp.setEmail(info.email);
+        restLoginResp.setCellphone(info.cellphone);
+        restLoginResp.setTelephone(info.telephone);
+        restLoginResp.setDept(info.dept);
+        restLoginResp.setEverChangedPasswd(info.everChangedPasswd);
+        restLoginResp.setCustomizedH5UrlPrefix(info.customizedH5UrlPrefix);
+        restLoginResp.setToken(info.token);
+        restLoginResp.setDoradoVersion(info.doradoVersion);
+        restLoginResp.setDeviceId(info.deviceId);
+        featureSupport.setContactWebPage(feature.contactWebPage);
+        featureSupport.setChatInConference(feature.chatInConference);
+        featureSupport.setP2pCall(feature.p2pCall);
+        featureSupport.setSwitchingToAudioConference(feature.switchingToAudioConference);
+        featureSupport.setSitenameIsChangeable(feature.sitenameIsChangeable);
+        restLoginResp.setFeatureSupport(featureSupport);
+        SystemCache.getInstance().setLoginResponse(restLoginResp);
+        if(isObtain){
+            EventBus.getDefault().post(new UserInfoEvent(info.username,info.displayName,info.org,info.email,info.cellphone,info.telephone,info.dept));
+        }
+
     }
 
     class EVListenr extends EVEventListener {
@@ -658,7 +727,14 @@ public class SdkManagerImpl implements SdkManager {
                         event.setEndReason(ResourceUtils.getInstance().getCallFailedReason(err.code));
                         EventBus.getDefault().post(event);
                     }else {
-                        SdkManagerImpl.handlerError(err.code, err.msg ,err.arg);
+                        if(err.code== ResourceUtils.CALL_ERROR_SDK_10){
+                            CallEvent event = new CallEvent(CallState.IDLE);
+                            event.setEndReason(ResourceUtils.getInstance().getCallFailedReason(ResourceUtils.CALL_ERROR_SDK_10));
+                            EventBus.getDefault().post(event);
+                        }else {
+                            SdkManagerImpl.handlerError(err.code, err.msg ,err.arg);
+                        }
+
                     }
                 }else if(err.type.toString()== ErrorType.EVErrorTypeCall){
                     //TODO
@@ -672,21 +748,8 @@ public class SdkManagerImpl implements SdkManager {
 
         @Override
         public void onLoginSucceed(UserInfo user) {
-            LOG.info("CallBack onLoginSucceed: " + user.toString());
-                RestLoginResp restLoginResp = new RestLoginResp();
-                restLoginResp.setUsername(user.username);
-                restLoginResp.setDisplayName(user.displayName);
-                restLoginResp.setOrg(user.org);
-                restLoginResp.setEmail(user.email);
-                restLoginResp.setCellphone(user.cellphone);
-                restLoginResp.setTelephone(user.telephone);
-                restLoginResp.setDept(user.dept);
-                restLoginResp.setEverChangedPasswd(user.everChangedPasswd);
-                restLoginResp.setCustomizedH5UrlPrefix(user.customizedH5UrlPrefix);
-                restLoginResp.setToken(user.token);
-                restLoginResp.setDoradoVersion(user.doradoVersion);
-                SystemCache.getInstance().setLoginResponse(restLoginResp);
-
+                LOG.info("CallBack onLoginSucceed: " + user.toString());
+                SdkManagerImpl.getUserInfoList(user,false);
                 if(SystemCache.getInstance().isAnonymousMakeCall()){
                     LOG.info("CallBack isCloud : "+SystemCache.getInstance().getJoinMeetingParam().isCloud());
                     LoginSettings.getInstance().setLoginState(SystemCache.getInstance().getJoinMeetingParam().isCloud() ? LoginSettings.LOGIN_CLOUD_SUCCESS : LoginSettings.LOGIN_PRIVATE_SUCCESS, true);
@@ -706,14 +769,28 @@ public class SdkManagerImpl implements SdkManager {
         public void onJoinConferenceIndication(CallInfo info) {//邀请入会
             LOG.info("onJoinConferenceIndication   "+info.toString());
             Peer peer = new Peer(Peer.DIRECT_IN);
-            peer.setName(info.conferenceNumber);
             peer.setNumber(info.conferenceNumber);
             peer.setPassword(info.password);
             peer.setFrom(info.peer);
             peer.setVideoCall(true);
+            if(info.type==EVEngine.CallType.SvcCallP2P){
+                peer.setName(info.peer);
+                peer.setCalled(true);
+                peer.setP2P(true);
+            } else {
+                peer.setP2P(false);
+                peer.setName(info.conferenceNumber);
+            }
+            if(info.action==EVEngine.CallAction.SvcIncomingCallCancel){
+                CallEvent event = new CallEvent(CallState.IDLE);
+                event.setEndReason(ResourceUtils.getInstance().getCallFailedReason(ResourceUtils.CALL_ERROR_SDK_101));
+                EventBus.getDefault().post(event);
+                return;
+            }
             CallEvent event = new CallEvent(CallState.RING);
             event.setPeer(peer);
             EventBus.getDefault().post(event);
+
         }
 
         @Override
@@ -749,19 +826,24 @@ public class SdkManagerImpl implements SdkManager {
         @Override
         public void onCallConnected(CallInfo info) {
             LOG.info("CallBack CallConnected=="+info.toString());
+       if(info!=null && info.type==EVEngine.CallType.SvcCallP2P){
+            CallEvent event = new CallEvent(CallState.PEERCONNECTED);
+            EventBus.getDefault().post(event);
+        }else {
+            CallEvent event = new CallEvent(CallState.CONNECTED);
+            EventBus.getDefault().post(event);
+        }
 
-         CallEvent event = new CallEvent(CallState.CONNECTED);
-         EventBus.getDefault().post(event);
         }
 
         @Override
         public void onCallEnd(CallInfo info) {
             LOG.info("CallBack onCallEnd: "+info.toString());
-            if (info.err.code == CALL_ERROR_2015 ) {
+            if (info.err.code == CALL_ERROR_2015) {
                 LOG.info("CallBack. CallEnd Password empty or wrong");
                 CallEvent event = new CallEvent(CallState.AUTHORIZATION);
                 EventBus.getDefault().post(event);
-            }else {
+            } else {
                 LOG.info("CallBack. CallEnd ");
                 CallEvent event = new CallEvent(CallState.IDLE);
                 event.setEndReason(ResourceUtils.getInstance().getCallFailedReason(info.err.code));
@@ -787,9 +869,8 @@ public class SdkManagerImpl implements SdkManager {
                         info.addDeviceId(String.valueOf(sit.deviceId));//gradle 分配号 服务器分配给我们的
                         if(sit.isLocal){
                             if(SystemCache.getInstance().isRemoteMuted() ^ sit.remoteMuted) {
-
+                                LOG.info(" CallBack  onLayoutIndication: isRemoteMuted " + SystemCache.getInstance().isRemoteMuted()+", sit.remoteMuted : "+ sit.remoteMuted);
                                 EventBus.getDefault().post(new RemoteMuteEvent(sit.remoteMuted));
-
                             }
 
                         } else {
@@ -801,7 +882,7 @@ public class SdkManagerImpl implements SdkManager {
                     }
 
                 }
-                LOG.info("CallBack onLayoutSiteIndication svcLayout: " + info.toString());
+                LOG.info("CallBack onLayoutIndication svcLayout: " + info.toString());
                 EventBus.getDefault().post(info);
             }
         }
@@ -811,10 +892,13 @@ public class SdkManagerImpl implements SdkManager {
             LOG.info("CallBack onLayoutSiteIndication: " + site.toString());
            if(site.isLocal){
                if(SystemCache.getInstance().isRemoteMuted() ^ site.remoteMuted) {
+                   LOG.info("isMuteFromMru  sdk ");
                    EventBus.getDefault().post(new RemoteMuteEvent(site.remoteMuted));
                }
+               EventBus.getDefault().post(new RemoteNameUpdateEvent(site.window,site.name,String.valueOf(site.deviceId),true));
             } else {
-                EventBus.getDefault().post(new ParticipantsMicMuteEvent(site.micMuted,String.valueOf(site.deviceId)));
+               EventBus.getDefault().post(new ParticipantsMicMuteEvent(site.micMuted,String.valueOf(site.deviceId)));
+               EventBus.getDefault().post(new RemoteNameUpdateEvent(site.window,site.name,String.valueOf(site.deviceId),false));
             }
 
         }
@@ -846,8 +930,8 @@ public class SdkManagerImpl implements SdkManager {
 
         @Override
         public void onMuteSpeakingDetected() {//提示打开声音
-            LOG.info("CallBack onMuteSpeakingDetected isUserMuteMic  : YES ? "+engine.micEnabled());
-            if(!engine.micEnabled()){
+            LOG.info("CallBack onMuteSpeakingDetected isUserMuteMic  : YES ? "+engine.micEnabled()+", isCloseTips "+AppSettings.getInstance().isCloseTips());
+            if(!engine.micEnabled() && !AppSettings.getInstance().isCloseTips()){
                 EventBus.getDefault().post(new MuteSpeaking(true));
             }
         }
@@ -875,11 +959,13 @@ public class SdkManagerImpl implements SdkManager {
                 EventBus.getDefault().post( RegisterState.IDLE);
             }
         }
-
         @Override
-        public void onWarnMessage(Warning warnMessage) {
-            LOG.info("onWarn: "+warnMessage.toString());
-            if(warnMessage.code!=null){
+        public void onWarnMessage(Warning warnMessage) {//会议中网络和带宽相关通知提示
+            LOG.info("onWarn: "+warnMessage.toString()+", isCloseTips "+AppSettings.getInstance().isCloseTips());
+
+            if(NetworkEvent.EV_WARN_UNMUTE_AUDIO_INDICATION.equals(warnMessage.code.toString())|| NetworkEvent.EV_WARN_UNMUTE_AUDIO_NOT_ALLOWED.equals(warnMessage.code.toString())){
+                EventBus.getDefault().post(new NetworkEvent(warnMessage.code.toString()));
+            } else if(!AppSettings.getInstance().isCloseTips()){
                 EventBus.getDefault().post(new NetworkEvent(warnMessage.code.toString()));
             }
         }
@@ -897,14 +983,39 @@ public class SdkManagerImpl implements SdkManager {
             EventBus.getDefault().post(new PeopleNumberEvent(number+""));
          }
 
+        @Override
+        public void onCallPeerConnected(CallInfo info) {//p2p
+            LOG.info("onCallPeerConnected: "+info.toString());
+            SystemCache.getInstance().getPeer().setNumber(info.conferenceNumber);
+            CallEvent event = new CallEvent(CallState.CONNECTED);
+            EventBus.getDefault().post(event);
 
-        /*public void onVideoPreviewFrame(byte[] frame) {
+        }
+
+        public void onVideoPreviewFrame(byte[] frame) {
              LOG.info("onVideoPreviewFrame: "+ frame.length);
          }
 
 
         public void onContentPreviewFrame(byte[] frame) {
             LOG.info("onVideoPreviewFrame: "+ frame.length);
-        }*/
+        }
+
+        @Override
+        public void onMicMutedShow(int mic_muted) {
+            LOG.info("Local mute state  :"+mic_muted);//1 静音 ，0 非静音
+            if(mic_muted==1){
+                EventBus.getDefault().post(new MicMuteChangeEvent(true));
+            }else {
+                EventBus.getDefault().post(new MicMuteChangeEvent(false));
+            }
+        }
+
+        @Override
+        public void onPeerImageUrl(String imageUrl) {//获取p2p头像
+            LOG.info("onPeerImageUrl()");
+            SystemCache.getInstance().getPeer().setImageUrl(imageUrl);
+            EventBus.getDefault().post(new FileMessageEvent(true,imageUrl));
+        }
     }
 }

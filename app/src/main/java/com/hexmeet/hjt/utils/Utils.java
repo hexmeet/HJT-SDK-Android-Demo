@@ -36,6 +36,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Utils {
     private static Logger log = Logger.getLogger(Utils.class);
@@ -257,7 +259,7 @@ public class Utils {
         File file = new File(SystemCache.getInstance().getDownloadUserImage());
         Log.i("ImageViewPath",SystemCache.getInstance().getDownloadUserImage()+"===="+file);
         if(file.exists()) {
-            Picasso.with(HjtApp.getInstance().getContext()).load(file).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).networkPolicy(NetworkPolicy.NO_CACHE).into(imageView);
+            Picasso.get().load(file).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).networkPolicy(NetworkPolicy.NO_CACHE).into(imageView);
         } else {
             log.error("loadAvatar error: no userImage nothing");
         }
@@ -281,4 +283,15 @@ public class Utils {
 
     }
 
+    public static boolean regExTest(String name){
+        String regEx = "^[@.\\-_()a-zA-Z0-9\\u4e00-\\u9fa5\\u0020]{1,32}$";
+
+        Pattern pattern = Pattern.compile(regEx);
+        Matcher m = pattern.matcher(name);
+
+        if (m.find()) {
+            return false;
+        }
+        return true;
+    }
 }

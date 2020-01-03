@@ -3,8 +3,6 @@ package com.hexmeet.hjt.login;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
 import com.hexmeet.hjt.AppCons;
@@ -16,7 +14,6 @@ import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.TagAliasOperatorHelper;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.call.AnonymousJoinMeetActivity;
-import com.hexmeet.hjt.call.Conversation;
 import com.hexmeet.hjt.event.LoginResultEvent;
 import com.hexmeet.hjt.model.LoginParams;
 import com.hexmeet.hjt.utils.ProgressUtil;
@@ -26,6 +23,9 @@ import org.apache.log4j.Logger;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 public class Login extends BaseActivity implements LoginFragmentCallback{
     private Logger LOG = Logger.getLogger(Login.class);
@@ -77,15 +77,32 @@ public class Login extends BaseActivity implements LoginFragmentCallback{
             Utils.showToastWithCustomLayout(Login.this, errorMessage);
         }
         if (HjtApp.getInstance().getAppService() != null) {
-          //  Log.i("isCalling", HjtApp.getInstance().getAppService().isCalling() + "");
-
             if (!HjtApp.getInstance().getAppService().isCalling()) {
                 handleWebInvite(getIntent());
             }
         } else {
-
             handleWebInvite(getIntent());
         }
+        turnPage();
+    }
+
+    private void turnPage() {
+        if (LoginSettings.getInstance().cannotAutoLogin()) {
+            gotoLoginPage();
+        } else {
+                LOG.info("logined before this launch, start auto login");
+                if (SystemCache.getInstance().isNetworkConnected()) {
+                    progress.showDelayed(500);
+                    LOG.info("network connected, start auto login");
+                    LoginService.getInstance().autoLogin();
+                }
+        }
+    }
+
+    private void gotoLoginPage() {
+        LOG.info("not login before this launch, jump to login_main UI");
+        LoginSettings.getInstance().setLoginState(LoginSettings.LOGIN_STATE_IDLE, false);
+        SystemCache.getInstance().resetLoginCache();
     }
 
     @Override
@@ -99,13 +116,13 @@ public class Login extends BaseActivity implements LoginFragmentCallback{
         super.onResume();
         if (HjtApp.getInstance().getAppService() != null) {
             HjtApp.getInstance().getAppService().setUserInLogin(false);
-            if (HjtApp.getInstance().getAppService().isCalling()) {
+           /* if (HjtApp.getInstance().getAppService().isCalling()) {
                 LOG.info("onResume: Resume Call");
                 Intent intent = new Intent();
                 intent.setClass(Login.this, Conversation.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(intent);
-            }
+            }*/
         }
     }
 
@@ -206,7 +223,6 @@ public class Login extends BaseActivity implements LoginFragmentCallback{
                 LOG.debug("login - start hexmeet without data intent");
                 HexMeet.actionStart(Login.this);
             }
-            TagAliasOperatorHelper.setAlias(getApplicationContext(),SystemCache.getInstance().getLoginResponse().getUsername(),true);
             finish();
         }else {
             LOG.info("Logon failure "+event.getCode());

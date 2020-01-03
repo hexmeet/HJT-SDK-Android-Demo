@@ -5,5 +5,7 @@ public enum CallState {
     CONNECTING,
     AUTHORIZATION,
     RING,
-    CONNECTED
+    CONNECTED,
+    PEERCONNECTED,
+    P2PRING
 }

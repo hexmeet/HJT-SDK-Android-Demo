@@ -8,7 +8,10 @@ import android.util.Log;
 import com.hexmeet.hjt.BuildConfig;
 import com.hexmeet.hjt.HjtApp;
 
+import org.apache.log4j.Logger;
+
 public class LoginSettings {
+    private Logger LOG = Logger.getLogger(LoginSettings.class);
     public static final String LOCATION_CLOUD = BuildConfig.CLOUD_LOCATION_SERVER_ADDR;
     public static final String LOGIN_CLOUD_SERVER = BuildConfig.CLOUD_SERVER_ADDR;
     public static final int LOGIN_STATE_IDLE = 0;
@@ -159,7 +162,7 @@ public class LoginSettings {
     }
 
     public String getPassword(boolean isCloud) {
-        Log.i("password===",isCloud+"==="+cloudPassword +"==="+privatePassword);
+        LOG.info("isCloud : "+isCloud);
         return isCloud ? cloudPassword : privatePassword;
     }
 
@@ -171,7 +174,6 @@ public class LoginSettings {
     }
 
     public void setCloudPassword(String password) {
-        Log.i("setCloudPassword", password);
         if (!TextUtils.equals(this.cloudPassword, password)) {
             this.cloudPassword = password;
             sp.edit().putString(Key.LOGIN_PASSWORD_CLOUD, password).apply();

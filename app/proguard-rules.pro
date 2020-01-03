@@ -127,6 +127,7 @@
     *;
 }
 
+-keep class org.apache.log4j.**{*;}
 -keep class com.ut.**{*;}
 -keep class com.ta.**{*;}
 -keep class com.alibaba.* {*;}
@@ -200,3 +201,65 @@
 
 -dontwarn com.meizu.cloud.**
 -keep class com.meizu.cloud.** { *; }
+
+-dontwarn com.sj.emoji.**
+-keep class com.sj.emoji.** { *; }
+
+-keepattributes *Annotation*
+-keepclassmembers class ** {
+    @org.greenrobot.eventbus.Subscribe <methods>;
+}
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }
+
+# Only required if you use AsyncExecutor
+-keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
+    <init>(java.lang.Throwable);
+}
+
+-keep class em.engine.** {
+    *;
+}
+-keep class em.common.** {
+    *;
+}
+#man
+-keep class com.taobao.** {*;}
+-keep class com.alibaba.** {*;}
+-keep class com.ta.**{*;}
+-keep class com.ut.**{*;}
+-dontwarn com.taobao.**
+-dontwarn com.alibaba.**
+-dontwarn com.ta.**
+-dontwarn com.ut.**
+
+
+-keepclasseswithmembernames class ** {
+    native <methods>;
+}
+-keepattributes Signature
+-keep class sun.misc.Unsafe { *; }
+-keep class com.alipay.** {*;}
+-keep class anet.**{*;}
+-keep class anetwork.**{*;}
+-keep class org.android.spdy.**{*;}
+-keep class org.android.agoo.**{*;}
+-keep class android.os.**{*;}
+-keep class org.json.**{*;}
+-dontwarn com.alipay.**
+-dontwarn anet.**
+-dontwarn org.android.spdy.**
+-dontwarn org.android.agoo.**
+-dontwarn anetwork.**
+
+# 小米通道
+-keep class com.xiaomi.** {*;}
+-dontwarn com.xiaomi.**
+# 华为通道
+-keep class com.huawei.** {*;}
+-dontwarn com.huawei.**
+# OPPO通道
+-keep public class * extends android.app.Service
+# VIVO通道
+-keep class com.vivo.** {*;}
+-dontwarn com.vivo.**
+

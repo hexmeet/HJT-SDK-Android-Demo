@@ -40,6 +40,9 @@ class SdkHandler extends BaseSafelyHandler<SdkManager> {
     final static int HANDLER_SDK_USER_IMAGE = 10027;
     final static int HANDLER_SDK_USER_SPEAKER = 10028;
     final static int HANDLER_SDK_HARD_DECODING = 10029;
+    final static int HANDLER_SDK_P2P_MAKE_CALL = 10030;
+    final static int HANDLER_SDK_REFUSE_P2P_MAKE_CALL = 10031;
+    final static int HANDLER_SDK_CONFDISPLAYNAME = 10032;
 
     final static int HANDLER_LOGIN = 20001;
     final static int HANDLER_LOGOUT = 20002;
@@ -97,6 +100,13 @@ class SdkHandler extends BaseSafelyHandler<SdkManager> {
                         ref.makeCall(callParam);
                     }
                     break;
+                case HANDLER_SDK_P2P_MAKE_CALL:
+                    MakeCallParam  p2pParam = msg.getData().getParcelable(AppCons.BundleKeys.EXTRA_DATA);
+                    if(p2pParam != null) {
+                        ref.p2pMakeCall(p2pParam);
+                    }
+                    break;
+
                 case HANDLER_SDK_SWITCH_CAMERA:
                     ref.switchCamera();
                     break;
@@ -183,6 +193,16 @@ class SdkHandler extends BaseSafelyHandler<SdkManager> {
                     break;
                 case HANDLER_SDK_HARD_DECODING:
                     ref.isHardDecoding(msg.arg1 == 1);
+                    break;
+                case  HANDLER_SDK_REFUSE_P2P_MAKE_CALL:
+                    String number = (String) msg.obj;
+                    if(number!=null){
+                        ref.refuseP2PMeeting(number);
+                    }
+                    break;
+                case HANDLER_SDK_CONFDISPLAYNAME:
+                    String displayName = (String) msg.obj;
+                    ref.setConfDisplayName(displayName);
                     break;
                 default:
                     break;

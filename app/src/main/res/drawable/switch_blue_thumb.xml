@@ -3,7 +3,7 @@
     android:shape="rectangle" >
 
     <!-- 高度40 -->
-    <size android:height="30dp" android:width="30dp"/>
+    <size android:height="25dp" android:width="25dp"/>
     <!-- 圆角弧度 20 -->
     <corners android:radius="20dp"/>
 

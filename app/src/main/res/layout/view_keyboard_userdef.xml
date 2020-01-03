@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/White"
+    android:orientation="vertical">
+
+    <View
+        android:background="@color/spilt_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.6dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp">
+
+
+        <!-- 语音/文字切换-->
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/btn_voice_or_text"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/chatting_vodie" />
+
+        <!--语音输入-->
+        <Button
+            android:id="@+id/btn_voice"
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:layout_toLeftOf="@+id/rl_multi_and_send"
+            android:layout_toRightOf="@+id/btn_voice_or_text"
+            android:textColor="#727272"
+            android:visibility="gone" />
+
+        <!--输入框-->
+        <sj.keyboard.widget.EmoticonsEditText
+            android:id="@+id/et_chat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:minHeight="40dp"
+            android:layout_toLeftOf="@+id/btn_face"
+            android:background="@color/chat_content_bg"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:lineSpacingExtra="4dp"
+            android:maxLines="4"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:gravity="center_vertical"
+            android:hint="发消息..."
+            android:textSize="16sp"
+            android:layout_marginLeft="10dp"
+            />
+
+        <!--表情-->
+        <ImageView
+            android:layout_marginLeft="5dp"
+            android:id="@+id/btn_face"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_toLeftOf="@+id/rl_multi_and_send"
+            android:layout_centerVertical="true"
+            android:src="@drawable/chat_emoji" />
+
+        <RelativeLayout
+            android:id="@+id/rl_multi_and_send"
+            android:layout_width="58dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:focusableInTouchMode="true"
+            android:orientation="horizontal">
+
+            <!--apps 功能-->
+            <ImageView
+                android:id="@+id/btn_multimedia"
+                android:layout_width="34dp"
+                android:layout_height="28dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/chat_more" />
+
+            <!--发送-->
+            <Button
+                android:id="@+id/btn_send"
+                android:layout_width="46dp"
+                android:layout_height="34dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/btn_send_bg_disable"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/btn_text_send"
+                android:textColor="@color/White"
+                android:textSize="12sp"
+                android:visibility="gone" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <sj.keyboard.widget.FuncLayout
+        android:id="@+id/ly_kvml"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:visibility="gone" />
+</LinearLayout>

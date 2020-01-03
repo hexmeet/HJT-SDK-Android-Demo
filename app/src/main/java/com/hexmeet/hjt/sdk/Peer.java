@@ -13,6 +13,9 @@ public class Peer {
     private long endTime = 0L;
     private long duration = 0L;
     private boolean isVideoCall = true;
+    private String imageUrl;
+    private boolean isCalled = true ;//是否是被呼叫 true 被呼叫  false 呼叫
+    private boolean isP2P = false;
 
     public Peer(int direct) {
         this.direct = direct;
@@ -81,5 +84,29 @@ public class Peer {
 
     public void setFrom(String from) {
         this.from = from;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public boolean isCalled() {
+        return isCalled;
+    }
+
+    public void setCalled(boolean called) {
+        isCalled = called;
+    }
+
+    public boolean isP2P() {
+        return isP2P;
+    }
+
+    public void setP2P(boolean p2P) {
+        isP2P = p2P;
     }
 }

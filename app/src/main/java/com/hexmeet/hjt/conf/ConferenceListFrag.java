@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,11 +26,18 @@ import com.hexmeet.hjt.HexMeet;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.cache.SystemCache;
+import com.hexmeet.hjt.event.RenameEvent;
 import com.hexmeet.hjt.model.RestLoginResp;
 import com.hexmeet.hjt.utils.NetworkUtil;
+import com.hexmeet.hjt.utils.Utils;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 
 import org.apache.log4j.Logger;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import androidx.fragment.app.Fragment;
 
 
 public class ConferenceListFrag extends Fragment {
@@ -46,14 +52,14 @@ public class ConferenceListFrag extends Fragment {
     private ViewGroup loadFailedInfo;
     private boolean tokenExpired = false;
     private final String IP = "172.20.0.25:3000";
-   // private final String DEBUG_IP_ADDRESS = "http://"+IP+"/#/conferences?token=";
+    // private final String DEBUG_IP_ADDRESS = "http://"+IP+"/#/conferences?token=";
     private final String DEBUG_IP_ADDRESS = "";
 
     @SuppressLint({"JavascriptInterface", "SetJavaScriptEnabled"})
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.conference_list, container, false);
-
+        EventBus.getDefault().register(this);
         progressLayout = root.getRootView().findViewById(R.id.progress_layout);
         progressBar = (CircleProgressBar) root.getRootView().findViewById(R.id.progressBar);
         loadFailedInfo = (ViewGroup) root.getRootView().findViewById(R.id.no_network);
@@ -206,6 +212,13 @@ public class ConferenceListFrag extends Fragment {
             LOG.info("JavaScript: doradoVersionUpdate");
             loadConference();
         }
+        @JavascriptInterface
+        public void clearCache(){
+            LOG.info("clearCache()");
+            webView.clearCache(true);
+            loadConference();
+        }
+
     }
 
     public void updateTokenForWeb() {
@@ -266,6 +279,7 @@ public class ConferenceListFrag extends Fragment {
             webView.removeAllViews();
             webView.destroy();
         }
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
@@ -318,13 +332,27 @@ public class ConferenceListFrag extends Fragment {
         });
     }
 
-    /*public boolean onBackClick(boolean isNavBottomBarHide) {
+    public boolean onBackClick(boolean isNavBottomBarHide) {
         if(this.webView.canGoBack() && isNavBottomBarHide){
-            this.webView.goBack();
+            LOG.info("JavaScript: goBack() ");
+            webView.evaluateJavascript("javascript:goBack()", null);
             return true;
         } else {
             return false;
         }
-    }*/
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onRenameEvent(RenameEvent event) {
+        if(event.isSuccess()) {
+            updateDisplayName(event.getMessage());
+        }
+    }
+
+    public void updateDisplayName(final String displayName){
+        LOG.info("JavaScript: new displayName ["+displayName+"]");
+        webView.evaluateJavascript("javascript:updateLoginUser('" +displayName+ "')",null);
+
+    }
 
 }

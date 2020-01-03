@@ -10,9 +10,10 @@ public class AppSettings {
     private static final String DEFAULT_STR = "";
     private static AppSettings instance;
     private SharedPreferences sp;
-    private boolean isSpeakerMode;
+    private boolean isSpeakerMode = false;
     private boolean autoAnswer;
     private boolean hardwareDecoding;
+    private boolean isCloseTips = false;
     private AppSettings() {
         init(HjtApp.getInstance().getContext());
     }
@@ -21,6 +22,7 @@ public class AppSettings {
         String SPEAKER_LAYOUT = "layout_mode_speaker";
         String AUTO_ANSWER = "auto_answer";
         String HARDWAREDECODING = "hardware_decoding";
+        String ISCLOSETIPS = "close_tips";
     }
 
     public static AppSettings getInstance() {
@@ -35,6 +37,7 @@ public class AppSettings {
         isSpeakerMode = sp.getBoolean(Key.SPEAKER_LAYOUT, false);
         autoAnswer = sp.getBoolean(Key.AUTO_ANSWER, false);
         hardwareDecoding = sp.getBoolean(Key.HARDWAREDECODING,false);
+        isCloseTips = sp.getBoolean(Key.ISCLOSETIPS,false);
     }
 
     public boolean isSpeakerMode() {
@@ -68,6 +71,17 @@ public class AppSettings {
         if (this.hardwareDecoding ^ hardwareDecoding) {
             this.hardwareDecoding = hardwareDecoding;
             sp.edit().putBoolean(Key.HARDWAREDECODING, hardwareDecoding).apply();
+        }
+    }
+
+    public boolean isCloseTips() {
+        return isCloseTips;
+    }
+
+    public void setCloseTips(boolean isCloseTips) {
+        if (this.isCloseTips ^ isCloseTips) {
+            this.isCloseTips = isCloseTips;
+            sp.edit().putBoolean(Key.ISCLOSETIPS, isCloseTips).apply();
         }
     }
 

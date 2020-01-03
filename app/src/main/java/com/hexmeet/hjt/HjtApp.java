@@ -3,18 +3,29 @@ package com.hexmeet.hjt;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
+
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.multidex.MultiDex;
 import android.view.OrientationEventListener;
 
 import com.alibaba.sdk.android.man.MANService;
 import com.alibaba.sdk.android.man.MANServiceProvider;
+import com.alibaba.sdk.android.push.CloudPushService;
+import com.alibaba.sdk.android.push.CommonCallback;
+import com.alibaba.sdk.android.push.huawei.HuaWeiRegister;
+import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
+import com.alibaba.sdk.android.push.register.MeizuRegister;
+import com.alibaba.sdk.android.push.register.MiPushRegister;
+import com.alibaba.sdk.android.push.register.OppoRegister;
+import com.alibaba.sdk.android.push.register.VivoRegister;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.call.CallIncomingActivity;
 import com.hexmeet.hjt.call.ConnectActivity;
@@ -31,16 +42,19 @@ import java.lang.ref.WeakReference;
 import java.util.Iterator;
 import java.util.Locale;
 
+import androidx.multidex.MultiDex;
 import cn.jpush.android.api.JPushInterface;
 import de.mindpipe.android.logging.log4j.LogConfigurator;
 
 public class HjtApp extends Application {
     private static HjtApp instance;
     private AppService appService;
+    private MeetingWindowService floatService;
     private Logger LOG = Logger.getLogger(HjtApp.class);
     private Activity conversation;
     private WeakReference<Activity> topActivity;
     private boolean isFloatServiceStart = false;
+    private boolean isNewRemote = false;
 
     public synchronized static HjtApp getInstance() {
         while (instance == null) {
@@ -54,7 +68,7 @@ public class HjtApp extends Application {
     }
 
     public void startFloatService() {
-        LOG.info("startFloatService, isStart? ["+isFloatServiceStart+"]");
+        LOG.info("startFloatService, isStart? ["+isFloatServiceStart()+"]");
         if(!isFloatServiceStart) {
             Intent intent = new Intent(this, MeetingWindowService.class);
             setFloatServiceStart(true);
@@ -63,7 +77,6 @@ public class HjtApp extends Application {
             } else {
                 startService(intent);
             }
-           // startService(intent);
         }
     }
 
@@ -71,19 +84,26 @@ public class HjtApp extends Application {
         return isFloatServiceStart;
     }
 
+    public boolean isNewRemote() {
+        return isNewRemote;
+    }
+
     public void stopFloatService() {
-        LOG.info("stopFloatService, isStart? ["+isFloatServiceStart+"]");
+        LOG.info("stopFloatService, isStart? ["+isFloatServiceStart()+"]");
         if(isFloatServiceStart) {
+            seNewRemote(true);
             setFloatServiceStart(false);
             Intent intent = new Intent(this, MeetingWindowService.class);
             stopService(intent);
-
         }
+    }
+    public void seNewRemote(boolean isNewRemote) {
+        this.isNewRemote = isNewRemote;
     }
 
     public void setFloatServiceStart(boolean floatServiceStart) {
         LOG.info("floatServiceStart, ["+floatServiceStart+"]");
-        isFloatServiceStart = floatServiceStart;
+        this.isFloatServiceStart = floatServiceStart;
     }
 
     public void bindAppService() {
@@ -106,8 +126,13 @@ public class HjtApp extends Application {
         }
     };
 
+
     public AppService getAppService() {
         return appService;
+    }
+
+    public MeetingWindowService getFloatService() {
+        return floatService;
     }
 
     public static boolean isEnVersion() {
@@ -156,7 +181,8 @@ public class HjtApp extends Application {
     public boolean isCalling() {
         return topActivity != null && (topActivity.get() instanceof CallIncomingActivity
                 || topActivity.get() instanceof ConnectActivity
-                || topActivity.get() instanceof Conversation);
+                || topActivity.get() instanceof Conversation
+        );
     }
 
     private static boolean isSpeakerOn = false;
@@ -182,7 +208,6 @@ public class HjtApp extends Application {
         super.onCreate();
 
         MANService manService = MANServiceProvider.getService();
-
         LOG.info("App - onCreate");
         synchronized (HjtApp.class) {
             instance = this;
@@ -193,13 +218,17 @@ public class HjtApp extends Application {
             LOG.info("Start bindAppService");
             bindAppService();
         }
-
         SystemCache.getInstance().setNetworkConnected(NetworkUtil.isNetConnected(getContext()));
-
         manService.getMANAnalytics().init(this, getApplicationContext());
-
-       // JPushInterface.setDebugMode(true); //正式环境时去掉此行代码
+        //极光推送
+        // JPushInterface.setDebugMode(true); 正式环境时去掉此行代码
         JPushInterface.init(this);
+        // 初始化Mobile Analytics服务
+        initManService();
+        //阿里云推送
+        initCloudChannel(this);
+        floatWindowNotificationChannel(this);
+
         ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         int normalHeap = activityManager.getMemoryClass();
         int largeHeap = activityManager.getLargeMemoryClass();
@@ -291,6 +320,41 @@ public class HjtApp extends Application {
         }
     }
 
+    private void initCloudChannel(Context context) {
+        this.createNotificationChannel(context);
+        PushServiceFactory.init(context);
+        CloudPushService pushService = PushServiceFactory.getCloudPushService();
+        pushService.register(context, new CommonCallback() {
+            @Override
+            public void onSuccess(String response) {
+                LOG.info("init cloudchannel success");
+            }
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+                LOG.info("init cloudchannel failed -- errorcode:" + errorCode + " -- errorMessage:" + errorMessage);
+            }
+        });
+
+        MiPushRegister.register(context, BuildConfig.XIAOMI_ID, BuildConfig.XIAOMI_KEY);
+        HuaWeiRegister.register(this);
+        OppoRegister.register(context, BuildConfig.OPPO_KEY, BuildConfig.OPPO_APPSECRET);
+        MeizuRegister.register(context, BuildConfig.MEIZU_ID, BuildConfig.MEIZU_KEY);
+        VivoRegister.register(context);
+    }
+
+
+    private void initManService() {
+        // 获取MAN服务
+        MANService manService = MANServiceProvider.getService();
+        // 打开调试日志
+        manService.getMANAnalytics().turnOnDebug();
+        manService.getMANAnalytics().setAppVersion("3.0");
+        // 通过插件接入后直接在下发json中获取appKey和appSecret初始化
+        manService.getMANAnalytics().init(this, getApplicationContext());
+        // 通过此接口关闭页面自动打点功能
+       // manService.getMANAnalytics().turnOffAutoPageTrack();
+    }
+
     public void initLogs() {
         if (ConfigureLog4J.getLogConfigurator() == null) {
             ConfigureLog4J.setLogConfigurator(new LogConfigurator());
@@ -361,5 +425,36 @@ public class HjtApp extends Application {
             }
         }
         return processName;
+    }
+
+
+    public void createNotificationChannel(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            // 通知渠道的id
+            String id = BuildConfig.NOTIFICATION;
+            // 用户可以看到的通知渠道的名字.
+            CharSequence name = getString(R.string.notification);
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel mChannel = new NotificationChannel(id, name, importance);
+            // 设置通知出现时的闪灯（如果 android 设备支持的话）
+            mChannel.enableLights(true);
+            mChannel.setLightColor(Color.RED);
+            // 设置通知出现时的震动（如果 android 设备支持的话）
+            mChannel.enableVibration(true);
+            mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+            //最后在notificationmanager中创建该通知渠道
+            mNotificationManager.createNotificationChannel(mChannel);
+        }
+    }
+
+    public void floatWindowNotificationChannel(Context context){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationChannel channel = new NotificationChannel(BuildConfig.FLOATNOTIFICATION, getString(R.string.incall), NotificationManager.IMPORTANCE_LOW);
+            channel.setSound(null, null);//无声音
+            channel.enableVibration(false);//震动不可用
+            manager.createNotificationChannel(channel);
+        }
     }
 }
