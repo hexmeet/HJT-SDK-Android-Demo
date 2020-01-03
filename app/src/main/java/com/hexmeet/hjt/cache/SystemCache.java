@@ -3,7 +3,6 @@ package com.hexmeet.hjt.cache;
 import android.os.SystemClock;
 import android.text.TextUtils;
 
-import com.hexmeet.hjt.AppSettings;
 import com.hexmeet.hjt.CallState;
 import com.hexmeet.hjt.RegisterState;
 import com.hexmeet.hjt.dial.RecentPreference;
@@ -12,10 +11,12 @@ import com.hexmeet.hjt.event.ContentEvent;
 import com.hexmeet.hjt.event.MicMuteUpdateEvent;
 import com.hexmeet.hjt.event.ParticipantsMicMuteEvent;
 import com.hexmeet.hjt.event.RecordingEvent;
-import com.hexmeet.hjt.event.RefreshLayoutModeEvent;
 import com.hexmeet.hjt.event.RemoteMuteEvent;
+import com.hexmeet.hjt.event.RemoteNameEvent;
+import com.hexmeet.hjt.event.RemoteNameUpdateEvent;
 import com.hexmeet.hjt.login.JoinMeetingParam;
 import com.hexmeet.hjt.login.LoginSettings;
+import com.hexmeet.hjt.model.FeatureSupport;
 import com.hexmeet.hjt.model.RestLoginResp;
 import com.hexmeet.hjt.sdk.MessageOverlayInfo;
 import com.hexmeet.hjt.sdk.Peer;
@@ -54,7 +55,7 @@ public class SystemCache {
     private boolean isUserMuteMic = false;
     private boolean isUserShowLocalCamera = true;
     private boolean isRemoteMuted = false;
-    private boolean isUserVoiceMode= true;
+    private boolean isUserVideoMode = true;
 
     private JoinMeetingParam joinMeetingParam;
     private boolean isAnonymousLogin = false;
@@ -74,6 +75,10 @@ public class SystemCache {
     private boolean isInvite = false;
 
     private String participantNumber;
+
+    private String speakName;
+    private String localName;
+    private Map<String, String> remoteNameUpdateState = new HashMap<>();
 
     private SystemCache() {
         EventBus.getDefault().register(this);
@@ -139,13 +144,13 @@ public class SystemCache {
 
     public void setLoginResponse(RestLoginResp loginResponse) {
         this.loginResponse = loginResponse;
+        setLocalName(loginResponse.getDisplayName());
     }
 
-    public void updateUserDisplayName(String name) {
-        if(loginResponse != null) {
-            loginResponse.setDisplayName(name);
-        }
+    public void setLocalName(String name){
+        this.localName = name;
     }
+
 
     public long getStartTime() {
         return startTime;
@@ -164,8 +169,8 @@ public class SystemCache {
             isUserMuteMic = false;
             loginResponse = null;
             isUserShowLocalCamera = true;
-            isUserVoiceMode=true;
         }
+        EmMessageCache.getInstance().resetIMCache();
     }
     public void resetLoginCache() {
         loginResponse = null;
@@ -175,7 +180,7 @@ public class SystemCache {
         isUserShowLocalCamera = true;
         downloadUserImage = null;
         department=null;
-        isUserVoiceMode = true;
+        EmMessageCache.getInstance().resetIMCache();
     }
 
     public RegisterState getRegisterState() {
@@ -199,6 +204,7 @@ public class SystemCache {
                 svcLayoutInfo = null;
                 overlayInfo = null;
                 participantsMicMuteState.clear();
+                remoteNameUpdateState.clear();
                 layoutModeEnable = true;
                 isRecordingOn = false;
                 repeatCount.set(0);
@@ -221,8 +227,10 @@ public class SystemCache {
             LOG.info("SystemCache - Peer got updated, event call state = " + event.getCallState());
 
             this.peer = event.getPeer();
-            String history = TextUtils.isEmpty(peer.getPassword()) ? peer.getNumber() : (peer.getNumber() + "*" +peer.getPassword());
-            RecentPreference.getInstance().updateRecent(history, true);
+            if(!peer.isP2P()){
+                String history = TextUtils.isEmpty(peer.getPassword()) ? peer.getNumber() : (peer.getNumber() + "*" +peer.getPassword());
+                RecentPreference.getInstance().updateRecent(history, true);
+            }
         }
     }
 
@@ -294,12 +302,12 @@ public class SystemCache {
     }
 
 
-    public boolean isUserVoiceMode() {
-        return isUserVoiceMode;
+    public boolean isUserVideoMode() {
+        return isUserVideoMode;
     }
 
-    public void setUserVoiceMode(boolean show) {
-        isUserVoiceMode = show;
+    public void setUserVideoMode(boolean show) {
+        isUserVideoMode = show;
     }
 
     public JoinMeetingParam getJoinMeetingParam() {
@@ -340,6 +348,10 @@ public class SystemCache {
         return isRemoteMuted;
     }
 
+    public void setRemoteMuted(boolean isRemoteMuted){
+        this.isRemoteMuted = isRemoteMuted;
+    }
+
     @Subscribe(threadMode = ThreadMode.POSTING)
     public void onParticipantsMicMuteEvent(ParticipantsMicMuteEvent event) {
         if(event != null ) {
@@ -362,15 +374,33 @@ public class SystemCache {
         return false;
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onRemoteNameUpdateEvent(RemoteNameUpdateEvent event) {
+        LOG.info("RemoteNameUpdateEvent : "+event.isLocal());
+        if(event != null) {
+            if(!event.isLocal){
+                remoteNameUpdateState.put(event.getDeviceId(),event.getName());
+            }
+            EventBus.getDefault().post(new RemoteNameEvent(event.getDeviceId(),event.getName(),event.isLocal()));
+        }
+    }
+
+    public String getRemoteDeviceName(String deviceId) {
+        if(remoteNameUpdateState.containsKey(deviceId)) {
+            return remoteNameUpdateState.get(deviceId);
+        }
+       return null;
+    }
+
     public boolean isLayoutModeEnable() {
         return layoutModeEnable;
     }
 
     public void setLayoutModeEnable(boolean layoutModeEnable) {
         this.layoutModeEnable = layoutModeEnable;
-        if(!layoutModeEnable && !AppSettings.getInstance().isSpeakerMode()) {
+        /*if(!layoutModeEnable && !AppSettings.getInstance().isSpeakerMode()) {
             EventBus.getDefault().post(new RefreshLayoutModeEvent(true));
-        }
+        }*/
     }
 
     public boolean isRecordingOn() {
@@ -398,7 +428,6 @@ public class SystemCache {
         isRecording = recording;
     }
 
-  //  participantNumber
 
     public String getParticipant() {
         return participantNumber;
@@ -415,4 +444,14 @@ public class SystemCache {
     public String getDoradoVersion() {
         return loginResponse == null ? null : loginResponse.getDoradoVersion();
     }
+
+
+    public String getSpeakName() {
+        return speakName;
+    }
+
+    public void setSpeakName(String name) {
+        speakName = name;
+    }
+
 }

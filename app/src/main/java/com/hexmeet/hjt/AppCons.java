@@ -4,6 +4,8 @@ package com.hexmeet.hjt;
 public interface AppCons {
     String USER_AGENT = "HexMeet EasyVideo Android";
     String SYSTEM_CALLING_ACTION = "hexmeet.software.hjt.calling";
+
+
     String APP_FILE_PROVIDER_AUTH = BuildConfig.APPLICATION_ID + ".fileprovider";
     String BLUETOOTH_CONNECT_ACTION = "android.bluetooth.headset.profile.action.CONNECTION_STATE_CHANGED";
     String BLUETOOTH_STATE_CHNGED = "android.bluetooth.adapter.action.STATE_CHANGED";

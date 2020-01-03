@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/ic_spitview_horizontal" />
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+
+
+   <LinearLayout
+       android:layout_marginLeft="25dp"
+       android:gravity="center"
+       android:orientation="vertical"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content">
+       <ImageView
+           android:id="@+id/iv_icon"
+           android:layout_width="75dp"
+           android:layout_height="75dp"
+           android:src="@drawable/chat_audiocall"
+           />
+
+       <TextView
+           android:id="@+id/tv_name"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:textSize="12sp"
+           android:textColor="#919191"
+           android:layout_marginTop="10dp"
+           android:text="语音通话"
+           />
+   </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginLeft="17dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/iv_video"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:src="@drawable/chat_videocall"
+            />
+
+        <TextView
+            android:id="@+id/tv_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#919191"
+            android:layout_marginTop="10dp"
+            android:text="视频通话"
+            />
+    </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

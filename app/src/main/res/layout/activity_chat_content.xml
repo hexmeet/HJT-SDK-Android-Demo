@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/ekBar"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/chat_content_bg"
+    android:fitsSystemWindows="true"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/chat_text_height"
+        android:layout_marginLeft="@dimen/chat_arginLR"
+        android:layout_marginRight="@dimen/chat_arginLR">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="demo"
+            android:textColor="@color/title_bar"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/chat_back_btn"
+            android:layout_width="@dimen/chat_text_height"
+            android:layout_height="@dimen/chat_text_height"
+            android:padding="@dimen/setting_padding"
+            android:src="@drawable/icon_back_black" />
+
+        <ImageView
+            android:id="@+id/more"
+            android:layout_width="@dimen/log_in_padding"
+            android:layout_height="@dimen/log_in_padding"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/chat_content_edit"
+            />
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/chat_content_view"
+        android:background="@color/group_chat_list_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rlv_message"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.hexmeet.hjt.groupchat.ChattingFooter
+            android:id="@+id/chat_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</LinearLayout>

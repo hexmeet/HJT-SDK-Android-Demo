@@ -1,14 +1,15 @@
 package com.hexmeet.hjt.dial;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.hexmeet.hjt.HexMeet;
@@ -26,12 +27,16 @@ import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import androidx.fragment.app.Fragment;
+
 public class DialingFrag extends Fragment {
     private Logger LOG = Logger.getLogger(this.getClass());
     private NumberKeyboard numberKeyboard;
-    private ViewGroup closeCameraView, closeMicView;
+ //   private ViewGroup closeCameraView, closeMicView;
     private LinearLayout recentContainer;
     private View recentBtn;
+    private Switch closeCameraView;
+    private Switch closeMicView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,12 +45,26 @@ public class DialingFrag extends Fragment {
         root.findViewById(R.id.dial_btn).setOnClickListener(clickListener);
         recentContainer = (LinearLayout) root.findViewById(R.id.recent_list_container);
 
-        closeCameraView = (ViewGroup) root.findViewById(R.id.close_camera);
-        closeCameraView.setOnClickListener(clickListener);
-        closeMicView = (ViewGroup) root.findViewById(R.id.close_mic);
-        closeMicView.setOnClickListener(clickListener);
-        closeCameraView.getChildAt(1).setSelected(SystemCache.getInstance().isUserMuteVideo());
-        closeMicView.getChildAt(1).setSelected(SystemCache.getInstance().isUserMuteMic());
+
+        closeCameraView = root.findViewById(R.id.close_camera_switch);
+        closeMicView = root.findViewById(R.id.close_mic_switch);
+
+        closeCameraView.setChecked(SystemCache.getInstance().isUserMuteVideo());
+        closeCameraView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SystemCache.getInstance().setUserMuteVideo(isChecked);
+            }
+        });
+
+        closeMicView.setChecked(SystemCache.getInstance().isUserMuteMic());
+        closeMicView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SystemCache.getInstance().setUserMuteMic(isChecked);
+            }
+        });
+
         recentBtn = root.findViewById(R.id.btn_recent);
         recentBtn.setOnClickListener(clickListener);
 
@@ -66,8 +85,7 @@ public class DialingFrag extends Fragment {
                 case R.id.dial_btn:
                     String number = numberKeyboard.getNumber();
                     if(validate(number)) {
-                        SystemCache.getInstance().setUserMuteVideo(closeCameraView.getChildAt(1).isSelected());
-                        //SystemCache.getInstance().setUserMuteMic(closeMicView.getChildAt(1).isSelected());
+                        SystemCache.getInstance().setUserMuteVideo(closeCameraView.isChecked());
                         String sipNumberWithoutPassword = number;
                         String password = "";
                         if (number.contains("*")) {
@@ -75,17 +93,9 @@ public class DialingFrag extends Fragment {
                             sipNumberWithoutPassword = strs[0];
                             password = strs[1];
                         }
-                        HjtApp.getInstance().getAppService().muteMic(closeMicView.getChildAt(1).isSelected());
+                        HjtApp.getInstance().getAppService().muteMic(closeMicView.isChecked());
                         ((HexMeet)getActivity()).dialOut(sipNumberWithoutPassword, password);
                     }
-                    break;
-                case R.id.close_camera:
-                    boolean cameraClose = closeCameraView.getChildAt(1).isSelected();
-                    closeCameraView.getChildAt(1).setSelected(!cameraClose);
-                    break;
-                case R.id.close_mic:
-                    boolean micClose = closeMicView.getChildAt(1).isSelected();
-                    closeMicView.getChildAt(1).setSelected(!micClose);
                     break;
                 case R.id.btn_recent:
                     boolean open = v.isSelected();

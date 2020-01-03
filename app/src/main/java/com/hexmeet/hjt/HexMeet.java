@@ -14,10 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -32,8 +28,10 @@ import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.call.AnonymousJoinMeetActivity;
 import com.hexmeet.hjt.call.ConnectActivity;
 import com.hexmeet.hjt.call.Conversation;
+import com.hexmeet.hjt.chat.ChatFrag;
 import com.hexmeet.hjt.conf.ConferenceListFrag;
 import com.hexmeet.hjt.conf.JsJoinMeeting;
+import com.hexmeet.hjt.contacts.ContactsFrag;
 import com.hexmeet.hjt.dial.DialingFrag;
 import com.hexmeet.hjt.event.FileMessageEvent;
 import com.hexmeet.hjt.event.LoginResultEvent;
@@ -51,14 +49,23 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 public class HexMeet extends BaseActivity implements OnClickListener {
     public FragmentManager fragmentManager;
     public ConferenceListFrag conferenceListFrag;
+    public ChatFrag chatFrag;
     public DialingFrag dialingFrag;
+    public ContactsFrag contactsFrag;
     public MeFrag meFrag;
 
     private TextView tabConference;
+    private TextView tabChat;
     private TextView tabDialing;
+    private TextView tabContacts;
     private TextView tabMe;
 
     private ViewGroup tabLayout;
@@ -70,6 +77,8 @@ public class HexMeet extends BaseActivity implements OnClickListener {
     private boolean screenReceiverRegistered = false;
     private RelativeLayout.LayoutParams contentLp;
     private int tabAvatarSize = ScreenUtil.dp_to_px(26);
+
+
 
     public static void actionStart(Context context) {
         Intent intent = new Intent(context, HexMeet.class);
@@ -220,9 +229,11 @@ public class HexMeet extends BaseActivity implements OnClickListener {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             contentLp = (RelativeLayout.LayoutParams) findViewById(R.id.content).getLayoutParams();
-           /* if(conferenceListFrag.isResumed() && conferenceListFrag.onBackClick(contentLp.bottomMargin == 0)) {
+            if(conferenceListFrag!=null && conferenceListFrag.isResumed() && conferenceListFrag.onBackClick(contentLp.bottomMargin == 0)) {
                 return true;
-            }*/
+            }else if(contactsFrag!=null && contactsFrag.isResumed() && contactsFrag.onBackClick(contentLp.bottomMargin == 0)) {
+                return true;
+            }
 
             if (isBackOncePressed) {
                 handler.removeMessages(0);
@@ -291,11 +302,17 @@ public class HexMeet extends BaseActivity implements OnClickListener {
         dividerLine = findViewById(R.id.divider);
 
         tabConference = (TextView) tabLayout.findViewById(R.id.conference);
+        tabChat = (TextView) tabLayout.findViewById(R.id.chat);
         tabDialing = (TextView) tabLayout.findViewById(R.id.dialing);
+        tabContacts = (TextView) tabLayout.findViewById(R.id.contacts);
         tabMe = (TextView) tabLayout.findViewById(R.id.me);
+        //是否支持通讯录功能
+        tabContacts.setVisibility(SystemCache.getInstance().getLoginResponse().getFeatureSupport().isContactWebPage() ? View.VISIBLE : View.GONE);
 
         tabConference.setOnClickListener(this);
+        tabChat.setOnClickListener(this);
         tabDialing.setOnClickListener(this);
+        tabContacts.setOnClickListener(this);
         tabMe.setOnClickListener(this);
     }
 
@@ -413,7 +430,7 @@ public class HexMeet extends BaseActivity implements OnClickListener {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                HjtApp.getInstance().getAppService().makeCall(number, password);
+                HjtApp.getInstance().getAppService().makeCall(number, password,false);
             }
         }, 2000);
 
@@ -427,8 +444,16 @@ public class HexMeet extends BaseActivity implements OnClickListener {
                 updateTip();
                 break;
 
+            case R.id.chat:
+                showTab(HexMeetTab.CHAT);
+                break;
+
             case R.id.dialing:
                 showTab(HexMeetTab.DIALING);
+                break;
+
+            case R.id.contacts:
+                showTab(HexMeetTab.CONTACTS);
                 break;
 
             case R.id.me:
@@ -456,6 +481,16 @@ public class HexMeet extends BaseActivity implements OnClickListener {
                 }
                 break;
 
+            case CHAT:
+                selectTabLabel(tabChat, R.drawable.tab_chat_selected);
+                if (chatFrag == null) {
+                    chatFrag = new ChatFrag();
+                    transaction.add(R.id.content, chatFrag);
+                } else {
+                    transaction.show(chatFrag);
+                }
+                break;
+
             case DIALING:
                 selectTabLabel(tabDialing, R.drawable.tab_dial_selected);
                 if (dialingFrag == null) {
@@ -463,6 +498,16 @@ public class HexMeet extends BaseActivity implements OnClickListener {
                     transaction.add(R.id.content, dialingFrag);
                 } else {
                     transaction.show(dialingFrag);
+                }
+                break;
+
+            case CONTACTS:
+                selectTabLabel(tabContacts, R.drawable.tab_contacts_selected);
+                if (contactsFrag == null) {
+                    contactsFrag = new ContactsFrag();
+                    transaction.add(R.id.content, contactsFrag);
+                } else {
+                    transaction.show(contactsFrag);
                 }
                 break;
 
@@ -499,7 +544,9 @@ public class HexMeet extends BaseActivity implements OnClickListener {
 
     private void clearSelection() {
         unselectTabLabel(tabConference, R.drawable.tab_conference_unselected);
+        unselectTabLabel(tabChat, R.drawable.tab_chat_unselected);
         unselectTabLabel(tabDialing, R.drawable.tab_dial_unselected);
+        unselectTabLabel(tabContacts, R.drawable.tab_contacts_unselected);
         unselectTabLabel(tabMe, R.drawable.tab_me_unselected);
     }
 
@@ -507,8 +554,14 @@ public class HexMeet extends BaseActivity implements OnClickListener {
         if (conferenceListFrag != null) {
             transaction.hide(conferenceListFrag);
         }
+        if (chatFrag != null) {
+            transaction.hide(chatFrag);
+        }
         if (dialingFrag != null) {
             transaction.hide(dialingFrag);
+        }
+        if (contactsFrag != null) {
+            transaction.hide(contactsFrag);
         }
         if (meFrag != null) {
             transaction.hide(meFrag);
@@ -521,16 +574,21 @@ public class HexMeet extends BaseActivity implements OnClickListener {
 
         if (conferenceListFrag == null && fragment instanceof ConferenceListFrag) {
             conferenceListFrag = (ConferenceListFrag) fragment;
+        }else if (chatFrag == null && fragment instanceof ChatFrag) {
+            chatFrag = (ChatFrag) fragment;
         } else if (dialingFrag == null && fragment instanceof DialingFrag) {
             dialingFrag = (DialingFrag) fragment;
-        } else if (meFrag == null && fragment instanceof MeFrag) {
+        }else if (contactsFrag == null && fragment instanceof ContactsFrag) {
+            contactsFrag = (ContactsFrag) fragment;
+        }  else if (meFrag == null && fragment instanceof MeFrag) {
             meFrag = (MeFrag) fragment;
         }
     }
 
     public void updateLoginToken() {
-        if(conferenceListFrag != null/* && conferenceListFrag.isResumed()*/) {
+        if(conferenceListFrag != null && contactsFrag!=null) {
             conferenceListFrag.updateTokenForWeb();
+            contactsFrag.updateTokenForWeb();
         } else {
             LOG.info("conferenceListFrag not resume, so not update token to web view");
         }
@@ -591,4 +649,6 @@ public class HexMeet extends BaseActivity implements OnClickListener {
             Log.i("CallBack","FileMessageEvent"+event.getFilePath());
         }
     }
+
+
 }

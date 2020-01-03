@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:emojicon="http://schemas.android.com/apk/res-auto"
+    >
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/line_color" />
+    <RelativeLayout
+           android:id="@+id/relative"
+        android:background="@color/White"
+        android:layout_centerVertical="true"
+        android:padding="6dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom">
+
+        <io.github.rockerhieu.emojicon.EmojiconEditText
+            android:id="@+id/et_input"
+            android:clickable="true"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="90dp"
+            android:background="@drawable/bg_chat_input"
+            android:inputType="textMultiLine"
+            android:lineSpacingExtra="3dp"
+            android:maxLines="3"
+            android:minHeight="39dp"
+            android:hint="@string/send_message"
+            emojicon:emojiconSize="28sp"
+            />
+
+        <ImageView
+            android:id="@+id/iv_emoji"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_toLeftOf="@+id/rl_multi_and_send"
+            android:layout_centerVertical="true"
+            android:src="@drawable/chat_emoji"
+            />
+
+    <RelativeLayout
+        android:layout_marginLeft="5dp"
+        android:id="@+id/rl_multi_and_send"
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:focusableInTouchMode="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/iv_more"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:background="@drawable/chat_more"
+            android:gravity="center"
+            />
+
+        <Button
+            android:id="@+id/iv_extra"
+            android:layout_width="46dp"
+            android:layout_height="34dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:background="@drawable/btn_send_bg_disable_s"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="@string/btn_text_send"
+            android:textColor="#fff"
+            android:textAllCaps="false"
+            android:visibility="gone"
+            />
+
+        <Button
+            android:id="@+id/btn_send"
+            android:layout_width="46dp"
+            android:layout_height="34dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:background="@drawable/btn_send_bg_disable"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="@string/btn_text_send"
+            android:textColor="#fff"
+           android:visibility="gone"
+            android:textAllCaps="false"
+            />
+    </RelativeLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/line_color" />
+
+    <LinearLayout
+        android:id="@+id/extra_view"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/vp_extra"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
+
+</merge>

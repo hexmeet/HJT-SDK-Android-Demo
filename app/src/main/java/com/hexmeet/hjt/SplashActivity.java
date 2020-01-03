@@ -5,18 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
 
+import com.alibaba.sdk.android.push.AndroidPopupActivity;
 import com.hexmeet.hjt.cache.SystemCache;
-import com.hexmeet.hjt.event.LoginResultEvent;
 import com.hexmeet.hjt.login.Login;
-import com.hexmeet.hjt.login.LoginService;
-import com.hexmeet.hjt.login.LoginSettings;
 import com.hexmeet.hjt.utils.ResourceUtils;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import java.util.Map;
+
+import androidx.annotation.NonNull;
 
 public class SplashActivity extends BaseActivity {
     private final int TIMEOUT = -100;
@@ -26,29 +23,12 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LOG.info("App splash onCreate");
-        EventBus.getDefault().register(this);
 
         if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
             finish();
             return;
         }
-
         autoLoginHandler.sendEmptyMessage(WAIT_SERVICE);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onLoginEvent(LoginResultEvent event) {
-        if (event.getCode() == LoginResultEvent.LOGIN_SUCCESS) {
-            LOG.info("Auto Login success, go to Hexmeet");
-            HexMeet.actionStart(SplashActivity.this);
-        } else if (event.getCode() == LoginResultEvent.LOGIN_WRONG_PASSWORD || event.getCode() == LoginResultEvent.LOGIN_MANUAL_TRY) {
-            Login.actionStart(SplashActivity.this, event.getMessage());
-        }else {
-            LOG.info("Auto Login failed, go to Login");
-            Login.actionStart(SplashActivity.this, event.getMessage());
-        }
-        autoLoginHandler.removeCallbacksAndMessages(null);
-        finish();
     }
 
     @SuppressLint("HandlerLeak")
@@ -56,7 +36,7 @@ public class SplashActivity extends BaseActivity {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == TIMEOUT) {
-                LOG.info("splash timeout after 5 seconds");
+                LOG.info("splash timeout after 1 seconds");
                 Login.actionStart(SplashActivity.this);
                 finish();
             }
@@ -87,29 +67,29 @@ public class SplashActivity extends BaseActivity {
 
     private void turnPage() {
         ResourceUtils.getInstance().initScreenSize();
-        if (LoginSettings.getInstance().cannotAutoLogin()) {
-            gotoLoginPage();
-        } else {
-            LOG.info("logined before this launch, start auto location");
-            if (SystemCache.getInstance().isNetworkConnected()) {
-                LOG.info("network connected, start auto location");
-                LoginService.getInstance().autoLogin();
+        autoLoginHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Login.actionStart(SplashActivity.this);
+                finish();
             }
-            autoLoginHandler.sendEmptyMessageDelayed(TIMEOUT, 8000);
-        }
-    }
-
-    private void gotoLoginPage() {
-        LOG.info("not login before this launch, jump to login_main UI");
-        LoginSettings.getInstance().setLoginState(LoginSettings.LOGIN_STATE_IDLE, false);
-        Login.actionStart(SplashActivity.this);
-        SystemCache.getInstance().resetLoginCache();
-        finish();
+        },1000);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+        LOG.info(" onDestroy()");
+    }
+
+
+    class PopupPushActivity  extends AndroidPopupActivity {
+
+        @Override
+        protected void onSysNoticeOpened(String title, String content, Map<String, String> extraMap) {
+            LOG.info("Receive ThirdPush notification, title: " + title + ", content: " + content + ", extraMap: " + extraMap);
+            Intent intent = new Intent(this,SplashActivity.class);
+            startActivity(intent);
+        }
     }
 }

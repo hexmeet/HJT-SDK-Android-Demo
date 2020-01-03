@@ -12,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hexmeet.hjt.CallState;
 import com.hexmeet.hjt.FullscreenActivity;
@@ -125,7 +126,8 @@ public class ConnectActivity extends FullscreenActivity {
         if(event.getCallState() == CallState.IDLE) {
             handler.removeMessages(1);
             if(!TextUtils.isEmpty(event.getEndReason())) {
-                Utils.showToast(ConnectActivity.this, event.getEndReason());
+                //Utils.showToast(ConnectActivity.this, event.getEndReason());
+                Toast.makeText(ConnectActivity.this,event.getEndReason(),Toast.LENGTH_SHORT).show();
             }
             finish();
         }
@@ -170,7 +172,7 @@ public class ConnectActivity extends FullscreenActivity {
                                 Utils.showToast(ConnectActivity.this, R.string.input_call_password);
                             } else {
                                 dialog.dismiss();
-                                HjtApp.getInstance().getAppService().makeCall(sipNumber, password);
+                                HjtApp.getInstance().getAppService().makeCall(sipNumber, password,false);
                             }
 
                         }
@@ -208,7 +210,7 @@ public class ConnectActivity extends FullscreenActivity {
             handler.sendEmptyMessageDelayed(1, 30 * 1000);
             String passwords = SystemCache.getInstance().getPeer().getPassword();
             String number = SystemCache.getInstance().getPeer().getNumber();
-            HjtApp.getInstance().getAppService().makeCall(number,passwords);
+            HjtApp.getInstance().getAppService().makeCall(number,passwords,false);
         }
     }
 

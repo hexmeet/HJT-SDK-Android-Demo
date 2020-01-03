@@ -12,6 +12,26 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true" />
 
+    <RelativeLayout
+        android:id="@+id/out_audio_mode"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_audio_only"
+        android:visibility="gone"
+        >
+        <Button
+            android:id="@+id/audio_mode_btn"
+            android:layout_width="@dimen/button_audio"
+            android:layout_height="@dimen/button_audio"
+            android:text="@string/switch_to_video"
+            android:layout_centerInParent="true"
+            android:background="@drawable/buttom_bg"
+            android:textColor="@color/White"
+            android:textSize="@dimen/button_size"
+            android:textAllCaps="false"
+            />
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/record_view"
         android:layout_width="@dimen/cancel_button_height"
@@ -25,44 +45,73 @@
         android:drawablePadding="4dp"
         android:paddingLeft="5dp"
         android:textColor="@color/White"
-        android:textSize="17sp" />
+        android:textSize="17sp"
+        android:visibility="gone"
+        />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/audio_name"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/setting_padding_double"
+        android:text=""
+        android:textColor="@color/White"
+        android:background="@drawable/button_circle_shape"
+        android:layout_toRightOf="@id/record_view"
+        android:layout_marginTop="@dimen/content_margin"
+        android:layout_marginLeft="10dp"
+        android:gravity="center"
+        android:padding="5dp"
+        android:drawableLeft="@drawable/tip_audio_mode"
+        android:drawablePadding="4dp"
+        android:visibility="gone"
+        />
+
+    <RelativeLayout
         android:id="@+id/layout_toast"
         android:layout_width="500dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="90dp"
-        android:visibility="gone"
+        android:layout_marginBottom="70dp"
         >
 
         <TextView
-            android:id="@+id/mytoast"
+            android:id="@+id/network_condition_toast"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/warntoast_bg"
             android:lineSpacingMultiplier="1.3"
-            android:padding="14dp"
+            android:padding="8dp"
             android:text=""
             android:textColor="#FFFFFF"
-            android:textSize="15dp" />
+            android:textSize="13dp"
+            android:visibility="gone"
+            android:layout_centerHorizontal="true"
+            />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/mute_speaking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/warntoast_bg"
+            android:layout_centerHorizontal="true"
+            android:padding="8dp"
+            android:text=""
+            android:textColor="#FFFFFF"
+            android:textSize="13dp"
+            android:visibility="gone"
+            />
+
+    </RelativeLayout>
+
+
 
 
     <include
         android:id="@+id/control_layout"
         layout="@layout/converstation_control" />
 
-    <TextView
-        android:id="@+id/audio_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text=""
-        android:textColor="@color/White"
-        />
+
 
 </RelativeLayout>

@@ -2,14 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/hexmeet_bg"
+    android:background="@color/White"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp">
 
         <TextView
@@ -24,7 +23,7 @@
             android:id="@+id/back_btn"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:padding="15dp"
+            android:padding="21dp"
             android:src="@drawable/icon_back_black" />
     </RelativeLayout>
 
@@ -39,36 +38,44 @@
         <ImageView
             android:id="@+id/logo"
             android:layout_width="120dp"
-            android:layout_height="wrap_content"
+            android:layout_height="97dp"
             android:src="@drawable/about_logo" />
 
-        <TextView
-            android:id="@+id/ev"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/app_name"
-            android:textColor="@color/font_color_313131"
-            android:textSize="18sp" />
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:id="@+id/ev"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textColor="@color/font_color_313131"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                />
 
-        <TextView
-            android:id="@+id/version"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="1.0.1.11"
-            android:textColor="@color/Blue"
-            android:textSize="14sp" />
+            <TextView
+                android:id="@+id/version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1.0.1.11"
+                android:textColor="@color/font_color_313131"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                />
+        </LinearLayout>
+
     </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/service_terms"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_below="@id/logo_area"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/bg_click_item"
+        android:background="@drawable/bg_click_item_color"
         android:padding="15dp">
 
         <ImageView
@@ -83,7 +90,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="5dp"
             android:text="@string/license_and_service"
             android:textColor="@drawable/popup_key_label"
             android:textSize="16sp" />

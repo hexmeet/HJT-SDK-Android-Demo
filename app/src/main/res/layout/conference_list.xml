@@ -37,26 +37,31 @@
     </LinearLayout>
 
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/no_network"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:visibility="gone"
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="212dp"
-            android:layout_height="195dp"
+            android:id="@+id/page_nonetwork"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_width="220dp"
+            android:layout_height="200dp"
             android:src="@drawable/default_page_nonetwork" />
 
         <TextView
+            android:id="@+id/load_failed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/load_failed"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="20dp"
             android:textSize="16sp"
-            android:textColor="@color/sub_title_bar"/>
+            android:textColor="@color/sub_title_bar"
+            android:layout_centerInParent="true"
+            android:layout_below="@id/page_nonetwork" />
 
         <Button
             android:id="@+id/reload"
@@ -67,15 +72,19 @@
             android:text="@string/reload"
             android:layout_marginTop="20dp"
             android:textSize="17sp"
-            android:textColor="@color/White"/>
-    </LinearLayout>
+            android:textColor="@color/White"
+            android:layout_centerInParent="true"
+            android:layout_below="@id/load_failed"
+            />
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/close_window"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentRight="true"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignParentLeft="true"
         android:padding="10dp"
+        android:src="@drawable/icon_back_black"
         android:visibility="gone"
-        android:src="@drawable/btn_closed"/>
+        />
 </RelativeLayout>
