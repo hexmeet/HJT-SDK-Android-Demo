@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:background=" @drawable/bg_click_item"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_marginRight="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_height="65dp"
+    android:paddingTop="3dp"
+    >
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+
+        <ImageView
+            android:id="@+id/new_owner_img"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/girl"
+            android:layout_margin="5dp"
+            />
+
+        <TextView
+            android:id="@+id/new_owner_name"
+            android:text="weihuanying"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:singleLine="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/title_bar"
+            />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/call_statistics_item_bg_1"
+        android:layout_marginTop="2dp"
+        />
+
+</LinearLayout>

@@ -2,7 +2,6 @@ package com.hexmeet.hjt.me;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,11 +16,14 @@ import com.hexmeet.hjt.utils.Utils;
 
 import org.apache.log4j.Logger;
 
+import androidx.fragment.app.Fragment;
+
 public class MeFrag extends Fragment {
     private Logger LOG = Logger.getLogger(MeFrag.class);
 
     private ImageView avatar;
     private TextView username;
+    private TextView displayName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -29,6 +31,7 @@ public class MeFrag extends Fragment {
 
         avatar = (ImageView) root.findViewById(R.id.avatar);
         username = (TextView) root.findViewById(R.id.username);
+        displayName = (TextView)  root.findViewById(R.id.displayName);
         root.findViewById(R.id.me_info).setOnClickListener(item_click);
         root.findViewById(R.id.me_setting).setOnClickListener(item_click);
         root.findViewById(R.id.me_share).setOnClickListener(item_click);
@@ -52,6 +55,14 @@ public class MeFrag extends Fragment {
                     break;
                 case R.id.me_setting:
                     ParametersActivity.actionStart(getActivity());
+                    //通知管理
+                    /*Intent intents = new Intent();
+                    intents.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+                    intents.putExtra(Settings.EXTRA_APP_PACKAGE,getActivity().getPackageName());
+                    startActivity(intents);*/
+                    //权限管理
+                  //  PermissionUtil.GoToSetting(getActivity());
+
                     break;
                 case R.id.me_password:
                     EditPasswordActivity.actionStart(getActivity());
@@ -74,6 +85,7 @@ public class MeFrag extends Fragment {
         Utils.loadAvatar(avatar);
         if (SystemCache.getInstance().getLoginResponse() != null) {
             username.setText(SystemCache.getInstance().getLoginResponse().getDisplayName());
+            displayName.setText(getString(R.string.account)+": "+SystemCache.getInstance().getLoginResponse().getUsername());
         }
     }
 

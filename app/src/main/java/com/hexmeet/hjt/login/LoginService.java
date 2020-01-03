@@ -34,6 +34,7 @@ public class LoginService {
             boolean https = isCloudLogin || LoginSettings.getInstance().useHttps();
             String port = isCloudLogin ? null : LoginSettings.getInstance().getPrivatePort();
             SystemCache.getInstance().setCloudLogin(isCloudLogin);
+            LOG.info("autoLogin()  https : "+https+",port : "+port);
             HjtApp.getInstance().getAppService().loginInThread(params, https, port);
         }
     }

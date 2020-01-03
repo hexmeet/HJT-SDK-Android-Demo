@@ -38,8 +38,9 @@ public class VideoBoxGroup {
     }
 
     public void buildDefaultCells(boolean localMute) {
+        LOG.info("buildDefaultCells()");
         localBox = new LocalBox(rootView.getContext());
-        remoteBox = new RemoteBox(rootView.getContext());
+        remoteBox = new RemoteBox(rootView.getContext(),false);
         remoteBox.setSvcListener(new RemoteBox.SvcSurfaceListener() {
             @Override
             public void onAllSurfaceReady() {
@@ -74,10 +75,31 @@ public class VideoBoxGroup {
 
     }
 
+    public void newRemote(){
+        LOG.info("NEWREMOTE()");
+        remoteBox = new RemoteBox(rootView.getContext(),false);
+        remoteBox.setSvcListener(new RemoteBox.SvcSurfaceListener() {
+            @Override
+            public void onAllSurfaceReady() {
+                remoteCellReady = true;
+                HjtApp.getInstance().getAppService().setRemoteViewToSdk(remoteBox.getAllSurfaces());
+
+            }
+        });
+        rootView.addView(remoteBox, 2, fullScreenLayoutPara);
+    }
+
     public void updateLocalMute(boolean localMute){
-        LOG.info("MUTE : "+localMute);
+        LOG.info("LOCAL MUTE : "+localMute);
         if(localBox != null){
             localBox.updateCellMuteState(localMute);
+        }
+    }
+
+    public void updateLocalName(String displayName){
+        LOG.info("local name : "+displayName);
+        if(localBox != null){
+            localBox.setLocalName(displayName);
         }
     }
 
@@ -129,6 +151,14 @@ public class VideoBoxGroup {
     public boolean updateMicMute(String  participants) {
         if(remoteCellReady) {
             remoteBox.updateMicMute(participants);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean updateRemoteName(String deviceId,String name){
+        if(remoteCellReady) {
+            remoteBox.updateRemoteName(deviceId,name);
             return true;
         }
         return false;
@@ -261,11 +291,11 @@ public class VideoBoxGroup {
                     } else {
                         colorString = "#" + alpha + colorString;
                     }
-                    LOG.info("MessageOverlay: combine bg color: ["+colorString+"]");
+                    LOG.info("MessageOverlay: combine bg_click_item_color color: ["+colorString+"]");
                     bgColor = Color.parseColor(colorString);
                 }
             } catch (Exception e) {
-                LOG.error("MessageOverlay: combine bg color error ", e);
+                LOG.error("MessageOverlay: combine bg_click_item_color color error ", e);
             }
             message.setText(info.getContent(), bgColor, getTextColor(info.getForegroundColor()), (int)(info.getFontSize() * 3), info.getDisplayRepetitions(), speedMode);
         } else {

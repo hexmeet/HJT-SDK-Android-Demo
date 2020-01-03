@@ -10,7 +10,6 @@
         android:id="@+id/login_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/login_private"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"
         android:text="@string/login_cloud"

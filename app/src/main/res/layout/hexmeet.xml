@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/hexmeet_bg"
+    android:background="@color/White"
     android:fitsSystemWindows="true"
     android:orientation="vertical" >
 
@@ -29,6 +29,21 @@
             android:textSize="10sp" />
 
         <TextView
+            android:id="@+id/chat"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/tab_chat_unselected"
+            android:gravity="center_horizontal"
+            android:paddingTop="7dp"
+            android:text="@string/chat"
+            android:textColor="#999999"
+            android:textSize="10sp"
+            android:visibility="gone"
+            />
+
+        <TextView
             android:id="@+id/dialing"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -38,6 +53,19 @@
             android:gravity="center_horizontal"
             android:paddingTop="7dp"
             android:text="@string/join_meeting"
+            android:textColor="#999999"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/contacts"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/tab_contacts_unselected"
+            android:gravity="center_horizontal"
+            android:paddingTop="7dp"
+            android:text="@string/contacts"
             android:textColor="#999999"
             android:textSize="10sp" />
 
@@ -53,6 +81,8 @@
             android:text="@string/tab_me"
             android:textColor="#999999"
             android:textSize="10sp" />
+
+
     </LinearLayout>
 
     <View

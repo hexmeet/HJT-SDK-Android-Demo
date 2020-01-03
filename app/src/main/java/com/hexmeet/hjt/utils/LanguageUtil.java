@@ -6,7 +6,9 @@ import org.apache.log4j.Logger;
 
 import java.util.Locale;
 
-public class LanguageUtil extends android.support.v4.app.FragmentActivity {
+import androidx.fragment.app.FragmentActivity;
+
+public class LanguageUtil extends FragmentActivity {
    private static Logger log = Logger.getLogger(LanguageUtil.class);
 
    public static boolean isEn(Context context){

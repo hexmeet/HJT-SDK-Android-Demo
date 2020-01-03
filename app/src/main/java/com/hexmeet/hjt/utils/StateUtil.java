@@ -1,5 +1,6 @@
 package com.hexmeet.hjt.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
@@ -12,6 +13,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.hexmeet.hjt.R;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,6 +26,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import androidx.core.content.ContextCompat;
+import cn.ycbjie.ycstatusbarlib.StatusBarUtils;
+import cn.ycbjie.ycstatusbarlib.bar.StateAppBar;
+
 public class StateUtil {
     public static int screenWidth;
     public static int screenHeight;
@@ -30,7 +37,8 @@ public class StateUtil {
     private static final String KEY_MIUI_VERSION_CODE = "ro.miui.ui.version.code";
     private static final String KEY_MIUI_VERSION_NAME = "ro.miui.ui.version.name";
     private static final String KEY_MIUI_INTERNAL_STORAGE = "ro.miui.internal.storage";
-
+    private static final String MANUFACTURER_MEIZU = "meiZu";//魅族
+    private static final String MANUFACTURER_XIAOMI = "xiaoMi";//小米
     private static DisplayMetrics mMetrics;
     public static final String HOME_CURRENT_TAB_POSITION = "HOME_CURRENT_TAB_POSITION";
 
@@ -94,6 +102,7 @@ public class StateUtil {
      * @param useThemestatusBarColor   是否要状态栏的颜色，不设置则为透明色
      * @param withoutUseStatusBarColor 是否不需要使用状态栏为暗色调
      */
+    @SuppressLint("ResourceAsColor")
     public static void setStatusBar(Activity activity, boolean useThemestatusBarColor, boolean withoutUseStatusBarColor) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//5.0及以上
             View decorView = activity.getWindow().getDecorView();
@@ -101,7 +110,7 @@ public class StateUtil {
                     | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
             decorView.setSystemUiVisibility(option);
             if (useThemestatusBarColor) {
-                activity.getWindow().setStatusBarColor(Color.parseColor("#ffffff"));
+                activity.getWindow().setStatusBarColor(R.color.White);
             } else {
                 activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
             }
@@ -167,6 +176,17 @@ public class StateUtil {
     }
 
 
+    public static void setStateBarUtil(Activity activity){
+        if(Build.MANUFACTURER.equals(MANUFACTURER_XIAOMI) || Build.MANUFACTURER.equals(MANUFACTURER_MEIZU)){
+            StateUtil.setStatusBar(activity,true,false);
+            StateUtil.setStatusTextColor(true,activity);
+        }else {
+            StateAppBar.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.white));
+            //状态栏亮色模式，设置状态栏黑色文字、图标
+            StatusBarUtils.StatusBarLightMode(activity);
+        }
+
+    }
 
     /**
      * 判断手机是否是小米

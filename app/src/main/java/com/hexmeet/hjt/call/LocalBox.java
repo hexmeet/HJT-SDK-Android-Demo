@@ -69,7 +69,7 @@ public class LocalBox {
         textView.setTextColor(Color.WHITE);
         textView.setPadding(3, 0, 3, 2);
         textView.setMaxLines(1);
-        textView.setText(EVFactory.createEngine().getDisplayName());
+        textView.setText(HjtApp.getInstance().getAppService().getDisplayName());
 
         infoContainer.addView(textView);
     }
@@ -89,6 +89,10 @@ public class LocalBox {
         infoContainer.getChildAt(0).setVisibility(mute ? View.VISIBLE : View.GONE);
     }
 
+    public void setLocalName(String displayName){
+        TextView childAt =(TextView) infoContainer.getChildAt(1);
+        childAt.setText(displayName);
+    }
     public SurfaceView getSurfaceView() {
         return surfaceView;
     }

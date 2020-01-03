@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +15,9 @@ import com.hexmeet.hjt.AppCons;
 import com.hexmeet.hjt.BuildConfig;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 public class PreLoginFragment extends Fragment {
     private LoginFragmentCallback callback;

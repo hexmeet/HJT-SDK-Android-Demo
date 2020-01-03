@@ -142,4 +142,23 @@
         <item name="android:windowBackground">@null</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>
+
+    <style name="KeyboardTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+    </style>
+
+    <style name="DiallnNotify" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="colorPrimary">@color/title_bar</item>
+        <item name="colorPrimaryDark">@color/title_bar</item>
+        <item name="colorAccent">@color/title_bar</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 </resources>

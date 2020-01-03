@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,8 @@ import com.hexmeet.hjt.sdk.ChannelStatList;
 import com.hexmeet.hjt.sdk.ChannelStatistics;
 
 import java.util.List;
+
+import androidx.annotation.RequiresApi;
 
 
 public class CallStaticsWindow {

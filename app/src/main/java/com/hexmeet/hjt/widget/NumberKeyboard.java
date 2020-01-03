@@ -1,12 +1,13 @@
 package com.hexmeet.hjt.widget;
 
-import android.support.v7.widget.GridLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import androidx.gridlayout.widget.GridLayout;
 
 public class NumberKeyboard {
     private TextView input;

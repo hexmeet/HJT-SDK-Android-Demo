@@ -6,7 +6,7 @@
     <RelativeLayout
         android:id="@+id/title_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
+        android:layout_height="58dp"
         android:background="@color/call_toolbar_bg"
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
@@ -185,6 +185,29 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/toolbar_layout_chat"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_menu_converstation"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/toolbar_icon_width"
+                android:layout_height="@dimen/toolbar_icon_height"
+                android:src="@drawable/icon_toolbar_chat_" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/chat"
+                android:textColor="@color/White"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/toolbar_layout_mode"
             android:layout_weight="1"
             android:layout_width="0dp"
@@ -201,7 +224,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/speaker_mode"
+                android:text="@string/split_screen_switch"
                 android:textColor="@color/White"
                 android:textSize="13sp" />
 
@@ -260,17 +283,31 @@
             android:gravity="center"
             android:textColor="@drawable/color_handup"
             android:text="@string/handup"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:visibility="gone"
+            />
 
         <TextView
-            android:id="@+id/switch_voice_mode"
+            android:id="@+id/switch_vadio_mode"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/bg_menu_converstation"
             android:gravity="center"
             android:textColor="@color/White"
             android:text="@string/voice_mode"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:visibility="gone"
+            />
+        <TextView
+            android:id="@+id/update_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_menu_converstation"
+            android:gravity="center"
+            android:textColor="@color/White"
+            android:text="@string/rename"
+            android:textSize="15sp"
+            />
 
     </LinearLayout>
 

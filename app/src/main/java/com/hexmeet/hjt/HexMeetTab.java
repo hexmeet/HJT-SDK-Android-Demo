@@ -3,7 +3,7 @@ package com.hexmeet.hjt;
 import org.apache.commons.lang3.StringUtils;
 
 public enum HexMeetTab {
-    CONFERENCE(0, "conference"), DIALING(1, "dialing"), ME(2, "me");
+    CONFERENCE(0, "conference"), CHAT(1, "chat"), DIALING(2, "dialing"), CONTACTS(3, "contacts"), ME(4, "me");
 
     private int index;
     private String tabName;

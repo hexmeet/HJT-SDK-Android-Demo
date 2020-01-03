@@ -14,7 +14,9 @@ import java.net.Socket;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 
-public class NetworkUtil extends android.support.v4.app.FragmentActivity {
+import androidx.fragment.app.FragmentActivity;
+
+public class NetworkUtil extends FragmentActivity {
     private static Logger LOG = Logger.getLogger(NetworkUtil.class);
 
     private static boolean cloudAlive = true;

@@ -12,8 +12,6 @@ import com.hexmeet.hjt.sdk.CopyAssets;
 
 import org.apache.log4j.Logger;
 
-import ev.common.EVFactory;
-
 public class PhoneStateChangedReceiver extends BroadcastReceiver {
     private Logger LOG = Logger.getLogger(PhoneStateChangedReceiver.class);
     @SuppressLint("LongLogTag")
@@ -43,8 +41,8 @@ public class PhoneStateChangedReceiver extends BroadcastReceiver {
             LOG.info("hexmeet PhoneStateChangedReceiver : audioInterruption 0, isSpeakerOn: " + HjtApp.isSpeakerOn());
             HjtApp.getInstance().getAppService().enableSpeaker(true);
             HjtApp.getInstance().getAppService().phoneStateChange(false);
-            LOG.info("hexmeet PhoneStateChangedReceiver ：call hunged. App.IsUserMuteVideo: " + EVFactory.createEngine().micEnabled());
-            if(EVFactory.createEngine().micEnabled()) {
+            LOG.info("hexmeet PhoneStateChangedReceiver ：call hunged. App.IsUserMuteVideo: " + HjtApp.getInstance().getAppService().micEnabled());
+            if(HjtApp.getInstance().getAppService().micEnabled()) {
                 HjtApp.getInstance().getAppService().muteMic(false);
             } else {
                 HjtApp.getInstance().getAppService().muteMic(true);//video mute
@@ -64,7 +62,7 @@ public class PhoneStateChangedReceiver extends BroadcastReceiver {
                     AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
                     if(am.isWiredHeadsetOn()){
                         //earphone
-                        LOG.info("hexmeet PhoneStateChangedReceiver   route to receiver-earphone");
+                        LOG.info("hexmeet PhoneStateChang edReceiver   route to receiver-earphone");
                         CopyAssets.getInstance().routeAudioToReceiver();
                     } else {
                         if(HjtApp.isSpeakerOn()){

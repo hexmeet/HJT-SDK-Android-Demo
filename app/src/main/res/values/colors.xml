@@ -32,4 +32,15 @@
     <color name="hexmeet_light_gray">#90313131</color>
     <color name="hexmeet_bg">#f1f1f1</color>
     <color name="appset">#c1c1c1</color>
+    <color name="chat_content_bg">#f7f7f7</color>
+
+
+    <color name="colorPrimary">#FFFFFF</color>
+
+    <color name="spilt_line">#CFCFCF</color>
+
+    <color name="group_chat_list_bg">#eeeeee</color>
+    <color name="bg_border">#e7e7e7</color>
+    <color name="dialog_update_name_color">#f7f7f7</color>
+    <color name="line_color">#dddddd</color>
 </resources>

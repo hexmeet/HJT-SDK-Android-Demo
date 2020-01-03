@@ -2,6 +2,7 @@ package com.hexmeet.hjt;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -62,7 +63,9 @@ public class CrashHandler implements UncaughtExceptionHandler {
         }
         // android.os.Process.killProcess(android.os.Process.myPid());
         // System.exit(1);
-
+        Intent intent = new Intent(HjtApp.getInstance().getContext(),SplashActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        HjtApp.getInstance().getContext().startActivity(intent);
         System.exit(1);
 
         // ExitAppUtils.getInstance().exit();

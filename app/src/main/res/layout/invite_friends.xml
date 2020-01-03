@@ -2,8 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/hexmeet_bg"
-    android:fitsSystemWindows="true">
+    android:background="@color/White"
+    android:fitsSystemWindows="true"
+    >
 
     <RelativeLayout
         android:id="@+id/title_layout"
@@ -24,7 +25,7 @@
             android:id="@+id/back_btn"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:padding="15dp"
+            android:padding="21dp"
             android:src="@drawable/icon_back_black" />
     </RelativeLayout>
 
@@ -34,16 +35,16 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
         android:layout_below="@id/title_layout"
-        android:background="@drawable/bg_card_border">
+        android:background="@color/White">
 
         <ImageView
             android:id="@+id/qr_code"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="@dimen/qr_code_wh"
+            android:layout_height="@dimen/qr_code_wh"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp"
-            android:background="@drawable/bkg_qr"
             android:padding="15dp"
             android:src="@drawable/qr_code" />
 
@@ -54,7 +55,7 @@
             android:layout_below="@id/qr_code"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="50dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:text="@string/scan_qrcode_download_app"
             android:textColor="@color/font_color_313131"
             android:textSize="15sp" />

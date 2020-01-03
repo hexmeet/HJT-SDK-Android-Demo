@@ -11,25 +11,32 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Message;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.SurfaceView;
 
+import com.alibaba.sdk.android.push.CommonCallback;
+import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
 import com.hexmeet.hjt.AppCons;
 import com.hexmeet.hjt.AppSettings;
 import com.hexmeet.hjt.CallState;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.RegisterState;
+import com.hexmeet.hjt.TagAliasOperatorHelper;
+import com.hexmeet.hjt.cache.EmMessageCache;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.event.CallEvent;
 import com.hexmeet.hjt.event.LoginResultEvent;
 import com.hexmeet.hjt.event.LoginRetryEvent;
+import com.hexmeet.hjt.model.IMLoginParams;
 import com.hexmeet.hjt.model.LoginParams;
+import com.hexmeet.hjt.model.RestLoginResp;
 import com.hexmeet.hjt.sdk.CopyAssets;
+import com.hexmeet.hjt.sdk.EmSdkManagerImpl;
 import com.hexmeet.hjt.sdk.MakeCallParam;
 import com.hexmeet.hjt.sdk.SdkManager;
 import com.hexmeet.hjt.sdk.SdkManagerImpl;
@@ -40,6 +47,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import em.common.EMEngine;
 import ev.common.EVEngine;
 
 public class AppService extends Service {
@@ -50,6 +60,9 @@ public class AppService extends Service {
     private SdkHandler mSdkHandler;
     private SdkManager sdkManager;
     private boolean userInLogin = false;
+    private EmSdkHandler emSdkHandler;
+    private EmSdkManagerImpl emSdkMeanager;
+    private final static int FLOAT_NOTIFICATION_ID = 11;
 
     @Nullable
     @Override
@@ -63,17 +76,26 @@ public class AppService extends Service {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void onCreate() {
         super.onCreate();
         LOG.info("->AppService onCreate<-");
         EventBus.getDefault().register(this);
 
         sdkManager = new SdkManagerImpl();
+        emSdkMeanager = new EmSdkManagerImpl();
 
         HandlerThread sdkThread = new HandlerThread("SdkHandlerThread");
         sdkThread.start();
         mSdkHandler = new SdkHandler(sdkThread, sdkManager);
         mSdkHandler.sendEmptyMessageDelayed(SdkHandler.HANDLER_SDK_INIT, 200);
+
+        HandlerThread restThread = new HandlerThread("SdkRestThread");
+        restThread.start();
+        emSdkHandler = new EmSdkHandler(restThread, emSdkMeanager);
+        emSdkHandler.sendEmptyMessageDelayed(EmSdkHandler.HANDLER_EMSDK_INIT,200);
+
+
         hardwareDecoding(AppSettings.getInstance().isHardwareDecoding());
         registerNetworkReceiver();
     }
@@ -89,8 +111,12 @@ public class AppService extends Service {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCallStateEvent(CallEvent event) {
+        LOG.info("onCallStateEvent ："+event.getCallState());
         if(event.getCallState() == CallState.CONNECTED) {
             initAudioMode(true);
+            if(SystemCache.getInstance().getLoginResponse().getFeatureSupport().isChatInConference()){
+                anonymousLoginIM();
+            }
         }
 
         if(event.getCallState() == CallState.RING && !HjtApp.getInstance().isCalling()) {
@@ -104,6 +130,10 @@ public class AppService extends Service {
         if(event.getCallState() == CallState.IDLE){
             cancelFloatIndicator();
             uninitAudioMode(true);
+            if(SystemCache.getInstance().getLoginResponse().getFeatureSupport().isChatInConference()){
+                logoutIm();
+                EmMessageCache.getInstance().resetIMCache();
+            }
         }
     }
 
@@ -149,6 +179,12 @@ public class AppService extends Service {
 
     public void releaseSdk() {
         sdkManager.release();
+        emSdkMeanager.releaseEmSdk();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return super.onStartCommand(intent, flags, startId);
     }
 
     public void loginInThread(LoginParams params, boolean https, String port){
@@ -176,16 +212,31 @@ public class AppService extends Service {
         mSdkHandler.sendMessage(msg);
     }
 
-    public void makeCall(String number, String password) {
+    public void makeCall(String number, String password,boolean isP2pCall) {
         MakeCallParam param = new MakeCallParam();
         param.callType = 1;
         param.uri = number;
         param.password = (password == null ? "" : password);
         param.signalType = 2;
         param.displayName = number;
+        param.isP2pCall = isP2pCall;
 
         Message message = Message.obtain();
         message.what = SdkHandler.HANDLER_SDK_MAKE_CALL;
+        message.getData().putParcelable(AppCons.BundleKeys.EXTRA_DATA, param);
+        mSdkHandler.sendMessage(message);
+    }
+
+    public void p2pMakeCall(String number, String password,String name) {
+        MakeCallParam param = new MakeCallParam();
+        param.callType = 1;
+        param.uri = number;
+        param.password = (password == null ? "" : password);
+        param.signalType = 2;
+        param.displayName = name;
+
+        Message message = Message.obtain();
+        message.what = SdkHandler.HANDLER_SDK_P2P_MAKE_CALL;
         message.getData().putParcelable(AppCons.BundleKeys.EXTRA_DATA, param);
         mSdkHandler.sendMessage(message);
     }
@@ -216,10 +267,11 @@ public class AppService extends Service {
     }
 
     public void muteMic(boolean mute) {
-        Message message = Message.obtain();
+        /*Message message = Message.obtain();
         message.what = SdkHandler.HANDLER_SDK_MIC_MUTE;
         message.arg1 = mute ? 1 : 0;
-        mSdkHandler.sendMessage(message);
+        mSdkHandler.sendMessage(message);*/
+        sdkManager.setMicMute(mute);
     }
 
     //Speaker:2 ,Gallery:1
@@ -235,6 +287,17 @@ public class AppService extends Service {
         Message msg = Message.obtain(mSdkHandler);
         msg.what = SdkHandler.HANDLER_USER_MESSAGE;
         msg.sendToTarget();
+    }
+
+    public void setConfDisplayName(String displayName){
+        Message msg = Message.obtain(mSdkHandler);
+        msg.what = SdkHandler.HANDLER_SDK_CONFDISPLAYNAME;
+        msg.obj = displayName;
+        msg.sendToTarget();
+    }
+
+    public String getDisplayName(){
+      return sdkManager.getDisplayName();
     }
 
     public void endCall() {
@@ -373,12 +436,29 @@ public class AppService extends Service {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.POSTING)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onLoginResultEvent(LoginResultEvent event) {
         if (userInLogin && event.isAnonymous() && event.getCode() == LoginResultEvent.LOGIN_ANONYMOUS_FAILED) {
             LOG.error("Reconnect anonymous login failed : "+ event.getMessage());
             loginInLoop(true);
         }
+        if(event.getCode() == LoginResultEvent.LOGIN_SUCCESS){
+            String username = SystemCache.getInstance().getLoginResponse().getUsername();
+            String telephone = SystemCache.getInstance().getLoginResponse().getCellphone();
+            TagAliasOperatorHelper.setAlias(getApplicationContext(),username,true);
+            PushServiceFactory.getCloudPushService().bindAccount(username+"__"+telephone, new CommonCallback() {
+                @Override
+                public void onSuccess(String s) {
+                    LOG.info("  PushService onSuccess");
+                }
+
+                @Override
+                public void onFailed(String s, String s1) {
+                    LOG.info("  PushService onFailed");
+                }
+            });
+        }
+
     }
 
     public void setUserInLogin(boolean userInLogin) {
@@ -435,14 +515,24 @@ public class AppService extends Service {
         mSdkHandler.sendMessage(message);
     }
 
+    public void refuseP2PMetting(String number) {
+        Message msg = Message.obtain(mSdkHandler);
+        msg.what = SdkHandler.HANDLER_SDK_REFUSE_P2P_MAKE_CALL;
+        msg.obj = number;
+        msg.sendToTarget();
+    }
+
     public boolean isCalling(){
       return   sdkManager.isCalling();
     }
 
-    public void isVideoMode(boolean mode){
-        sdkManager.isVideoActive(mode);
+    public void setVideoMode(boolean mode){
+        sdkManager.setVideoActive(mode);
     }
 
+    public boolean micEnabled(){
+        return   sdkManager.micEnabled();
+    }
 
     public void zoomVideoByStreamType(EVEngine.StreamType type,float factor,float cx,float cy){
         sdkManager.zoomVideoByStreamType(type,factor,cx,cy);
@@ -542,6 +632,77 @@ public class AppService extends Service {
         CopyAssets.getInstance().processAudioRouteEvent(
                 isVideoCall ? CopyAssets.CONVERSATION_EVENT : CopyAssets.CONVERSATION_AUDIOONLY_EVENT,
                 CopyAssets.EVENT_START);
+    }
+
+    public void loginIM(){
+        emSdkMeanager.emLogin();
+    }
+
+    public void anonymousLoginIM(){
+        String imAddress = sdkManager.getIMAddress();//   address  ws://172.24.0.63:6060
+        if(imAddress!=null && !imAddress.equals("")){
+            String server = null ;
+            String port = null;
+            String[] split = imAddress.split("//");
+            for (int i = 0; i < split.length; i++){
+                server = split[1];
+            }
+            String[] site = server.split(":");
+            for (int i = 0; i < site.length; i++){
+                server = site[0];
+                port = site[1];
+            }
+        EmMessageCache.getInstance().setIMAddress(true);
+        RestLoginResp loginResponse = SystemCache.getInstance().getLoginResponse();
+        IMLoginParams params = new IMLoginParams();
+        params.setServer(server);
+        params.setPort(Integer.parseInt(port));
+        params.setDisplayName(loginResponse.getDisplayName());
+        params.setUserId(String.valueOf(loginResponse.getUserId()));
+
+        Message msg = Message.obtain();
+        msg.what = EmSdkHandler.HANDLER_EMSDK_ANONYMOUSLOGIN;
+        Bundle data = msg.getData();
+        data.putParcelable(AppCons.BundleKeys.EXTRA_DATA, params);
+        msg.setData(data);
+        emSdkHandler.sendMessage(msg);
+        }else {
+            EmMessageCache.getInstance().setIMAddress(false);
+        }
+    }
+
+    public EMEngine.UserInfo getImUserInfo(){
+       return emSdkMeanager.userInfo();
+    }
+
+    public void sendMessage(String content) {
+        Message msgs = Message.obtain();
+        msgs.what = EmSdkHandler.HANDLER_EMSDK_SENDMESSAGE;
+        Bundle bundle = new Bundle();
+        bundle.putString("groupId", EmMessageCache.getInstance().getGroupId());
+        bundle.putString("content",content);
+        msgs.setData(bundle);
+        emSdkHandler.sendMessage(msgs);
+    }
+
+    public String getGroupMemberName(String fromId ,String groupId) {
+        return emSdkMeanager.getGroupMemberName(fromId,groupId);
+    }
+
+    public void joinGroupChat(){
+        EmMessageCache.getInstance().setGroupId(sdkManager.getIMGroupId());
+        Message msg = Message.obtain(emSdkHandler);
+        msg.what = EmSdkHandler.HANDLER_EMSDK_JOINGROUPCHAT;
+        msg.obj = sdkManager.getIMGroupId();
+        msg.sendToTarget();
+    }
+
+    public void logoutIm(){
+        emSdkHandler.sendEmptyMessage(EmSdkHandler.HANDLER_EMSDK_LOGAUT);
+    }
+
+    public  EVEngine.ContactInfo getImageUrl(String userId){
+       return   sdkManager.getIMContactInfo(userId);
     }
 
 }
