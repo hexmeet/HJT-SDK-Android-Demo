@@ -4,7 +4,7 @@
 
     <string name="app_name">会捷通</string>
     <string name="company">中创视讯</string>
-    <string name="copyright1">版权所有 © 2019 北京中创视讯科技有限公司</string>
+    <string name="copyright1">版权所有 © 2020 北京中创视讯科技有限公司</string>
     <string name="need_float_window_permission">请在系统设置中为%1$s打开悬浮窗权限</string>
 
 </resources>

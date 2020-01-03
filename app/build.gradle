@@ -1,45 +1,51 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'com.aliyun.ams.emas-services'
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 29
 
     defaultConfig {
         applicationId System.getenv("APPLICATION_ID") as String ?: "com.hexmeet.hjtsdkdemo"
         minSdkVersion 21
-        targetSdkVersion 28
-        versionCode System.getenv("BUILD_CODE") as Integer ?: 0
+        targetSdkVersion 29
+        versionCode System.getenv("BUILD_CODE") as Integer ?: 10
         versionName System.getenv("BUILD_VERSION") as String ?: "0.0"
 
         def appFileProviderAuth = applicationId + (".fileprovider")
-        def wxAppId = System.getenv("WX_APPID") as String ?: "wx_id_of_your_company"
+        def wxAppId = System.getenv("WX_APPID") as String ?: "yours"
         def trialApplicationURL = System.getenv("TRIAL_APPLICATION_URL") as String ?: "http://www.hjtcloud.com/try"
         def cloudLocationServerAddr = System.getenv("CLOUD_LOCATION_SERVER_ADDR") as String ?: "cloudcenter.hexmeet.com"
         def cloudServerAddr = System.getenv("CLOUD_SERVER_ADDR") as String ?: "cloud.hexmeet.com"
         def cloudServerProtoHttps = System.getenv("CLOUD_SERVER_PROTOCOL_HTTPS") as String ?: "true"
-
+        def xiaomiId = System.getenv("XIAOMI_ID") as String ?: "yours"
+        def xiaomiKey = System.getenv("XIAOMI_KEY") as String ?: "yours"
+        def oppoKey = System.getenv("OPPO_KEY") as String ?: "yours"
+        def oppoSecret = System.getenv("OPPO_APPSECRET") as String ?: "yours"
+        def meizuId = System.getenv("MEIZU_ID") as String ?: "yours"
+        def meizuKey = System.getenv("MEIZU_KEY") as String ?: "yours"
+        def notification = System.getenv("NOTIFICATION") as String ?: "notification"
+        def floatNotification = System.getenv("FLOATNOTIFICATION") as String ?: "floatNotification"
         manifestPlaceholders = [
                 APP_FILE_PROVIDER_AUTH: appFileProviderAuth,
-                JPUSH_PKGNAME : applicationId, //JPush上注册的包名.
-                JPUSH_APPKEY : "yours", //JPush上注册的包名对应的appkey.
+                JPUSH_PKGNAME         : applicationId, //JPush上注册的包名.
+                JPUSH_APPKEY          : "yours", //JPush上注册的包名对应的appkey.
 
-                HUAWEI_APPID:"yours ",//华为平台注册的appid
+                HUAWEI_APPID          : "yours ",//华为平台注册的appid
 
-                XIAOMI_APPKEY:"MI-yours",//小米平台注册的appkey
-                XIAOMI_APPID:"MI-yours",//小米平台注册的appid
+                XIAOMI_APPKEY         : "yours",//小米平台注册的appkey
+                XIAOMI_APPID          : "yours",//小米平台注册的appid
 
-                OPPO_APPKEY : "OP-yours", // OPPO平台注册的appkey
-                OPPO_APPID : "OP-yours", // OPPO平台注册的appid
-                OPPO_APPSECRET: "OP-yours",//OPPO平台注册的appsecret
+                OPPO_APPKEY           : "yours", // OPPO平台注册的appkey
+                OPPO_APPID            : "yours", // OPPO平台注册的appid
+                OPPO_APPSECRET        : "yours",//OPPO平台注册的appsecret
 
-                MEIZU_APPKEY:"MZ-yours",//魅族平台注册的appkey
-                MEIZU_APPID:"MZ-yours",//魅族平台注册的appid
+                MEIZU_APPKEY          : "yours",//魅族平台注册的appkey
+                MEIZU_APPID           : "yours",//魅族平台注册的appid
 
-                VIVO_APPKEY :"yours", // VIVO平台注册的appkey
-                VIVO_APPID :"yours", // VIVO平台注册的appid
+                VIVO_APPKEY           : "yours", // VIVO平台注册的appkey
+                VIVO_APPID            : "yours", // VIVO平台注册的appid
 
-                JPUSH_CHANNEL:"developer-default", //暂时填写默认值即可.
+                JPUSH_CHANNEL         : "developer-default", //暂时填写默认值即可.
         ]
 
 
@@ -48,17 +54,25 @@ android {
         buildConfigField("String", "CLOUD_LOCATION_SERVER_ADDR", '"' + cloudLocationServerAddr + '"')
         buildConfigField("String", "CLOUD_SERVER_ADDR", '"' + cloudServerAddr + '"')
         buildConfigField("boolean", "CLOUD_SERVER_PROTOCOL_HTTPS", cloudServerProtoHttps)
+        buildConfigField("String", "XIAOMI_ID", '"' + xiaomiId + '"')
+        buildConfigField("String", "XIAOMI_KEY", '"' + xiaomiKey + '"')
+        buildConfigField("String", "OPPO_KEY", '"' + oppoKey + '"')
+        buildConfigField("String", "OPPO_APPSECRET", '"' + oppoSecret + '"')
+        buildConfigField("String", "MEIZU_ID", '"' + meizuId + '"')
+        buildConfigField("String", "MEIZU_KEY", '"' + meizuKey + '"')
+        buildConfigField("String", "NOTIFICATION", '"' + notification + '"')
+        buildConfigField("String", "FLOATNOTIFICATION", '"' + floatNotification + '"')
 
 
         def archiveVersionName = ((System.getenv("ARCHIVE_NAME") as String ?: "HJT_SDKDEMO-") +
-                                 (System.getenv("BUILD_VERSION") as String ?: "0.0"))
+                (System.getenv("BUILD_VERSION") as String ?: "0.0"))
 
         project.ext.set("archivesBaseName", archiveVersionName)
         ndk {
             moduleName "jniLibs"
             abiFilters "armeabi", "armeabi-v7a"
         }
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     lintOptions {
@@ -96,7 +110,6 @@ android {
 
 repositories {
     maven {
-        // url 'https://download.01.org/crosswalk/releases/crosswalk/android/maven2'
         url 'http://maven.aliyun.com/nexus/content/repositories/releases/'
     }
     flatDir {
@@ -107,27 +120,33 @@ repositories {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation fileTree(include: ['*.aar'], dir: 'libs')
-    implementation 'com.android.support:support-v4:28.0.0'
-    implementation 'com.android.support:gridlayout-v7:28.0.0'
-    implementation 'com.google.code.gson:gson:2.8.0'
-    implementation 'com.android.support:multidex:1.0.3'
-    implementation 'com.squareup.picasso:picasso:2.5.2'
-    implementation 'com.andreabaccega:android-form-edittext:1.3.+'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.andreabaccega:android-form-edittext:1.3.5'
     implementation 'com.lsjwzh:materialloadingprogressbar:0.5.8-RELEASE'
     implementation 'com.aliyun.ams:alicloud-android-man:1.2.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.15'
- //  implementation(name:'evsdk', ext:'aar')
     implementation 'cn.jiguang.sdk:jpush:3.3.4'
     implementation 'cn.jiguang.sdk:jcore:2.1.2'
-    //华为
-    implementation 'cn.jiguang.sdk.plugin:huawei:3.3.4'
-    //小米
-    implementation 'cn.jiguang.sdk.plugin:xiaomi:3.3.4'
-    // oppo
-    implementation 'cn.jiguang.sdk.plugin:oppo:3.3.4'
-    //魅族
-    implementation'cn.jiguang.sdk.plugin:meizu:3.3.4'
-    //vivo
-    implementation 'cn.jiguang.sdk.plugin:vivo:3.3.4'
+    implementation 'com.github.bumptech.glide:glide:4.10.0'
+    implementation 'com.jcodecraeer:xrecyclerview:1.5.9'
+    implementation 'com.github.w446108264:XhsEmoticonsKeyboard:2.0.4'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'com.inuker.bluetooth:library:1.4.0'
+    implementation 'cn.yc:YCStatusBarLib:1.4.0'//沉浸式状态栏
+    implementation 'net.danlew:android.joda:2.9.5'
+    //aliyun
+    implementation 'com.aliyun.ams:alicloud-android-push:3.1.6'
+    implementation 'com.aliyun.ams:alicloud-android-third-push:3.0.9@aar'
+    implementation 'com.aliyun.ams:huawei-push:2.6.3.305'
+    implementation 'com.aliyun.ams:huawei-push-base:2.6.3.305'
+    implementation 'com.aliyun.ams:meizu-push:3.8.3-fix'
+    //微信分享
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
 }

@@ -9,7 +9,6 @@ import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.util.Log;
 
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
@@ -130,8 +129,7 @@ public class CopyAssets {
     }
 
     public String processAudioRouteEvent(String event, int value){
-        LOG.info("hexmeet  processAudioRouteEvent - event="+mAudioManager.getMode());
-        LOG.info("hexmeet  processAudioRouteEvent - event="+event+", value="+value);
+        LOG.info("hexmeet  processAudioRouteEvent - event="+event+", value="+value+",mode : "+mAudioManager.getMode());
 
         if(event.equals(PHONE_INTERRUPTION)){
             return processAudioRouteEventPhoneInterruption(value);
@@ -223,12 +221,12 @@ public class CopyAssets {
 
     private void routeAudioToSpeakerHelper(boolean speakerOn) {
         LOG.info("hexmeet Manager - routeAudioToSpeakerHelper  "+speakerOn +",bluetooth : "+isUsingBluetooth());
-        Log.w("Routing audio to : ",speakerOn ? "speaker" : "earpiece" );
+        LOG.info("Routing audio to : "+speakerOn+ " ?  speaker ：earpiece" );
         //BluetoothManager.getInstance().disableBluetoothSCO();
         if(isUsingBluetooth())
             disconnectBluetooth();
 
-        mAudioManager.setSpeakerphoneOn(speakerOn);
+        mAudioManager.setSpeakerphoneOn(speakerOn);//是否外放
 
     }
 
@@ -362,6 +360,7 @@ public class CopyAssets {
                 }
             }
             else{
+                setBluetoothMonoState(false);
                 // now is not using this device, maybe wiredHeadset or speaker, no need to process
                 LOG.info("hexmeet processAudioRouteEventBluetoothConnection(plug out) no audio route needed");
             }

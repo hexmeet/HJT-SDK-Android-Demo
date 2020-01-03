@@ -13,6 +13,7 @@ public class RestLoginResp {
      * everChangedPasswd : false
      * customizedH5UrlPrefix:
      */
+    public long userId;
     public String username;
     public String displayName;
     public String org;
@@ -24,6 +25,32 @@ public class RestLoginResp {
     public String customizedH5UrlPrefix;
     public String token;
     public String doradoVersion;
+    public long deviceId;
+    public FeatureSupport featureSupport;
+
+    public FeatureSupport getFeatureSupport() {
+        return featureSupport;
+    }
+
+    public void setFeatureSupport(FeatureSupport featureSupport) {
+        this.featureSupport = featureSupport;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public long getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(long deviceId) {
+        this.deviceId = deviceId;
+    }
 
     public String getUsername() {
         return username;
@@ -113,9 +140,11 @@ public class RestLoginResp {
         this.doradoVersion = doradoVersion;
     }
 
+
     public RestLoginResp() {}
 
-    public RestLoginResp(String username, String displayName, String org, String email, String cellphone, String telephone, String dept, boolean everChangedPasswd, String customizedH5UrlPrefix, String token, String doradoVersion) {
+    public RestLoginResp(long userId, String username, String displayName, String org, String email, String cellphone, String telephone, String dept, boolean everChangedPasswd, String customizedH5UrlPrefix, String token, String doradoVersion, long deviceId, FeatureSupport featureSupport) {
+        this.userId = userId;
         this.username = username;
         this.displayName = displayName;
         this.org = org;
@@ -127,12 +156,15 @@ public class RestLoginResp {
         this.customizedH5UrlPrefix = customizedH5UrlPrefix;
         this.token = token;
         this.doradoVersion = doradoVersion;
+        this.deviceId = deviceId;
+        this.featureSupport = featureSupport;
     }
 
     @Override
     public String toString() {
         return "RestLoginResp{" +
-                "username='" + username + '\'' +
+                "userId=" + userId +
+                ", username='" + username + '\'' +
                 ", displayName='" + displayName + '\'' +
                 ", org='" + org + '\'' +
                 ", email='" + email + '\'' +
@@ -143,6 +175,8 @@ public class RestLoginResp {
                 ", customizedH5UrlPrefix='" + customizedH5UrlPrefix + '\'' +
                 ", token='" + token + '\'' +
                 ", doradoVersion='" + doradoVersion + '\'' +
+                ", deviceId=" + deviceId +
+                ", featureSupport=" + featureSupport +
                 '}';
     }
 }

@@ -18,8 +18,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -37,6 +35,9 @@ import com.hexmeet.hjt.utils.ScreenUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 
 public class VoiceLinkListActivity extends BaseActivity {
 	private final static String TAG = VoiceLinkListActivity.class.getSimpleName();

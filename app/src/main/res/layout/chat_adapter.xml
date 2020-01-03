@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/chat_item_height"
+    android:paddingTop="@dimen/wheelview_padding"
+    android:paddingBottom="@dimen/log_in_image_bottom_margin"
+    >
+
+    <ImageView
+        android:id="@+id/chat_avatar"
+        android:layout_marginLeft="@dimen/chat_margin_Left"
+        android:layout_width="@dimen/chat_layout_width"
+        android:layout_height="@dimen/chat_layout_width"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/girl" />
+
+    <LinearLayout
+        android:layout_width="@dimen/chat_text_width"
+        android:layout_height="@dimen/chat_text_height"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center"
+        android:layout_marginStart="65dp"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/chat_margin_Left"
+        >
+
+        <TextView
+            android:id="@+id/user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="demo"
+            android:layout_marginTop="@dimen/wheelview_padding"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textColor="@color/title_bar"
+            />
+
+        <TextView
+            android:id="@+id/user_context"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/chat_text_top"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textColor="@color/sub_title_bar"
+            android:text="今天得主题定的怎么样了？今天得主题定的怎么样了？" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/chat_text_height"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center"
+        android:layout_marginRight="@dimen/chat_margin_Left"
+        >
+        <TextView
+            android:layout_marginTop="@dimen/wheelview_padding"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:id="@+id/user_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="15:01"
+            android:textColor="@color/sub_title_bar"
+            android:textSize="@dimen/chat_text_size"
+            />
+        <TextView
+            android:id="@+id/msg_number"
+            android:layout_width="@dimen/not_tips_num_w"
+            android:layout_height="@dimen/not_disturb_wh"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/chat_text_top_mg"
+            android:background="@drawable/chat_messages_number"
+            android:gravity="center"
+            android:textColor="@color/White"
+            android:text="99+"
+            android:textSize="@dimen/chat_text_size"
+            android:visibility="gone"
+            />
+
+        <LinearLayout
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/chat_text_top_mg"
+            android:orientation="horizontal"
+            android:layout_width="@dimen/not_disturb_w"
+            android:layout_height="@dimen/not_disturb_h">
+            <ImageView
+                android:id="@+id/not_disturb"
+                android:layout_gravity="center"
+                android:layout_width="@dimen/not_disturb_wh"
+                android:layout_height="@dimen/not_disturb_wh"
+                android:src="@drawable/chat_reminder"
+                />
+            <TextView
+                android:id="@+id/not_disturb_msg_remind"
+                android:layout_marginLeft="@dimen/wheelview_padding"
+                android:layout_gravity="center"
+                android:layout_width="@dimen/chat_text_size"
+                android:layout_height="@dimen/chat_text_size"
+                android:background="@drawable/chat_unread_reminder"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

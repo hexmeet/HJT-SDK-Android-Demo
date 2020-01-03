@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_chat_ll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="true"
+    android:background="@color/chat_content_bg"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/contact_layout"
+        android:background="@color/group_chat_list_bg"
+        >
+
+        <TextView
+            android:id="@+id/group_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="群聊（5）"
+            android:textColor="@color/title_bar"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:layout_alignParentRight="true"
+            android:id="@+id/chat_back_btn"
+            android:layout_width="@dimen/chat_text_height"
+            android:layout_height="@dimen/chat_text_height"
+            android:padding="@dimen/setting_padding"
+            android:src="@drawable/btn_closed" />
+
+    </RelativeLayout>
+    <LinearLayout
+        android:background="@color/group_chat_list_bg"
+        android:id="@+id/ll_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rlv_message"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.hexmeet.hjt.groupchat.ChattingFooter
+            android:id="@+id/chatting_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</LinearLayout>

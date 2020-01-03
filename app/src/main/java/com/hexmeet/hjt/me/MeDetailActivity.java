@@ -14,10 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -38,6 +34,7 @@ import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.call.PasswordDialog;
 import com.hexmeet.hjt.event.AvatarUploadEvent;
 import com.hexmeet.hjt.event.RenameEvent;
+import com.hexmeet.hjt.event.UserInfoEvent;
 import com.hexmeet.hjt.login.Login;
 import com.hexmeet.hjt.model.RestLoginResp;
 import com.hexmeet.hjt.utils.Utils;
@@ -52,6 +49,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 public class MeDetailActivity extends BaseActivity {
     public Logger LOG = Logger.getLogger(this.getClass());
@@ -435,14 +437,14 @@ public class MeDetailActivity extends BaseActivity {
         if(event.isSuccess()) {
             Log.i("==setname",event.isSuccess()+"");
             Utils.showToast(this, R.string.rename_sucess);
-            displayName.setText(SystemCache.getInstance().getLoginResponse().getDisplayName());
+            displayName.setText(event.getMessage());
         } else {
             Utils.showToast(this, R.string.rename_failed);
             LOG.error("User rename failed: ["+event.getMessage()+"]");
         }
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onLoginRespEvent(RestLoginResp event) {
+    public void onLoginRespEvent(UserInfoEvent event) {
         if(event!=null){
             displayName.setText(event.getDisplayName());
             username.setText(event.getUsername());

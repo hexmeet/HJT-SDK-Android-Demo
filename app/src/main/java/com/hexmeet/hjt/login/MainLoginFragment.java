@@ -1,8 +1,7 @@
 package com.hexmeet.hjt.login;
+
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,9 @@ import android.widget.ImageView;
 
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 public class MainLoginFragment extends Fragment {
     private LoginFragmentCallback callback;

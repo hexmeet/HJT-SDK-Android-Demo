@@ -46,14 +46,16 @@ public class RemoteBox extends RelativeLayout {
     private boolean speakerMode = false;
     private boolean showContent = true;
     private AtomicInteger surfaceReadyCount = new AtomicInteger(0);
+    int textSize = 14;
 
     public interface SvcSurfaceListener {
         void onAllSurfaceReady();
     }
 
-    public RemoteBox(Context context) {
+    public RemoteBox(Context context,boolean isWindowService) {
         super(context);
-        init(context);
+        LOG.info("INIT isWindowService ： "+isWindowService);
+        init(context,isWindowService);
     }
 
     @Override
@@ -64,11 +66,20 @@ public class RemoteBox extends RelativeLayout {
     }
 
     public void refreshLayout() {
-        if (svcLayoutInfo != null) {
+       /* if (svcLayoutInfo != null) {
             postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     updateLayout(svcLayoutInfo);
+                }
+            }, 500);
+        }*/
+
+        if (SystemCache.getInstance().getSvcLayoutInfo() != null) {
+            postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    updateLayout(SystemCache.getInstance().getSvcLayoutInfo());
                 }
             }, 500);
         }
@@ -78,7 +89,11 @@ public class RemoteBox extends RelativeLayout {
         this.listener = listener;
     }
 
-    private void init(Context context) {
+    private void init(final Context context, final boolean isWindowService) {
+        if(isWindowService){
+            textSize = 8 ;
+        }
+
         hideParam = new LayoutParams(1, 1);
         emptyParam = new LayoutParams(0, 0);
         cellEmptyParam = new LinearLayout.LayoutParams(0, 0);
@@ -96,7 +111,7 @@ public class RemoteBox extends RelativeLayout {
             surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
                 @Override
                 public void surfaceCreated(SurfaceHolder holder) {
-                    LOG.info("--SVC-surfaceCreated[" + pos + "]-->" + holder.getSurface() + "<---");
+                    LOG.info("--SVC-surfaceCreated[" + pos + "]-->" + holder.getSurface() + "<---"+",isWindowService : "+isWindowService);
                     surfaceViewValid[pos] = true;
                     if(pos == 0) {
                         surfaceReadyCount.set(0);
@@ -108,19 +123,21 @@ public class RemoteBox extends RelativeLayout {
 
                 @Override
                 public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                    LOG.info("--SVC-surfaceChanged[" + pos + "]-->" + holder.getSurface().toString() + "<--[" + width + "x" + height + "]-");
+                    LOG.info("--SVC-surfaceChanged[" + pos + "]-->" + holder.getSurface().toString() + "<--[" + width + "x" + height + "]-"+",isWindowService : "+isWindowService);
                 }
 
                 @Override
                 public void surfaceDestroyed(SurfaceHolder holder) {
-                    surfaceViewValid[pos] = false;
-                    Object[] surfaces = getAllSurfaces();
-                    HjtApp.getInstance().getAppService().setRemoteViewToSdk(surfaces);
-                    LOG.info("--SVC-surfaceDestroyed[" + pos + "]-->" + holder.getSurface().toString());
+                    if(!isWindowService){
+                        surfaceViewValid[pos] = false;
+                        Object[] surfaces = getAllSurfaces();
+                        HjtApp.getInstance().getAppService().setRemoteViewToSdk(surfaces);
+                        LOG.info("--SVC-surfaceDestroyed[" + pos + "]-->" + holder.getSurface().toString()+",isWindowService : "+isWindowService);
+                    }
                 }
             });
 
-            LOG.info("--SVC-surface Added[" + pos + "]--");
+            LOG.info("--SVC-surface Added[" + pos + "]--"+",isWindowService : "+isWindowService);
             addView(surfaceView, hideParam);
             surfaceViews[i] = surfaceView;
         }
@@ -168,7 +185,7 @@ public class RemoteBox extends RelativeLayout {
             LOG.error("surface count != sitename count");
         }
         this.svcLayoutInfo = svcLayoutInfo;
-
+        SystemCache.getInstance().setSpeakName(svcLayoutInfo.getSpeakerName());
         int count = svcLayoutInfo.getSvcSuit().size();
         //speakerMode = svcLayoutInfo.getLayoutMode() != null && svcLayoutInfo.getLayoutMode().equalsIgnoreCase("Speaker");
         speakerMode = AppSettings.getInstance().isSpeakerMode();
@@ -182,7 +199,7 @@ public class RemoteBox extends RelativeLayout {
 
         int width = getWidth() == 0 ? ResourceUtils.screenWidth : getWidth();
         int height = getHeight() == 0 ? ResourceUtils.screenHeight : getHeight();
-        int textSize = 14;
+
         int siteIcon = R.drawable.icon_local_mute_small;
 
         int indexInArray = !TextUtils.isEmpty(svcLayoutInfo.getSpeakerName()) ? svcLayoutInfo.getSvcSuit().indexOf(svcLayoutInfo.getSpeakerName()) : -1;
@@ -248,10 +265,14 @@ public class RemoteBox extends RelativeLayout {
 
     private void layoutEndpointName(int cellIndex, int indexInArray, int textSize, int iconRes) {
         boolean muted = false;
+        String remoteDeviceName = null;
         if(indexInArray < svcLayoutInfo.getSvcDeviceIds().size()) {
+            LOG.info("layoutEndpointName  indexInArray : "+indexInArray+",svcLayoutInfo.getSvcDeviceIds().size() : "+svcLayoutInfo.getSvcDeviceIds().size());
             String deviceId = svcLayoutInfo.getSvcDeviceIds().get(indexInArray);
             msgInfo[cellIndex].setTag(deviceId);
             muted = SystemCache.getInstance().isRemoteDeviceMicMuted(deviceId);
+            remoteDeviceName = SystemCache.getInstance().getRemoteDeviceName(deviceId);
+
         }
 
         if (TextUtils.isEmpty(svcLayoutInfo.getSvcSuit().get(indexInArray))) {
@@ -265,11 +286,17 @@ public class RemoteBox extends RelativeLayout {
             msgLp.addRule(RelativeLayout.ALIGN_LEFT, surfaceViews[cellIndex].getId());
             msgInfo[cellIndex].setLayoutParams(msgLp);
             ((TextView) msgInfo[cellIndex].getChildAt(INDEX_INFO_SITE_NAME)).setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
-            ((TextView) msgInfo[cellIndex].getChildAt(INDEX_INFO_SITE_NAME)).setText(svcLayoutInfo.getSvcSuit().get(indexInArray));
+            if(remoteDeviceName==null || remoteDeviceName.equals("")){
+                ((TextView) msgInfo[cellIndex].getChildAt(INDEX_INFO_SITE_NAME)).setText(svcLayoutInfo.getSvcSuit().get(indexInArray));
+            }else {
+                ((TextView) msgInfo[cellIndex].getChildAt(INDEX_INFO_SITE_NAME)).setText(remoteDeviceName);
+            }
+
         }
     }
 
     private void layoutSurface(int index, int width, int height, int marginLeft, int marginTop) {
+        LOG.info("layoutSurface()");
         LayoutParams cellPara = new LayoutParams(width, height);
         cellPara.topMargin = marginTop;
         cellPara.leftMargin = marginLeft;
@@ -318,6 +345,7 @@ public class RemoteBox extends RelativeLayout {
     }
 
     public void updateMicMute(String participants) {
+        LOG.info("participants : "+participants);
         View muteView = findViewWithTag(participants);
         if (muteView != null && muteView instanceof LinearLayout) {
             ((LinearLayout) muteView).getChildAt(INDEX_INFO_LOCAL_MUTE).setLayoutParams(SystemCache.getInstance().isRemoteDeviceMicMuted(participants) ? infoCellParam : cellEmptyParam);
@@ -328,6 +356,15 @@ public class RemoteBox extends RelativeLayout {
         this.showContent = showContent;
     }
 
+    public void updateRemoteName(String deviceId,String name){
+        LOG.info("updateRemoteName  deviceid : "+deviceId+",displayName : "+name);
+        View muteView = findViewWithTag(deviceId);
+        if (muteView != null && muteView instanceof LinearLayout) {
+            TextView childAt = (TextView)((LinearLayout) muteView).getChildAt(INDEX_INFO_SITE_NAME);
+            childAt.setText(name);
+        }
+
+    }
 
     public void release() {
         surfaceReadyCount.set(0);

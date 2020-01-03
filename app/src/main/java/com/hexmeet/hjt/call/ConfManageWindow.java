@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +29,8 @@ import com.hexmeet.hjt.utils.NetworkUtil;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 
 import org.apache.log4j.Logger;
+
+import androidx.annotation.RequiresApi;
 
 public class ConfManageWindow {
     private Logger LOG = Logger.getLogger(this.getClass());
@@ -225,6 +226,7 @@ public class ConfManageWindow {
             sb.append(SystemCache.getInstance().getLoginResponse().getCustomizedH5UrlPrefix());
             sb.append("/mobile/#/confControl?token=");
             sb.append(token);
+            sb.append("&deviceId="+ SystemCache.getInstance().getLoginResponse().getDeviceId());
             sb.append("&numericId="+ SystemCache.getInstance().getPeer().getNumber());
             sb.append("&lang="+ (HjtApp.isCnVersion() ? "cn" : "en"));
             if(!TextUtils.isEmpty(version)) {

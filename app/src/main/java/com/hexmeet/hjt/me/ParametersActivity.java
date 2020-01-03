@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
-import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CompoundButton;
@@ -28,6 +27,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.core.content.FileProvider;
 
 public class ParametersActivity extends BaseActivity {
 
@@ -75,6 +76,15 @@ public class ParametersActivity extends BaseActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 HjtApp.getInstance().getAppService().hardwareDecoding(isChecked);
                 AppSettings.getInstance().setHardwareDecoding(isChecked);
+            }
+        });
+
+        Switch call_tips_switch =(Switch) findViewById(R.id.call_tips_switch);
+        call_tips_switch.setChecked(AppSettings.getInstance().isCloseTips());
+        call_tips_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                AppSettings.getInstance().setCloseTips(isChecked);
             }
         });
 

@@ -9,8 +9,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
+        android:background="@color/White"
+        >
 
         <TextView
             android:layout_width="wrap_content"
@@ -24,17 +24,15 @@
             android:id="@+id/back_btn"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:padding="15dp"
+            android:padding="21dp"
             android:src="@drawable/icon_back_black" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/feedback_diagnose"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/bg_click_item"
+        android:layout_height="60dp"
+        android:background="@drawable/bg_click_item_colors"
         android:padding="15dp">
 
         <ImageView
@@ -58,11 +56,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_marginTop="7dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/bg_card_border"
+        android:background="@color/White"
         android:padding="15dp">
 
         <TextView
@@ -91,7 +87,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
             android:switchMinWidth="20dp"
             android:textOff=""
             android:textOn=""
@@ -101,11 +96,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_marginTop="7dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/bg_card_border"
+        android:background="@color/White"
         android:padding="15dp">
 
         <TextView
@@ -142,4 +135,44 @@
             android:track="@drawable/bg_switch" />
     </RelativeLayout>
 
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="7dp"
+        android:background="@color/White"
+        android:padding="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:text="@string/clos_tips"
+            android:textColor="@color/font_color_313131"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/sub_title_bar"
+            android:textSize="16sp" />
+
+
+        <Switch
+            android:id="@+id/call_tips_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:switchMinWidth="20dp"
+            android:textOff=""
+            android:textOn=""
+            android:thumb="@drawable/thumb_switch"
+            android:track="@drawable/bg_switch" />
+    </RelativeLayout>
 </LinearLayout>

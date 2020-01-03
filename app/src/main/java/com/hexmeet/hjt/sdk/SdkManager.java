@@ -21,6 +21,8 @@ public interface  SdkManager {
 
     void makeCall(MakeCallParam param);
 
+    void p2pMakeCall(MakeCallParam param);
+
     void answerCall(MakeCallParam param);
 
     void enableVideo(boolean enable);
@@ -79,5 +81,19 @@ public interface  SdkManager {
 
     void isFrontCamera();
 
-    void isVideoActive(boolean mode);
+    void setVideoActive(boolean mode);
+
+    boolean micEnabled();
+
+    void refuseP2PMeeting(String number);
+
+    void setConfDisplayName(String displayName);
+
+    String getDisplayName();
+
+    String getIMAddress();
+
+    String getIMGroupId();
+
+    EVEngine.ContactInfo getIMContactInfo(String userId);
 }

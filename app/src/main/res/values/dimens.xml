@@ -78,4 +78,28 @@
     <dimen name="wheelview_padding" >5dp</dimen>
     <dimen name="invite_height" >280dp</dimen>
     <dimen name="keyboard_height" >220dp</dimen>
+
+    <dimen name="chat_margin_Left" >7dp</dimen>
+    <dimen name="chat_layout_width" >58dp</dimen>
+    <dimen name="chat_text_width" >215dp</dimen>
+    <dimen name="chat_text_height" >60dp</dimen>
+    <dimen name="chat_item_height" >100dp</dimen>
+    <dimen name="chat_text_top" >12dp</dimen>
+    <dimen name="chat_text_size" >10sp</dimen>
+    <dimen name="not_disturb_wh" >15dp</dimen>
+    <dimen name="chat_text_top_mg" >18dp</dimen>
+    <dimen name="not_disturb_w" >35dp</dimen>
+    <dimen name="not_disturb_h" >20dp</dimen>
+    <dimen name="not_tips_num_w" >27dp</dimen>
+    <dimen name="chat_arginLR" >10dp</dimen>
+    <dimen name="chat_more_wh" >25dp</dimen>
+    <dimen name="horizontalspit_view_height">0.6dp</dimen>
+    <dimen name="indicator_margin">10dp</dimen>
+    <dimen name="dialinotify_img_wh">120dp</dimen>
+    <dimen name="dialinotify_text_top">244dp</dimen>
+    <dimen name="button_size">20sp</dimen>
+    <dimen name="button_audio">@dimen/navigation_max_width</dimen>
+    <dimen name="flotwindow_w">400dp</dimen>
+    <dimen name="qr_code_wh">240dp</dimen>
+    <dimen name="me_icon_wh">20dp</dimen>
 </resources>
