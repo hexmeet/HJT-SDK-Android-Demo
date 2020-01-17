@@ -34,35 +34,36 @@
 
     <TextView
         android:id="@+id/record_view"
-        android:layout_width="@dimen/cancel_button_height"
-        android:layout_height="@dimen/setting_padding_double"
-        android:layout_marginLeft="@dimen/content_margin"
-        android:layout_marginTop="@dimen/content_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
         android:gravity="center"
-        android:background="@drawable/shape_recording_bg"
-        android:text="REC"
+        android:background="@drawable/button_circle_shape"
+        android:text="@string/record"
         android:drawableLeft="@drawable/image_recording"
         android:drawablePadding="4dp"
-        android:paddingLeft="5dp"
+        android:padding="5dp"
         android:textColor="@color/White"
-        android:textSize="17sp"
+        android:textSize="@dimen/text_size"
+        android:layout_marginTop="@dimen/content_margin"
+        android:layout_marginLeft="@dimen/content_margin"
         android:visibility="gone"
         />
 
     <TextView
         android:id="@+id/audio_name"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/setting_padding_double"
+        android:layout_height="30dp"
         android:text=""
         android:textColor="@color/White"
         android:background="@drawable/button_circle_shape"
         android:layout_toRightOf="@id/record_view"
-        android:layout_marginTop="@dimen/content_margin"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="@dimen/indicator_margin"
         android:gravity="center"
         android:padding="5dp"
         android:drawableLeft="@drawable/tip_audio_mode"
         android:drawablePadding="4dp"
+        android:textSize="@dimen/text_size"
+        android:layout_marginTop="@dimen/content_margin"
         android:visibility="gone"
         />
 
@@ -104,14 +105,7 @@
             />
 
     </RelativeLayout>
-
-
-
-
     <include
         android:id="@+id/control_layout"
         layout="@layout/converstation_control" />
-
-
-
 </RelativeLayout>

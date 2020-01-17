@@ -330,7 +330,6 @@ public class ContactsFrag extends Fragment {
             sb.append("&lang="+ (HjtApp.isCnVersion() ? "cn" : "en"));
             String url = sb.toString();
             LOG.info("Load URL : [" + url + "]");
-            Log.i("=========",url);
             mContactsWeb.loadUrl(url);
 
         } else {

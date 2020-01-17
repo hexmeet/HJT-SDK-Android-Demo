@@ -52,7 +52,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import ev.common.EVEngine;
-import ev.common.EVEngine.VideoSize;
 import ev.common.EVEventListener;
 import ev.common.EVFactory;
 
@@ -452,7 +451,7 @@ public class SdkManagerImpl implements SdkManager {
     public void setSvcLayoutMode(int svcLayoutMode) {
        LOG.info("setSvcLayoutMode: " + (svcLayoutMode == 0 ? "Auto" : (svcLayoutMode == 1 ? "Gallery" : "Speaker")));
        LayoutType type = (svcLayoutMode == 0) ? LayoutType.typeAuto : ((svcLayoutMode == 2) ? LayoutType.type1 : LayoutType.type4);
-       LayoutRequest request = new LayoutRequest(LayoutMode.fromInt(svcLayoutMode),type, LayoutPage.typeCurrent, VideoSize.VIDEO_SIZE_UNKNOWN,null);
+       LayoutRequest request = new LayoutRequest(LayoutMode.fromInt(svcLayoutMode),type, LayoutPage.typeCurrent, EVEngine.VideoSize.VIDEO_SIZE_UNKNOWN,null);
        engine.setLayout(request);
     }
 
@@ -731,16 +730,18 @@ public class SdkManagerImpl implements SdkManager {
                             CallEvent event = new CallEvent(CallState.IDLE);
                             event.setEndReason(ResourceUtils.getInstance().getCallFailedReason(ResourceUtils.CALL_ERROR_SDK_10));
                             EventBus.getDefault().post(event);
+                        }else if(err.code == ResourceUtils.CALL_ERROR_9 && err.action.equals("downloadUserImage")){
+                            return;
                         }else {
                             SdkManagerImpl.handlerError(err.code, err.msg ,err.arg);
                         }
 
                     }
-                }else if(err.type.toString()== ErrorType.EVErrorTypeCall){
+                }/*else if(err.type.toString()== ErrorType.EVErrorTypeCall){
                     //TODO
                 }else if(err.type.toString()== ErrorType.EVErrorTypeUnknown){
                     //TODO
-                }
+                }*/
 
             }
 
@@ -1014,8 +1015,10 @@ public class SdkManagerImpl implements SdkManager {
         @Override
         public void onPeerImageUrl(String imageUrl) {//获取p2p头像
             LOG.info("onPeerImageUrl()");
-            SystemCache.getInstance().getPeer().setImageUrl(imageUrl);
-            EventBus.getDefault().post(new FileMessageEvent(true,imageUrl));
+            if(imageUrl!=null && !TextUtils.isEmpty(imageUrl)){
+                SystemCache.getInstance().getPeer().setImageUrl(imageUrl);
+                EventBus.getDefault().post(new FileMessageEvent(true,imageUrl));
+            }
         }
     }
 }

@@ -253,13 +253,11 @@ public class MeetingWindowService extends Service {
                 isMoved = false;
                 downX = x;
                 downY = y;
-            } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                if (isMoved || Math.abs(x - downX) > touchSlop || Math.abs(y - downY) > touchSlop) {
-                    if (!isMoved) isMoved = true;
-                    wmParams.x = x - width;
-                    wmParams.y = y - height;
-                    mWindowManager.updateViewLayout(mFloatLayout, wmParams);
-                }
+            } else if (event.getAction() == MotionEvent.ACTION_MOVE && (isMoved || Math.abs(x - downX) > touchSlop || Math.abs(y - downY) > touchSlop)) {
+                if (!isMoved) isMoved = true;
+                wmParams.x = x - width;
+                wmParams.y = y - height;
+                mWindowManager.updateViewLayout(mFloatLayout, wmParams);
             }
             return false;
         }

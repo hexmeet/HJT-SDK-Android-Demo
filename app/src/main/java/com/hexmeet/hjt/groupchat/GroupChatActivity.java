@@ -69,7 +69,6 @@ public class GroupChatActivity extends BaseActivity implements ChattingFooter.On
         }
     };
     private TextView number;
-    private EMEngine.UserInfo isSelf;
     private String userId;
     private ImageView mChatBack;
 
@@ -86,7 +85,7 @@ public class GroupChatActivity extends BaseActivity implements ChattingFooter.On
         LOG.info("onCreate()");
         setContentView(R.layout.activity_group_chat);
         initView();
-        isSelf = HjtApp.getInstance().getAppService().getImUserInfo();
+
         userId = String.valueOf(SystemCache.getInstance().getLoginResponse().getUserId());
         initImMessageBody();
     }
@@ -137,6 +136,7 @@ public class GroupChatActivity extends BaseActivity implements ChattingFooter.On
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void OnSendTextMessageRequest(final CharSequence text) {
+        EMEngine.UserInfo isSelf = HjtApp.getInstance().getAppService().getImUserInfo();
         EmMessageBody body = new EmMessageBody();
         body.setGroupId(isSelf.userid);
         body.setContent(text.toString());

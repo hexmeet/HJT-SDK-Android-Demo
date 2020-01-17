@@ -26,7 +26,6 @@ import com.hexmeet.hjt.AppSettings;
 import com.hexmeet.hjt.CallState;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.RegisterState;
-import com.hexmeet.hjt.TagAliasOperatorHelper;
 import com.hexmeet.hjt.cache.EmMessageCache;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.event.CallEvent;
@@ -445,7 +444,6 @@ public class AppService extends Service {
         if(event.getCode() == LoginResultEvent.LOGIN_SUCCESS){
             String username = SystemCache.getInstance().getLoginResponse().getUsername();
             String telephone = SystemCache.getInstance().getLoginResponse().getCellphone();
-            TagAliasOperatorHelper.setAlias(getApplicationContext(),username,true);
             PushServiceFactory.getCloudPushService().bindAccount(username+"__"+telephone, new CommonCallback() {
                 @Override
                 public void onSuccess(String s) {

@@ -50,8 +50,8 @@ public class ConferenceListFrag extends Fragment {
     private boolean isWebLoadComplete = false;
     private ViewGroup loadFailedInfo;
     private boolean tokenExpired = false;
-    private final String IP = "172.20.0.25:3000";
-    // private final String DEBUG_IP_ADDRESS = "http://"+IP+"/#/conferences?token=";
+    private final String IP = "172.16.0.222:3000";
+    //private final String DEBUG_IP_ADDRESS = "http://"+IP+"/#/conferences?token=";
     private final String DEBUG_IP_ADDRESS = "";
 
     @SuppressLint({"JavascriptInterface", "SetJavaScriptEnabled"})
@@ -211,11 +211,11 @@ public class ConferenceListFrag extends Fragment {
             LOG.info("JavaScript: doradoVersionUpdate");
             loadConference();
         }
+
         @JavascriptInterface
         public void clearCache(){
             LOG.info("clearCache()");
-            webView.clearCache(true);
-            loadConference();
+            destroy();
         }
 
     }
@@ -271,6 +271,13 @@ public class ConferenceListFrag extends Fragment {
 
     @Override
     public void onDestroy() {
+
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+        destroy();
+    }
+
+    public void destroy() {
         if(webView!=null) {
             webView.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
             webView.clearHistory();
@@ -278,8 +285,6 @@ public class ConferenceListFrag extends Fragment {
             webView.removeAllViews();
             webView.destroy();
         }
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
     }
 
     private void loadConference() {

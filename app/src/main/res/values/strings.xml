@@ -272,4 +272,8 @@
     <string name="chat_video_call">Video Call</string>
     <string name="notification">notification</string>
     <string name="incall">Incall</string>
+    <string name="record">REC</string>
+    <string name="live">LIVE</string>
+    <string name="share">Share</string>
+    <string name="stop_share">Stop Share</string>
 </resources>

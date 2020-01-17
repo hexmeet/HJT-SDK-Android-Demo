@@ -40,6 +40,7 @@ public class ConversationController implements View.OnClickListener{
     private ViewGroup moreDetail;
     private final LinearLayout layoutChatBtn;
     private final TextView handUp;
+    private final ViewGroup shareBtn;
 
     public interface IController{
         void updateCellsAsLayoutModeChanged();
@@ -52,6 +53,7 @@ public class ConversationController implements View.OnClickListener{
         void switchVoiceMode(boolean isVoiceMode);
         void showChat();
         void changeUserName();
+        void onClickShareScreen();
     }
 
     public ConversationController(View rootView, final IController iController, int width) {
@@ -72,6 +74,7 @@ public class ConversationController implements View.OnClickListener{
         moreDetail = (ViewGroup) rootView.findViewById(R.id.more_detail);
         layoutChatBtn = (LinearLayout) rootView.findViewById(R.id.toolbar_layout_chat);
         handUp = (TextView) rootView.findViewById(R.id.hand_up);
+        shareBtn = (ViewGroup) rootView.findViewById(R.id.toolbar_layout_share);
 
 
         adjustBottomButtons();
@@ -89,6 +92,7 @@ public class ConversationController implements View.OnClickListener{
         layoutModeBtn.setOnClickListener(this);
         layoutChatBtn.setOnClickListener(this);
         moreBtn.setOnClickListener(this);
+        shareBtn.setOnClickListener(this);
 
         moreDetail.getChildAt(0).setOnClickListener(this);
         moreDetail.getChildAt(1).setOnClickListener(this);
@@ -165,6 +169,7 @@ public class ConversationController implements View.OnClickListener{
     }
 
     public void muteVideo(boolean mute) {
+        LOG.info("muteVideo : "+mute);
         localVideoBtn.getChildAt(0).setSelected(mute);
         TextView title = (TextView) localVideoBtn.getChildAt(1);
         title.setText(mute ? R.string.enable_video : R.string.stop_video);
@@ -180,6 +185,13 @@ public class ConversationController implements View.OnClickListener{
         LOG.info("isSpeaker : "+isSpeaker);
         layoutModeBtn.getChildAt(0).setSelected(isSpeaker);
         iController.updateCellsAsLayoutModeChanged();
+    }
+
+    public void shareScreen(boolean share) {
+        LOG.info("shareScreen icon: "+share);
+        shareBtn.getChildAt(0).setSelected(share);
+        TextView title = (TextView) shareBtn.getChildAt(1);
+        title.setText(share ? R.string.stop_share :  R.string.share);
     }
 
     private void alertLayoutModeDisable() {
@@ -278,6 +290,9 @@ public class ConversationController implements View.OnClickListener{
                 iController.changeUserName();
                 moreDetail.setVisibility(View.GONE);
                 break;
+            case R.id.toolbar_layout_share:
+                iController.onClickShareScreen();
+                break;
             default:
                 break;
         }
@@ -292,6 +307,8 @@ public class ConversationController implements View.OnClickListener{
         localVideoBtn.setVisibility(isVideoMode ? View.VISIBLE : View.GONE);
         //隐藏视图模式
         layoutModeBtn.setVisibility(isVideoMode ? View.VISIBLE : View.GONE);
+        //是否隐藏转换摄像头
+        cameraSwitchBtn.setVisibility(isVideoMode ? View.VISIBLE :View.GONE);
         //视频模式下 判断是否启用本地视频
         if(SystemCache.getInstance().isUserMuteVideo() &&  localVideoBtn.getVisibility()==View.VISIBLE){
             HjtApp.getInstance().getAppService().enableVideo(false);

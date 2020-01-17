@@ -77,6 +77,8 @@ public class SystemCache {
 
     private String speakName;
     private String localName;
+    private boolean isSharedScreen = false;
+
     private Map<String, String> remoteNameUpdateState = new HashMap<>();
 
     private SystemCache() {
@@ -206,6 +208,7 @@ public class SystemCache {
                 remoteNameUpdateState.clear();
                 layoutModeEnable = true;
                 isRecordingOn = false;
+                isSharedScreen = false;
                 repeatCount.set(0);
                 withContent = false;
                 if(this.callState == CallState.CONNECTED && peer != null) {
@@ -453,4 +456,11 @@ public class SystemCache {
         speakName = name;
     }
 
+    public boolean isSharedScreen() {
+        return isSharedScreen;
+    }
+
+    public void setSharedScreen(boolean sharedScreen) {
+        this.isSharedScreen = sharedScreen;
+    }
 }

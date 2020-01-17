@@ -270,4 +270,8 @@
     <string name="chat_video_call">视频通话</string>
     <string name="notification">通知</string>
     <string name="incall">通话中</string>
+    <string name="record">REC</string>
+    <string name="live">LIVE</string>
+    <string name="share">共享</string>
+    <string name="stop_share">停止共享</string>
 </resources>

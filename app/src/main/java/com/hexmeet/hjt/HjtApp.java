@@ -42,18 +42,15 @@ import java.util.Iterator;
 import java.util.Locale;
 
 import androidx.multidex.MultiDex;
-import cn.jpush.android.api.JPushInterface;
 import de.mindpipe.android.logging.log4j.LogConfigurator;
 
 public class HjtApp extends Application {
     private static HjtApp instance;
     private AppService appService;
-    private MeetingWindowService floatService;
     private Logger LOG = Logger.getLogger(HjtApp.class);
     private Activity conversation;
     private WeakReference<Activity> topActivity;
     private boolean isFloatServiceStart = false;
-    private boolean isNewRemote = false;
 
     public synchronized static HjtApp getInstance() {
         while (instance == null) {
@@ -83,21 +80,13 @@ public class HjtApp extends Application {
         return isFloatServiceStart;
     }
 
-    public boolean isNewRemote() {
-        return isNewRemote;
-    }
-
     public void stopFloatService() {
         LOG.info("stopFloatService, isStart? ["+isFloatServiceStart()+"]");
         if(isFloatServiceStart) {
-            seNewRemote(true);
             setFloatServiceStart(false);
             Intent intent = new Intent(this, MeetingWindowService.class);
             stopService(intent);
         }
-    }
-    public void seNewRemote(boolean isNewRemote) {
-        this.isNewRemote = isNewRemote;
     }
 
     public void setFloatServiceStart(boolean floatServiceStart) {
@@ -128,10 +117,6 @@ public class HjtApp extends Application {
 
     public AppService getAppService() {
         return appService;
-    }
-
-    public MeetingWindowService getFloatService() {
-        return floatService;
     }
 
     public static boolean isEnVersion() {
@@ -219,9 +204,6 @@ public class HjtApp extends Application {
         }
         SystemCache.getInstance().setNetworkConnected(NetworkUtil.isNetConnected(getContext()));
         manService.getMANAnalytics().init(this, getApplicationContext());
-        //极光推送
-        // JPushInterface.setDebugMode(true); 正式环境时去掉此行代码
-        JPushInterface.init(this);
         // 初始化Mobile Analytics服务
         initManService();
         //阿里云推送
