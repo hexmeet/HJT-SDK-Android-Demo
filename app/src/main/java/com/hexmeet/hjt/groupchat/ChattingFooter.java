@@ -190,9 +190,7 @@ public class ChattingFooter  extends LinearLayout implements View.OnClickListene
             page = 1;
         }
 
-        if (page == 0) {
-            // onPageSelected(page);
-        } else {
+        if (page != 0) {
             vpExtra.setCurrentItem(page, false);
         }
 

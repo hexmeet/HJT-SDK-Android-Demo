@@ -45,7 +45,6 @@ import ev.common.EVFactory;
 public class P2pCallActivity extends FullscreenActivity {
     private Logger LOG = Logger.getLogger(this.getClass());
     private ImageView mCallerAvatar;
-    private TextView mCallerName;
     private LinearLayout mCallerEnd;
     private SurfaceView surfaceView;
     private RelativeLayout dial_notify_View;
@@ -71,9 +70,8 @@ public class P2pCallActivity extends FullscreenActivity {
     private void initView() {
         mCallerAvatar = (ImageView) findViewById(R.id.caller_avatar);
         mPulseViewAvatar = (PulseView) findViewById(R.id.pulse_view_avatar);
-        mCallerName = (TextView) findViewById(R.id.caller_name);
         mCallerEnd = (LinearLayout) findViewById(R.id.caller_end);
-
+        TextView mCallerName = (TextView) findViewById(R.id.caller_name);
         peer = SystemCache.getInstance().getPeer();
         if (peer != null) {
             LOG.info("peer message : "+peer.getName());

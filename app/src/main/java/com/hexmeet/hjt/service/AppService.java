@@ -274,6 +274,11 @@ public class AppService extends Service {
         sdkManager.setMicMute(mute);
     }
 
+
+    public void muteVideo(boolean video) {
+        sdkManager.enableVideo(video);
+    }
+
     //Speaker:2 ,Gallery:1
     public void setLayoutMode(int mode) {
         AppSettings.getInstance().setSpeakerMode(mode == 2);

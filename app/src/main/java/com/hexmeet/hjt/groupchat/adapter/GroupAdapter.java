@@ -30,14 +30,11 @@ public class GroupAdapter extends RecyclerView.Adapter{
     public static final int GROUPVIEW_TYPE_LEFT_TEXT = 0;
     public static final int GROUPVIEW_TYPE_RIGHT_TEXT = 1;
     private Context mContext;
-    private LayoutInflater mInflater;
-    private Activity mActivity;
 
     private List<ImMsgBean> mData;
 
     public GroupAdapter(Context context) {
         this.mContext = context;
-        mInflater = LayoutInflater.from(context);
     }
 
     public void addData(ImMsgBean bean, boolean isNotifyDataSetChanged) {

@@ -25,15 +25,6 @@ public class ExampleUtil {
     public static final String PREFS_END_TIME = "PREFS_END_TIME";
     public static final String KEY_APP_KEY = "JPUSH_APPKEY";
 
-    public static boolean isEmpty(String s) {
-        if (null == s)
-            return true;
-        if (s.length() == 0)
-            return true;
-        if (s.trim().length() == 0)
-            return true;
-        return false;
-    }
     /**
      * 只能以 “+” 或者 数字开头；后面的内容只能包含 “-” 和 数字。
      * */

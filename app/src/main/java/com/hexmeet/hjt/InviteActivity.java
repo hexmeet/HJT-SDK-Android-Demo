@@ -274,8 +274,9 @@ public class InviteActivity extends BaseActivity{
         } else {
             gotoLogin();
         }
-        SystemCache.getInstance().setUserMuteVideo(invite_camera1.isChecked());
-       /* SystemCache.getInstance().setUserMuteMic(invite_mic.isChecked());*/
+        SystemCache.getInstance().setCamera(!invite_camera1.isChecked());
+        HjtApp.getInstance().getAppService().setVideoMode(true);
+        HjtApp.getInstance().getAppService().enableVideo(!invite_camera1.isChecked());
         HjtApp.getInstance().getAppService().muteMic(invite_mic.isChecked());
     }
 

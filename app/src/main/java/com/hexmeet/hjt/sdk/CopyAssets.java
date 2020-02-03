@@ -30,7 +30,6 @@ public class CopyAssets {
     private  String mRootCaFile;
     private Resources mR;
     private String basePath;
-    private  String mUserCertificatePath;
     private static CopyAssets instance ;
     private AudioManager mAudioManager;
 
@@ -123,7 +122,6 @@ public class CopyAssets {
         mBackgroundFile = basePath + "/background.png";
         mBackgroundCallingFile = basePath + "/background_calling.png";
         mUserFile = basePath + "/user.jpg";
-        mUserCertificatePath = basePath;
 
         mAudioManager = ((AudioManager) c.getSystemService(Context.AUDIO_SERVICE));
     }
@@ -503,13 +501,7 @@ public class CopyAssets {
     private String processAudioRouteEventRemoteRing(int value){
         // maybe no need special process for remote ring event?
         // have a test!
-        if(EVENT_START == value){ // ring start
-
-        }
-        else if(EVENT_STOP == value){ // ring stop
-
-        }
-        else{
+        if(EVENT_START != value && EVENT_STOP != value){ // ring start
             LOG.info("hexmeet processAudioRouteEventRemoteRing received invalid value="+value);
         }
         return mCurrentAudioRoute;

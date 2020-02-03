@@ -69,7 +69,6 @@ public class HexMeet extends BaseActivity implements OnClickListener {
     private TextView tabMe;
 
     private ViewGroup tabLayout;
-    private View dividerLine;
 
     public HexMeetTab currentTab = HexMeetTab.CONFERENCE;
 
@@ -113,9 +112,9 @@ public class HexMeet extends BaseActivity implements OnClickListener {
         } else if(state != RegisterState.SUCCESS) {
             if(!SystemCache.getInstance().isRegServerConnect()) {
               //  warnRes = R.string.reg_unreachable;
-            } else {
+            }/* else {
               //  warnRes = R.string.unregistered;
-            }
+            }*/
         }
         //conferenceListFrag.setNetworkTipVisible(warnRes != -1);
         if(warnRes != -1) {
@@ -147,7 +146,7 @@ public class HexMeet extends BaseActivity implements OnClickListener {
             return;
         }
         setContentView(com.hexmeet.hjt.R.layout.hexmeet);
-        ScreenUtil.initStatusBar(this);
+
         fragmentManager = getSupportFragmentManager();
         initViews();
         //NetworkUtil.scheduleUcmDetector();
@@ -299,7 +298,6 @@ public class HexMeet extends BaseActivity implements OnClickListener {
 
     private void initViews() {
         tabLayout = (ViewGroup) findViewById(R.id.tabs_row);
-        dividerLine = findViewById(R.id.divider);
 
         tabConference = (TextView) tabLayout.findViewById(R.id.conference);
         tabChat = (TextView) tabLayout.findViewById(R.id.chat);
@@ -339,8 +337,9 @@ public class HexMeet extends BaseActivity implements OnClickListener {
                 try {
                     JsJoinMeeting meeting = JsonUtil.toObject(json, JsJoinMeeting.class);
                     if(!TextUtils.isEmpty(meeting.getNumericId())) {
-                        SystemCache.getInstance().setUserMuteVideo(meeting.isCameraStatus());
-                       /* SystemCache.getInstance().setUserMuteMic(meeting.isMicrophoneStatus());*/
+                        SystemCache.getInstance().setCamera(!meeting.isCameraStatus());
+                        HjtApp.getInstance().getAppService().setVideoMode(true);
+                        HjtApp.getInstance().getAppService().enableVideo(!meeting.isCameraStatus());
                         HjtApp.getInstance().getAppService().muteMic(meeting.isMicrophoneStatus());
                         dialOut(meeting.getNumericId(), meeting.getPassword());
                     }

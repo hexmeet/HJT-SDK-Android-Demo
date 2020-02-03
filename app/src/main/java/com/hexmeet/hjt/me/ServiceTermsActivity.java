@@ -15,7 +15,6 @@ import com.hexmeet.hjt.BaseActivity;
 import com.hexmeet.hjt.R;
 
 public class ServiceTermsActivity extends BaseActivity {
-    private WebView webView;
 //    private ProgressBar processBar;
 
     public static void actionStart(Context context) {
@@ -29,7 +28,7 @@ public class ServiceTermsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.service_terms);
 
-        webView = (WebView) findViewById(R.id.webView);
+        WebView webView = (WebView) findViewById(R.id.webView);
         WebSettings setting = webView.getSettings();
         setting.setJavaScriptEnabled(true);
 
@@ -38,19 +37,6 @@ public class ServiceTermsActivity extends BaseActivity {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
                 return true;
-            }
-        });
-
-        webView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                super.onProgressChanged(view, newProgress);
-                if (newProgress == 100) {
-//                    processBar.setVisibility(View.GONE);
-                } else {
-//                    processBar.setVisibility(View.VISIBLE);
-//                    processBar.setProgress(newProgress);
-                }
             }
         });
 

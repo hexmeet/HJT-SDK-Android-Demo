@@ -13,7 +13,6 @@ public class PointIndicator extends View {
     private Paint fPaint;
     private Path bPath;
     private Path fPath;
-    private Context mContext;
     private int radius;
     private int offset;
     private int count;
@@ -47,7 +46,6 @@ public class PointIndicator extends View {
     }
 
     private void init(Context ctx){
-        mContext=ctx;
         bPaint =new Paint();
         bPaint.setAntiAlias(true);
         bPaint.setColor(Color.GRAY);

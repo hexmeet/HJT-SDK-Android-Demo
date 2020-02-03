@@ -85,7 +85,6 @@ public class DialingFrag extends Fragment {
                 case R.id.dial_btn:
                     String number = numberKeyboard.getNumber();
                     if(validate(number)) {
-                        SystemCache.getInstance().setUserMuteVideo(closeCameraView.isChecked());
                         String sipNumberWithoutPassword = number;
                         String password = "";
                         if (number.contains("*")) {
@@ -93,6 +92,9 @@ public class DialingFrag extends Fragment {
                             sipNumberWithoutPassword = strs[0];
                             password = strs[1];
                         }
+                        SystemCache.getInstance().setCamera(!closeCameraView.isChecked());
+                        HjtApp.getInstance().getAppService().setVideoMode(true);
+                        HjtApp.getInstance().getAppService().enableVideo(!closeCameraView.isChecked());
                         HjtApp.getInstance().getAppService().muteMic(closeMicView.isChecked());
                         ((HexMeet)getActivity()).dialOut(sipNumberWithoutPassword, password);
                     }

@@ -292,6 +292,8 @@ public class ConversationController implements View.OnClickListener{
         localVideoBtn.setVisibility(isVideoMode ? View.VISIBLE : View.GONE);
         //隐藏视图模式
         layoutModeBtn.setVisibility(isVideoMode ? View.VISIBLE : View.GONE);
+        //是否隐藏转换摄像头
+        cameraSwitchBtn.setVisibility(isVideoMode ? View.VISIBLE :View.GONE);
         //视频模式下 判断是否启用本地视频
         if(SystemCache.getInstance().isUserMuteVideo() &&  localVideoBtn.getVisibility()==View.VISIBLE){
             HjtApp.getInstance().getAppService().enableVideo(false);
