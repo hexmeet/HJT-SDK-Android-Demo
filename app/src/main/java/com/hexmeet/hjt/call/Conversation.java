@@ -154,11 +154,12 @@ public class Conversation extends FullscreenActivity {
         audio.setMicrophoneMute(false);
 
         recordView.setVisibility(SystemCache.getInstance().isRecordingOn() ? View.VISIBLE : View.GONE);
-        recordView.setText(SystemCache.getInstance().isRecording() ? "LIVE" : "REC");
+        recordView.setText(SystemCache.getInstance().isRecording() ? getText(R.string.live) :getText(R.string.record));
         controller = new ConversationController(findViewById(R.id.control_layout), iController, getScreenWidth());
         initGesture();
         controller.startTime(startTime);
         controller.setRoomNum(SystemCache.getInstance().getPeer().getName());
+
 
         controller.setNumber(SystemCache.getInstance().getParticipant());
         signalIntensityScanner = new SignalIntensityScanner();
@@ -318,7 +319,7 @@ public class Conversation extends FullscreenActivity {
         public void onVideoSwitchClick(boolean isVideo) {
            LOG.info("ISVIDEO : "+isVideo);
             videoBoxGroup.updateContent(!isVideo);
-            isRecordVisible(!isVideo);
+            //isRecordVisible(!isVideo);
         }
 
         @Override
@@ -432,10 +433,13 @@ public class Conversation extends FullscreenActivity {
         super.onStart();
 
         if (isVideoCall) {
-            boolean isLocalVideoMuted = SystemCache.getInstance().isUserMuteVideo();
-            LOG.info("isLocalVideoMuted : "+isLocalVideoMuted);
-            controller.muteVideo(isLocalVideoMuted);
-            HjtApp.getInstance().getAppService().enableVideo(!isLocalVideoMuted);
+            LOG.info("isCamera : "+SystemCache.getInstance().isCamera());
+            if(SystemCache.getInstance().isCamera()){
+                HjtApp.getInstance().getAppService().muteVideo(true);
+            }
+            boolean isLocalVideoMuted = EVFactory.createEngine().cameraEnabled();
+            LOG.info("isLocalVideoMuted: "+isLocalVideoMuted);
+            controller.muteVideo(!isLocalVideoMuted);
         }
 
         boolean isLocalMicMuted = EVFactory.createEngine().micEnabled();
@@ -458,6 +462,7 @@ public class Conversation extends FullscreenActivity {
             floatService.svcHandler.sendEmptyMessage(ON_SVC_FLOAT_WINDOW);
             controller.muteVideo(true);
             SystemCache.getInstance().setUserMuteVideo(false);
+            SystemCache.getInstance().setCamera(EVFactory.createEngine().cameraEnabled());
             //HjtApp.getInstance().startFloatService();
         }
         super.onStop();
@@ -630,7 +635,7 @@ public class Conversation extends FullscreenActivity {
     public void onLiveEvent(LiveEvent event) {
         LOG.info("onLiveEvent = "+ event);
         if(event != null) {
-            recordView.setText(event.isRecording() ? "LIVE" : "REC");
+            recordView.setText(event.isRecording() ? getText(R.string.live) : getText(R.string.record));
         }
     }
 
@@ -712,10 +717,8 @@ public class Conversation extends FullscreenActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onLoginEvent(LoginResultEvent event) {
         LOG.info("isAnonymousCall : ["+event.isAnonymous()+"] ,isSuccess : "+event.getCode());
-        if(event.getCode() == LoginResultEvent.LOGIN_SUCCESS) {
-            if(confManageWindow != null) {
-                confManageWindow.updateTokenForWeb();
-            }
+        if(event.getCode() == LoginResultEvent.LOGIN_SUCCESS && confManageWindow != null) {
+            confManageWindow.updateTokenForWeb();
         }
     }
 
@@ -846,7 +849,7 @@ public class Conversation extends FullscreenActivity {
                             controller.showSwitchAsContent(msg.arg1 == 1);
                             HjtApp.getInstance().getAppService().setContentViewToSdk(msg.arg1 == 1 ? videoBoxGroup.getContentSurface() : null);
                             videoBoxGroup.updateContent(msg.arg1 == 1);
-                            isRecordVisible(msg.arg1 == 1);
+                            //isRecordVisible(msg.arg1 == 1);
                         }
                         break;
 
@@ -878,7 +881,7 @@ public class Conversation extends FullscreenActivity {
                         String displayName = msg.getData().getString("displayName");
                         boolean islocal = msg.getData().getBoolean("islocal",false);
                         LOG.info("islocal : "+islocal);
-                        if(islocal){
+                        if(islocal && !displayName.equals("")){
                             videoBoxGroup.updateLocalName(displayName);
                         }
                         if(videoBoxGroup == null || !videoBoxGroup.updateRemoteName(deviceId,displayName)) {

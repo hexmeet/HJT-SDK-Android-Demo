@@ -11,7 +11,6 @@ public class Peer {
     private int direct;
     //private long startTime = 0L;
     private long endTime = 0L;
-    private long duration = 0L;
     private boolean isVideoCall = true;
     private String imageUrl;
     private boolean isCalled = true ;//是否是被呼叫 true 被呼叫  false 呼叫
@@ -54,12 +53,6 @@ public class Peer {
     public void setEndTime(long endTime) {
         this.endTime = endTime;
         //duration = endTime - startTime;
-    }
-
-
-
-    public void setDuration(long duration) {
-        this.duration = duration;
     }
 
     public boolean isVideoCall() {

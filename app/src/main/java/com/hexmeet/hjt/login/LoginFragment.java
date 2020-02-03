@@ -256,7 +256,9 @@ public class LoginFragment extends Fragment {
         SystemCache.getInstance().getJoinMeetingParam().setDisplayName(displayName);
         SystemCache.getInstance().getJoinMeetingParam().setCloud(loginType == LOGIN_TYPE_CLOUD_ANONYMOUS);
 
-        SystemCache.getInstance().setUserMuteVideo(closeCamera.isChecked());
+        SystemCache.getInstance().setCamera(!closeCamera.isChecked());
+        HjtApp.getInstance().getAppService().setVideoMode(true);
+        HjtApp.getInstance().getAppService().enableVideo(!closeCamera.isChecked());
         HjtApp.getInstance().getAppService().muteMic(closeMic.isChecked());
 
         if(loginType == LOGIN_TYPE_CLOUD_ANONYMOUS ){

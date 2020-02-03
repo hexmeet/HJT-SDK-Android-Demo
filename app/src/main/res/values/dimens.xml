@@ -24,7 +24,7 @@
     <dimen name="Invitee_outer_padding" >5dp</dimen>
     <dimen name="group_padding" >20dp</dimen>
     <dimen name="setting_padding" >15dp</dimen>
-    <dimen name="setting_padding_double" >30dp</dimen>
+    <dimen name="setting_padding_double">30dp</dimen>
     <dimen name="text_padding" >80dp</dimen>
     <dimen name="navigation_bar_height" >50dp</dimen>
     <dimen name="navigation_max_width" >200dp</dimen>
@@ -102,4 +102,5 @@
     <dimen name="flotwindow_w">400dp</dimen>
     <dimen name="qr_code_wh">240dp</dimen>
     <dimen name="me_icon_wh">20dp</dimen>
+    <dimen name="text_size" >16sp</dimen>
 </resources>

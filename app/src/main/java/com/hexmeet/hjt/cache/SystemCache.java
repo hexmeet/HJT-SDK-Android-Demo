@@ -77,6 +77,7 @@ public class SystemCache {
 
     private String speakName;
     private String localName;
+    private boolean isCamera = true;
     private Map<String, String> remoteNameUpdateState = new HashMap<>();
 
     private SystemCache() {
@@ -208,6 +209,7 @@ public class SystemCache {
                 isRecordingOn = false;
                 repeatCount.set(0);
                 withContent = false;
+                isCamera = true;
                 if(this.callState == CallState.CONNECTED && peer != null) {
                     peer.setEndTime(SystemClock.elapsedRealtime());
                     setStartTime(SystemClock.elapsedRealtime());
@@ -453,4 +455,11 @@ public class SystemCache {
         speakName = name;
     }
 
+    public boolean isCamera() {
+        return isCamera;
+    }
+
+    public void setCamera(boolean camera) {
+        isCamera = camera;
+    }
 }

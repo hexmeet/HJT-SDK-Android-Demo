@@ -225,9 +225,7 @@ public class CallIncomingActivity  extends FullscreenActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onFileMessageEven(FileMessageEvent event) {//获取p2p主叫头像
         LOG.info("onFileMessageEven()");
-        if(event.isSuccess() && !TextUtils.isEmpty(event.getFilePath())) {
-            avaterUrl(event.getFilePath());
-        }
+        avaterUrl(event.getFilePath());
     }
 
     private void avaterUrl(String imageUrl) {
