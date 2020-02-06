@@ -46,7 +46,7 @@ public class LoginSettings {
 
     private boolean isPrivateMuteVideo;
     private boolean isPrivateMuteMic;
-
+    private boolean showPrivacyPolicyDialog;
 
     private String testServer;
 
@@ -85,6 +85,7 @@ public class LoginSettings {
 
         String is_PrivatMuteVideo = "is_PrivatMuteVideo";
         String is_PrivatMuteMic= "is_PrivatMuteMic";
+        String SHOWPRIVACY_WINDOW= "privacy_policy_dialog";
     }
 
     public static LoginSettings getInstance() {
@@ -127,6 +128,7 @@ public class LoginSettings {
 
         isPrivateMuteVideo= sp.getBoolean(Key.is_PrivatMuteVideo,false);
         isPrivateMuteMic= sp.getBoolean(Key.is_PrivatMuteMic,false);
+        showPrivacyPolicyDialog = sp.getBoolean(Key.SHOWPRIVACY_WINDOW,false);
     }
 
     public String getPrivateLoginServer() {
@@ -375,6 +377,17 @@ public class LoginSettings {
         if (this.isPrivateMuteMic ^ muteMic) {
             this.isPrivateMuteMic = muteMic;
             sp.edit().putBoolean(Key.is_PrivatMuteMic, muteMic).apply();
+        }
+    }
+
+    public boolean getPrivacyPolicy() {
+        return showPrivacyPolicyDialog;
+    }
+
+    public void setPrivacyPolicy(boolean showDialog) {
+        if (this.showPrivacyPolicyDialog ^ showDialog) {
+            this.showPrivacyPolicyDialog = showDialog;
+            sp.edit().putBoolean(Key.SHOWPRIVACY_WINDOW, showDialog).apply();
         }
     }
 }

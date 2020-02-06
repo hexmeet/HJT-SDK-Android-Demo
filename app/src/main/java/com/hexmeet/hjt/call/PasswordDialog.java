@@ -20,7 +20,7 @@ public class PasswordDialog extends Dialog {
     public PasswordDialog(Context context, int theme) {
         super(context, theme);
     }
-
+    private static EditText inputBox;
     public static class Builder {
         private String title;
         private String initValue;
@@ -31,7 +31,7 @@ public class PasswordDialog extends Dialog {
 
         private View layout;
         private PasswordDialog dialog;
-        private EditText inputBox;
+
         private TextView messageText;
 
         public Builder(Context context) {
@@ -118,5 +118,9 @@ public class PasswordDialog extends Dialog {
             dialog.setCancelable(true);     //用户可以点击手机Back键取消对话框显示
             dialog.setCanceledOnTouchOutside(false);        //用户不能通过点击对话框之外的地方取消对话框显示
         }
+    }
+
+    public  void setName(String userName){
+        inputBox.setText(userName);
     }
 }

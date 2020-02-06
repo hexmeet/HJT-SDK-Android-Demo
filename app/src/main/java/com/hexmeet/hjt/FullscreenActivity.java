@@ -101,14 +101,21 @@ public class FullscreenActivity extends Activity {
 
     protected void clearAnonymousData() {
         LoginSettings.getInstance().setLoginState(LoginSettings.LOGIN_STATE_IDLE, true);
-        SystemCache.getInstance().resetAnonymousLoginCache();
         HjtApp.getInstance().getAppService().setUserInLogin(false);
+        LOG.info("fullscreen : "+SystemCache.getInstance().isInviteMakeCall());
+        if(SystemCache.getInstance().isInviteMakeCall()){
+            SystemCache.getInstance().setAnonymousMakeCall(false);
+            clearInviteData();
+        }
+        SystemCache.getInstance().resetAnonymousLoginCache();
     }
 
     protected void clearInviteData(){
-        Log.i("fullscreen",SystemCache.getInstance().isInviteMakeCall()+"");
         // TODO - why make a autoLogin here?
-        LoginService.getInstance().autoLogin();
+        LOG.info("clearInviteData()");
+        if(!LoginSettings.getInstance().cannotAutoLogin()){
+            LoginService.getInstance().autoLogin();
+        }
         SystemCache.getInstance().setInviteMakeCall(false);
     }
 

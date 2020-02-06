@@ -410,7 +410,10 @@ public class MeDetailActivity extends BaseActivity {
                         }
                     }).setTitle(getString(R.string.update_name)).setInitValue(name, InputType.TYPE_CLASS_TEXT, getString(R.string.hint_input_new_name))
                     .createTwoButtonDialog();
+        }else {
+            dialog.setName(name);
         }
+
         dialog.show();
     }
 

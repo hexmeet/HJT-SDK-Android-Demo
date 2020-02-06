@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+import com.hexmeet.hjt.AppCons;
 import com.hexmeet.hjt.BaseActivity;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
@@ -27,7 +28,6 @@ public class AboutActivity extends BaseActivity {
         TextView version = (TextView) findViewById(R.id.version);
         version.setText(Utils.getVersion());
         LOG.info("APP version : "+Utils.getVersion());
-
         TextView copyright1 = (TextView) findViewById(R.id.copyright1);
         copyright1.setTextSize(HjtApp.isEnVersion() ? 10 : 12);
         TextView copyright2 = (TextView) findViewById(R.id.copyright2);
@@ -37,7 +37,18 @@ public class AboutActivity extends BaseActivity {
         findViewById(R.id.service_terms).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                ServiceTermsActivity.actionStart(AboutActivity.this);
+                Intent intent = new Intent(AboutActivity.this, ServiceTermsActivity.class);
+                intent.putExtra(AppCons.ISTERMSOFSERVICE,true);
+                startActivity(intent);
+            }
+        });
+
+        findViewById(R.id.service_privacy_policy).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AboutActivity.this, ServiceTermsActivity.class);
+                intent.putExtra(AppCons.ISTERMSOFSERVICE,false);
+                startActivity(intent);
             }
         });
 

@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -612,6 +611,10 @@ public class HexMeet extends BaseActivity implements OnClickListener {
 
         if(event.getCode() == LoginResultEvent.LOGIN_SUCCESS) {
             updateLoginToken();
+            if(meFrag != null) {
+                LOG.info("updated meFrag displayName and userName");
+                meFrag.onLoginName(SystemCache.getInstance().getLoginResponse().getDisplayName(),SystemCache.getInstance().getLoginResponse().getUsername());
+            }
         }
     }
 
@@ -628,6 +631,7 @@ public class HexMeet extends BaseActivity implements OnClickListener {
         if(type == AppCons.INTENT_VALUE_WEB_INVITE_DIAOUT) {
             LOG.info("handleWebInvite Hexmeet direct dial out");
             if (!TextUtils.isEmpty(param.getConferenceNumber())) {
+                SystemCache.getInstance().setInviteMakeCall(false);
                 dialOut(param.getConferenceNumber(), param.getPassword());
                 SystemCache.getInstance().setJoinMeetingParam(null);
             } else {
@@ -645,7 +649,7 @@ public class HexMeet extends BaseActivity implements OnClickListener {
             if(meFrag != null && meFrag.isResumed()) {
                 meFrag.loadAvatar();
             }
-            Log.i("CallBack","FileMessageEvent"+event.getFilePath());
+            LOG.info("CallBack FileMessageEvent"+event.getFilePath());
         }
     }
 
