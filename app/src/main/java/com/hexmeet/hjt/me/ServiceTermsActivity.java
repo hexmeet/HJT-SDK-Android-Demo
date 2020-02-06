@@ -1,26 +1,21 @@
 package com.hexmeet.hjt.me;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.hexmeet.hjt.AppCons;
 import com.hexmeet.hjt.BaseActivity;
+import com.hexmeet.hjt.BuildConfig;
 import com.hexmeet.hjt.R;
 
 public class ServiceTermsActivity extends BaseActivity {
-//    private ProgressBar processBar;
+    private WebView webView;
 
-    public static void actionStart(Context context) {
-        Intent intent = new Intent(context, ServiceTermsActivity.class);
-        context.startActivity(intent);
-    }
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -28,7 +23,7 @@ public class ServiceTermsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.service_terms);
 
-        WebView webView = (WebView) findViewById(R.id.webView);
+        webView = (WebView) findViewById(R.id.webView);
         WebSettings setting = webView.getSettings();
         setting.setJavaScriptEnabled(true);
 
@@ -40,8 +35,15 @@ public class ServiceTermsActivity extends BaseActivity {
             }
         });
 
-        String htmlUrl = "file:///android_asset/license.html";
-        webView.loadUrl(htmlUrl);
+        boolean booleanExtra = getIntent().getBooleanExtra(AppCons.ISTERMSOFSERVICE, false);
+        LOG.info("type : "+booleanExtra);
+        if(booleanExtra){
+            String htmlUrl = "file:///android_asset/license.html";
+            webView.loadUrl(htmlUrl);
+        }else {
+            String privacyUrl = BuildConfig.PRIVACY_URL;
+            webView.loadUrl(privacyUrl);
+        }
 
         findViewById(R.id.back_btn).setOnClickListener(new OnClickListener() {
             @Override

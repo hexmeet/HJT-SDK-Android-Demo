@@ -101,6 +101,7 @@ public class ConnectActivity extends FullscreenActivity {
     }
 
     protected void endCall() {
+        handler.removeMessages(0);
         HjtApp.getInstance().getAppService().endCall();
         ConnectActivity.this.finish();
         LOG.debug("hang up call successful");

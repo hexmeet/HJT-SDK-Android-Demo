@@ -148,6 +148,7 @@ public class CallIncomingActivity  extends FullscreenActivity {
         public void onClick(View v) {
             if (v.getId() == R.id.btn_hangup) {
                 LOG.info("onClick hangup");
+                handler.removeMessages(0);
                 HjtApp.getInstance().getAppService().refuseP2PMetting(SystemCache.getInstance().getPeer().getNumber());
                 handler.removeCallbacksAndMessages(null);
                 EventBus.getDefault().post(new CallEvent(CallState.IDLE));

@@ -28,7 +28,6 @@ public class MeFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.me, container, false);
-
         avatar = (ImageView) root.findViewById(R.id.avatar);
         username = (TextView) root.findViewById(R.id.username);
         displayName = (TextView)  root.findViewById(R.id.displayName);
@@ -80,13 +79,19 @@ public class MeFrag extends Fragment {
     };
 
     @Override
-    public void onResume() {
-        super.onResume();
-        Utils.loadAvatar(avatar);
+    public void onStart() {
+        super.onStart();
         if (SystemCache.getInstance().getLoginResponse() != null) {
             username.setText(SystemCache.getInstance().getLoginResponse().getDisplayName());
             displayName.setText(getString(R.string.account)+": "+SystemCache.getInstance().getLoginResponse().getUsername());
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LOG.info("onResume()");
+        Utils.loadAvatar(avatar);
     }
 
     public void loadAvatar() {
@@ -103,5 +108,12 @@ public class MeFrag extends Fragment {
             Login.actionStart(getActivity());
             getActivity().finish();
         }
+    }
+
+
+    public void onLoginName(String name,String userName) {
+        LOG.info("onLoginName()");
+        username.setText(name);
+        displayName.setText(getString(R.string.account)+": "+userName);
     }
 }

@@ -11,6 +11,7 @@ public interface AppCons {
     String BLUETOOTH_STATE_CHNGED = "android.bluetooth.adapter.action.STATE_CHANGED";
 
     String INTENT_KEY_WEB_INVITE = "key_web_invite";
+    String ISTERMSOFSERVICE = "terms_of_service";
     int INTENT_VALUE_WEB_INVITE_DIAOUT = 10;
     int INTENT_VALUE_WEB_INVITE_ANONYMOUS = 11;
 

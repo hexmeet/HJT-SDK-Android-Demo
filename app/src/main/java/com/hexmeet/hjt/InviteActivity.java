@@ -224,6 +224,7 @@ public class InviteActivity extends BaseActivity{
     private void handJoinMeeting(String targetServer, boolean isLocation) {
         boolean isSvcReg = SystemCache.getInstance().getRegisterState() == RegisterState.SUCCESS;
         boolean dialOutDirectly = false;
+        LOG.info("isLocation : "+isLocation+",isSvcReg : "+isSvcReg);
         if(isLocation && isSvcReg) {
             boolean isCloudLogin = SystemCache.getInstance().isCloudLogin();
             String locationServer = isCloudLogin ? LoginSettings.LOCATION_CLOUD : LoginSettings.getInstance().getPrivateLoginServer();
@@ -231,6 +232,7 @@ public class InviteActivity extends BaseActivity{
             String port = isCloudLogin ? AppCons.HTTP_DEFAULT_PORT : LoginSettings.getInstance().getPrivatePort();
 
             String server = (isHttps ? AppCons.HTTPS_PREFIX : AppCons.HTTP_PREFIX) + locationServer + (TextUtils.isEmpty(port) ? "" : (":" +port));
+            LOG.info("server : "+server+",targetServer : "+targetServer);
             dialOutDirectly = TextUtils.equals(server, targetServer);
         }
 
@@ -265,12 +267,11 @@ public class InviteActivity extends BaseActivity{
 
     private void turnPageToAnonymousDialOut() {
         if (SystemCache.getInstance().getLoginResponse() != null) {
-            //gotoHexmeet(false);
+            gotoHexmeet(false);
             // TODO - it's not correct to go HexMeet page first for an anonymous call scenario.
             // Should start anonymous call first, then after the call we determine whether to
             // do a auto login
-            gotoLogin();
-
+            //gotoLogin();
         } else {
             gotoLogin();
         }

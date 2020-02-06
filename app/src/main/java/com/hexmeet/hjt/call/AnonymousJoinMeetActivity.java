@@ -134,6 +134,7 @@ public class AnonymousJoinMeetActivity extends FullscreenActivity {
     }
 
     protected void endCall() {
+        handler.removeMessages(0);
         HjtApp.getInstance().getAppService().endCall();
         LOG.debug("hang up call successful");
         if(SystemCache.getInstance().isInviteMakeCall()){

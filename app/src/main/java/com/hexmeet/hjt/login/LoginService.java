@@ -24,6 +24,7 @@ public class LoginService {
     }
 
     public void autoLogin() {
+        LOG.info("isAnonymousMakeCall : "+SystemCache.getInstance().isAnonymousMakeCall());
         if(!SystemCache.getInstance().isAnonymousMakeCall()){
             boolean isCloudLogin = LoginSettings.getInstance().getLoginState(false) == LoginSettings.LOGIN_CLOUD_SUCCESS;
             LOG.info("iscloud : "+isCloudLogin+"");
