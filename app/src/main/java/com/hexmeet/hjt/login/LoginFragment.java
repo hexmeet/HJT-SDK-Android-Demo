@@ -1,9 +1,13 @@
 package com.hexmeet.hjt.login;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,6 +16,8 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.andreabaccega.widget.FormEditText;
@@ -19,10 +25,14 @@ import com.hexmeet.hjt.BuildConfig;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.cache.SystemCache;
+import com.hexmeet.hjt.dial.RecentPreference;
 import com.hexmeet.hjt.model.LoginParams;
 import com.hexmeet.hjt.utils.Utils;
 
 import org.apache.log4j.Logger;
+
+import java.lang.reflect.Method;
+import java.util.LinkedList;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -39,6 +49,7 @@ public class LoginFragment extends Fragment {
     private FormEditText input_server, input_name, input_password, input_conf_id, input_conf_name;
     private CheckBox closeCamera, closeMic;
     private Button loginBtn;
+    private LinearLayout recentContainer;
 
     @Override
     public void onAttach(Context context) {
@@ -69,12 +80,14 @@ public class LoginFragment extends Fragment {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View mainView = inflater.inflate(R.layout.auth_login, container, false);
         mainView.findViewById(R.id.login_back).setOnClickListener(click);
         mainView.findViewById(R.id.text_advance_setting).setOnClickListener(click);
+        recentContainer = (LinearLayout) mainView.findViewById(R.id.recent_list);
         loginBtn = (Button) mainView.findViewById(R.id.login_btn);
         loginBtn.setOnClickListener(click);
 
@@ -86,6 +99,34 @@ public class LoginFragment extends Fragment {
         input_password = (FormEditText) mainView.findViewById(R.id.login_password);
         input_conf_id = (FormEditText) mainView.findViewById(R.id.login_conf_id);
         input_conf_name = (FormEditText) mainView.findViewById(R.id.login_conf_name);
+
+        showIconDirection(false);
+        input_conf_id.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Drawable drawable = input_conf_id.getCompoundDrawables()[2];
+                if (drawable == null){
+                    return false;
+                }
+                if (event.getAction() != MotionEvent.ACTION_UP){
+
+
+                    return false;
+                }
+                if (event.getX() > input_conf_id.getWidth() - input_conf_id.getPaddingRight() - drawable.getIntrinsicWidth()){
+
+                    hideInput();
+
+                    boolean open = v.isSelected();
+                    showRecentView(!open);
+                    showIconDirection(!open);
+                    v.setSelected(!open);
+                    return true;
+                }
+                showInput(input_conf_id);
+                return false;
+            }
+        });
 
         closeCamera = (CheckBox) mainView.findViewById(R.id.close_camera);
         closeMic = (CheckBox) mainView.findViewById(R.id.close_mic);
@@ -312,4 +353,105 @@ public class LoginFragment extends Fragment {
     public void setLoginBtnEnable(boolean enable) {
         loginBtn.setEnabled(enable);
     }
+
+    public void showIconDirection(boolean direction){
+        if(direction){
+            Drawable drawables = getResources().getDrawable(R.drawable.ic_up);
+            drawables .setBounds(0, 0, 40, 40);//第一个 0 是距左边距离，第二个 0 是距上边距离，40 分别是长宽
+            input_conf_id .setCompoundDrawables(null , null, drawables, null);//只放左边
+        }else {
+            Drawable drawable = getResources().getDrawable(R.drawable.ic_down);
+            drawable .setBounds(0, 0, 40, 40);//第一个 0 是距左边距离，第二个 0 是距上边距离，40 分别是长宽
+            input_conf_id .setCompoundDrawables(null , null, drawable, null);//只放左边
+        }
+    }
+
+    private void showRecentView(boolean show) {
+        recentContainer.setVisibility(show ? View.VISIBLE : View.GONE);
+        if(show) {
+            recentContainer.removeAllViews();
+            LinkedList<String> recents = RecentPreference.getInstance().getRecentList();
+            if(recents.isEmpty()) {
+                showEmptyRecent();
+            } else {
+                LayoutInflater inflater = LayoutInflater.from(getContext());
+                for (int i = 0; i < recents.size(); i++) {
+                    String item = recents.get(i);
+                    ViewGroup child = (ViewGroup) inflater.inflate(R.layout.recent_item, recentContainer, false);
+                    child.getChildAt(0).setTag(item);
+                    child.getChildAt(0).setOnClickListener(recent_click);
+                    ((TextView)child.getChildAt(0)).setText(item);
+
+                    child.getChildAt(1).setTag(item);
+                    child.getChildAt(1).setOnClickListener(recent_del_click);
+
+                    if(i == (recents.size() -1)){
+                        child.getChildAt(2).setVisibility(View.GONE);
+                    }
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    recentContainer.addView(child, lp);
+                }
+            }
+        }
+    }
+
+    private View.OnClickListener recent_click = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            checkAndCloseRecentView();
+            String number = (String) v.getTag();
+            input_conf_id.setText(number);
+        }
+    };
+
+    private void checkAndCloseRecentView() {
+        /*boolean open = recentBtn.isSelected();
+        if(open) {
+            recentBtn.setSelected(false);
+        }*/
+
+        if(recentContainer.getVisibility() == View.VISIBLE) {
+            recentContainer.setVisibility(View.GONE);
+        }
+    }
+
+    private View.OnClickListener recent_del_click = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            recentContainer.removeView((View) v.getParent());
+            String number = (String) v.getTag();
+            RecentPreference.getInstance().updateRecent(number, false);
+            if(recentContainer.getChildCount() == 0) {
+                showEmptyRecent();
+            }
+        }
+    };
+
+    private void showEmptyRecent() {
+        TextView emptyView = new TextView(getContext());
+        emptyView.setText(R.string.empty_recent);
+        emptyView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+        emptyView.setPadding(0, 40, 0, 40);
+        emptyView.setGravity(Gravity.CENTER);
+        emptyView.setTextColor(getResources().getColor(R.color.font_color_AB313131));
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        recentContainer.addView(emptyView, lp);
+    }
+
+    public void showInput(EditText editText) {
+        editText.requestFocus();
+        InputMethodManager imm = (InputMethodManager)
+                getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    public void hideInput() {
+        InputMethodManager imm = (InputMethodManager)  getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+        View v =  getActivity().getWindow().peekDecorView();
+        if (null != v) {
+            //强制隐藏键盘
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
+    }
+
 }
