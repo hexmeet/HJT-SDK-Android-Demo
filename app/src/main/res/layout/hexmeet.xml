@@ -81,16 +81,15 @@
             android:text="@string/tab_me"
             android:textColor="#999999"
             android:textSize="10sp" />
-
-
     </LinearLayout>
 
-    <View
+    <RelativeLayout
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_above="@id/tabs_row"
-        android:background="#e1e1e1" />
+        android:background="#e1e1e1"
+        android:orientation="horizontal" />
 
     <FrameLayout
         android:id="@+id/content"
@@ -98,4 +97,18 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="53dp">
     </FrameLayout>
+
+    <ImageView
+        android:id="@+id/upgrade_hint"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/notice_version_img"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/divider"
+        android:layout_marginEnd="25dp"
+        android:layout_marginTop="9dp"
+        android:visibility="gone"
+        />
 </RelativeLayout>

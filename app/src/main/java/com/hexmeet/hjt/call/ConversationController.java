@@ -114,7 +114,6 @@ public class ConversationController implements View.OnClickListener{
             }
         };
         signalLevel.setOnClickListener(callStatisticsClick);
-
         showLocalCamera(SystemCache.getInstance().isUserShowLocalCamera());
         //是否支持会话、音频模式
         FeatureSupport featureSupport = SystemCache.getInstance().getLoginResponse().getFeatureSupport();
@@ -286,7 +285,11 @@ public class ConversationController implements View.OnClickListener{
     public void showVideoMode(boolean isVideoMode) {
         ((TextView)moreDetail.getChildAt(2)).setVisibility(isVideoMode ?View.VISIBLE : View.GONE);
         iController.switchVoiceMode(isVideoMode);
-        iController.showLocalCamera(isVideoMode);
+        if(isVideoMode && SystemCache.getInstance().isUserShowLocalCamera()){
+            iController.showLocalCamera(true);
+        }else {
+            iController.showLocalCamera(false);
+        }
         ((TextView)moreDetail.getChildAt(0)).setVisibility(isVideoMode ? View.VISIBLE : View.GONE);
         //隐藏本地视频
         localVideoBtn.setVisibility(isVideoMode ? View.VISIBLE : View.GONE);
@@ -307,6 +310,8 @@ public class ConversationController implements View.OnClickListener{
     }
 
     private void showLocalCamera(boolean show) {
+        LOG.info("showLocalCamera controller : "+show);
+        SystemCache.getInstance().setUserShowLocalCamera(show);
         ((TextView)moreDetail.getChildAt(0)).setText(show ? R.string.close_local_view : R.string.open_local_view);
         iController.showLocalCamera(show);
     }

@@ -60,6 +60,7 @@
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
 
     <uses-permission android:name="android.permission.WRITEEXTERNALSTORAGE"/>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
     <!--
     是否包含能够适用于任何屏幕密度的资源
     是否是支持较大一点的屏幕形式因素
@@ -279,6 +280,9 @@
                 <action android:name="cn.jiguang.user.service.action" />
             </intent-filter>
         </service>
+
+        <service android:name=".service.UpgradeService"
+            />
         <!--aliyun-->
         <receiver
             android:name=".push.MyMessageReceiver"

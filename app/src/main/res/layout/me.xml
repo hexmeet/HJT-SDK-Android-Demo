@@ -196,6 +196,7 @@
             />
 
         <TextView
+            android:id="@+id/text_about"
             android:layout_toRightOf="@+id/icon_about"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -204,6 +205,17 @@
             android:text="@string/about_hexmeet"
             android:textColor="@drawable/popup_key_label"
             android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/upgrade_hint_me"
+            android:layout_toRightOf="@+id/text_about"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/notice_version_img"
+            android:visibility="gone"
+            />
 
         <ImageView
             android:layout_width="wrap_content"

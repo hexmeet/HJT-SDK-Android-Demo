@@ -110,21 +110,28 @@ public class MeetingWindowService extends Service {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             sendNotification();
         }
-        initWindow();
+        startFloatWindow(true);
     }
 
-    public void startFloatWindow(){
+    public void startFloatWindow(boolean isCreate){
         try {
             boolean permissionOk = Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(HjtApp.getInstance().getContext());
             if(permissionOk) {
                 LOG.info("onStart  to show float window");
-                createFloatView();
+                if(isCreate){
+                    initWindow();
+                }else {
+                    createFloatView();
+                }
+
                 hasWindow = true;
             } else {
                 LOG.info("onStop will not show float window");
                 isLoadComplete = true;
                 hasWindow = false;
-                Utils.showToast(getApplicationContext(), R.string.need_float_window_permission);
+                if(!isCreate){
+                    Utils.showToast(getApplicationContext(), R.string.need_float_window_permission);
+                }
             }
         } catch (Exception e) {
             LOG.error("MeetingWindowService onCreate", e);
@@ -375,7 +382,7 @@ public class MeetingWindowService extends Service {
                     break;
                 case ON_SVC_FLOAT_WINDOW:
                     LOG.info("hander startFloatWindow()");
-                    startFloatWindow();
+                    startFloatWindow(false);
                     break;
             }
         }
