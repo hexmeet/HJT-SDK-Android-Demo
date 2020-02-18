@@ -24,6 +24,7 @@ public class MeFrag extends Fragment {
     private ImageView avatar;
     private TextView username;
     private TextView displayName;
+    private ImageView upgradeHint;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class MeFrag extends Fragment {
         avatar = (ImageView) root.findViewById(R.id.avatar);
         username = (TextView) root.findViewById(R.id.username);
         displayName = (TextView)  root.findViewById(R.id.displayName);
+        upgradeHint = (ImageView)root.findViewById(R.id.upgrade_hint_me);
         root.findViewById(R.id.me_info).setOnClickListener(item_click);
         root.findViewById(R.id.me_setting).setOnClickListener(item_click);
         root.findViewById(R.id.me_share).setOnClickListener(item_click);
@@ -85,6 +87,7 @@ public class MeFrag extends Fragment {
             username.setText(SystemCache.getInstance().getLoginResponse().getDisplayName());
             displayName.setText(getString(R.string.account)+": "+SystemCache.getInstance().getLoginResponse().getUsername());
         }
+        showWarn(SystemCache.getInstance().isShowRemind());
     }
 
     @Override
@@ -115,5 +118,11 @@ public class MeFrag extends Fragment {
         LOG.info("onLoginName()");
         username.setText(name);
         displayName.setText(getString(R.string.account)+": "+userName);
+    }
+
+    public void showWarn(boolean show) {
+        if (upgradeHint != null) {
+            upgradeHint.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+        }
     }
 }

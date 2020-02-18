@@ -217,8 +217,7 @@ public class InviteActivity extends BaseActivity{
         SystemCache.getInstance().getJoinMeetingParam().setUseHttps(isHttps);
         SystemCache.getInstance().getJoinMeetingParam().setCloud(host.equalsIgnoreCase(LoginSettings.LOCATION_CLOUD) || host.equalsIgnoreCase(LoginSettings.LOGIN_CLOUD_SERVER));
 
-        String targetServer = (isHttps ? AppCons.HTTPS_PREFIX : AppCons.HTTP_PREFIX) + host + (TextUtils.isEmpty(port) ? "" : (":" +port));
-        handJoinMeeting(targetServer, isLocationUri);
+        handJoinMeeting(host, isLocationUri);
     }
 
     private void handJoinMeeting(String targetServer, boolean isLocation) {
@@ -228,12 +227,8 @@ public class InviteActivity extends BaseActivity{
         if(isLocation && isSvcReg) {
             boolean isCloudLogin = SystemCache.getInstance().isCloudLogin();
             String locationServer = isCloudLogin ? LoginSettings.LOCATION_CLOUD : LoginSettings.getInstance().getPrivateLoginServer();
-            boolean isHttps = !isCloudLogin && LoginSettings.getInstance().useHttps();
-            String port = isCloudLogin ? AppCons.HTTP_DEFAULT_PORT : LoginSettings.getInstance().getPrivatePort();
-
-            String server = (isHttps ? AppCons.HTTPS_PREFIX : AppCons.HTTP_PREFIX) + locationServer + (TextUtils.isEmpty(port) ? "" : (":" +port));
-            LOG.info("server : "+server+",targetServer : "+targetServer);
-            dialOutDirectly = TextUtils.equals(server, targetServer);
+            LOG.info("server : "+locationServer+",targetServer : "+targetServer);
+            dialOutDirectly = TextUtils.equals(locationServer, targetServer);
         }
 
         if(dialOutDirectly) {

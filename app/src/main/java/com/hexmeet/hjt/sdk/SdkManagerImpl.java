@@ -674,7 +674,7 @@ public class SdkManagerImpl implements SdkManager {
 
 
     public static void getUserInfoList(UserInfo info, boolean isObtain){
-        EVEngine.EVFeatureSupport feature = info.featureSupport;
+
         RestLoginResp restLoginResp = new RestLoginResp();
         FeatureSupport featureSupport = new FeatureSupport();
         restLoginResp.setUserId(info.userId);
@@ -690,12 +690,15 @@ public class SdkManagerImpl implements SdkManager {
         restLoginResp.setToken(info.token);
         restLoginResp.setDoradoVersion(info.doradoVersion);
         restLoginResp.setDeviceId(info.deviceId);
-        featureSupport.setContactWebPage(feature.contactWebPage);
-        featureSupport.setChatInConference(feature.chatInConference);
-        featureSupport.setP2pCall(feature.p2pCall);
-        featureSupport.setSwitchingToAudioConference(feature.switchingToAudioConference);
-        featureSupport.setSitenameIsChangeable(feature.sitenameIsChangeable);
-        restLoginResp.setFeatureSupport(featureSupport);
+        EVEngine.EVFeatureSupport feature = info.featureSupport;
+        if(feature!=null){
+            featureSupport.setContactWebPage(feature.contactWebPage);
+            featureSupport.setChatInConference(feature.chatInConference);
+            featureSupport.setP2pCall(feature.p2pCall);
+            featureSupport.setSwitchingToAudioConference(feature.switchingToAudioConference);
+            featureSupport.setSitenameIsChangeable(feature.sitenameIsChangeable);
+            restLoginResp.setFeatureSupport(featureSupport);
+        }
         SystemCache.getInstance().setLoginResponse(restLoginResp);
         if(isObtain){
             EventBus.getDefault().post(new UserInfoEvent(info.username,info.displayName,info.org,info.email,info.cellphone,info.telephone,info.dept));
@@ -754,7 +757,7 @@ public class SdkManagerImpl implements SdkManager {
                 if(SystemCache.getInstance().isAnonymousMakeCall()){
                     LOG.info("CallBack isCloud : "+SystemCache.getInstance().getJoinMeetingParam().isCloud());
                     LoginSettings.getInstance().setLoginState(SystemCache.getInstance().getJoinMeetingParam().isCloud() ? LoginSettings.LOGIN_CLOUD_SUCCESS : LoginSettings.LOGIN_PRIVATE_SUCCESS, true);
-                    EventBus.getDefault().post(new LoginResultEvent(LoginResultEvent.LOGIN_SUCCESS, "success", true));
+                    //EventBus.getDefault().post(new LoginResultEvent(LoginResultEvent.LOGIN_SUCCESS, "success", true));
                     updateVideoUserImage(null);
                 }else {
                     boolean isCloudLogin = SystemCache.getInstance().isCloudLogin();

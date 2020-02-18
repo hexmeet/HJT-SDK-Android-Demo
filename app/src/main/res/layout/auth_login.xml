@@ -96,89 +96,118 @@
             whatever:testErrorString="@string/error_form"
             android:inputType="textPassword" />
 
-        <com.andreabaccega.widget.FormEditText
-            android:id="@+id/login_conf_id"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/bg_input_box"
-            android:gravity="center"
-            android:maxLines="1"
-            android:maxLength="24"
-            android:singleLine="true"
-            android:hint="@string/join_meeting_id"
-            android:padding="10dp"
-            android:textColor="@color/font_color_313131"
-            android:textColorHint="@color/hexmeet_light_gray"
-            android:textSize="18sp"
-            android:visibility="gone"
-            whatever:emptyErrorString="@string/error_empty"
-            whatever:testErrorString="@string/error_form"
-            whatever:testType="alphaNumeric" />
+            android:layout_height="wrap_content">
 
-        <com.andreabaccega.widget.FormEditText
-            android:id="@+id/login_conf_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/bg_input_box"
-            android:gravity="center"
-            android:hint="@string/join_meeting_name"
-            android:padding="10dp"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textColor="@color/font_color_313131"
-            android:textColorHint="@color/hexmeet_light_gray"
-            android:textSize="18sp"
-            android:visibility="gone"
-            whatever:emptyErrorString="@string/error_empty"
-            whatever:testErrorString="@string/error_form"
-            whatever:testType="personName" />
+            <com.andreabaccega.widget.FormEditText
+                android:id="@+id/login_conf_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/bg_input_box"
+                android:gravity="center"
+                android:maxLines="1"
+                android:maxLength="24"
+                android:singleLine="true"
+                android:hint="@string/join_meeting_id"
+                android:padding="10dp"
+                android:textColor="@color/font_color_313131"
+                android:textColorHint="@color/hexmeet_light_gray"
+                android:textSize="18sp"
+                android:visibility="gone"
+                android:drawableRight="@drawable/select_drop_down"
+                whatever:emptyErrorString="@string/error_empty"
+                whatever:testErrorString="@string/error_form"
+                whatever:testType="alphaNumeric" />
 
-        <Button
-            android:id="@+id/login_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/btn_private_login"
-            android:gravity="center"
-            android:padding="15dp"
-            android:text="@string/login"
-            android:textColor="@color/White"
-            android:textSize="18sp"
-            android:textAllCaps="false"
-            />
+                <com.andreabaccega.widget.FormEditText
+                    android:id="@+id/login_conf_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/bg_input_box"
+                    android:gravity="center"
+                    android:hint="@string/join_meeting_name"
+                    android:padding="10dp"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="@color/font_color_313131"
+                    android:textColorHint="@color/hexmeet_light_gray"
+                    android:textSize="18sp"
+                    android:visibility="gone"
+                    whatever:emptyErrorString="@string/error_empty"
+                    whatever:testErrorString="@string/error_form"
+                    whatever:testType="personName"
+                    android:layout_below="@id/login_conf_id"
+                    />
+            <LinearLayout
+                android:id="@+id/login_button"
+                android:layout_below="@id/login_conf_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/login_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/btn_private_login"
+                    android:gravity="center"
+                    android:padding="15dp"
+                    android:text="@string/login"
+                    android:textColor="@color/White"
+                    android:textSize="18sp"
+                    android:textAllCaps="false"
+                    />
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/close_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/login_button"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="10dp"
+                android:gravity="center"
+                android:button="@drawable/checkbox_selector"
+                android:text="@string/close_camera"
+                android:textColor="@color/font_color_313131"
+                android:visibility="gone"
+                android:textSize="14sp" />
+
+            <CheckBox
+                android:id="@+id/close_mic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/close_camera"
+                android:paddingLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:button="@drawable/checkbox_selector"
+                android:gravity="center"
+                android:visibility="gone"
+                android:text="@string/close_mic"
+                android:textColor="@color/font_color_313131"
+                android:textSize="14sp" />
+
+
+            <LinearLayout
+                android:id="@+id/recent_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/login_conf_id"
+                android:layout_marginTop="0dp"
+                android:visibility="gone"
+                android:background="@drawable/bg_card_style"
+                android:orientation="vertical" />
+        </RelativeLayout>
+
+
+
     </LinearLayout>
 
-    <CheckBox
-        android:id="@+id/close_camera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/input_area"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="10dp"
-        android:paddingLeft="10dp"
-        android:gravity="center"
-        android:button="@drawable/checkbox_selector"
-        android:text="@string/close_camera"
-        android:textColor="@color/font_color_313131"
-        android:visibility="gone"
-        android:textSize="14sp" />
 
-    <CheckBox
-        android:id="@+id/close_mic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/close_camera"
-        android:layout_marginLeft="40dp"
-        android:paddingLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:button="@drawable/checkbox_selector"
-        android:gravity="center"
-        android:visibility="gone"
-        android:text="@string/close_mic"
-        android:textColor="@color/font_color_313131"
-        android:textSize="14sp" />
+
+
 
     <TextView
         android:id="@+id/text_advance_setting"

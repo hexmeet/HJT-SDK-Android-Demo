@@ -88,6 +88,9 @@ public class Login extends BaseActivity implements LoginFragmentCallback{
     private void turnPage() {
         if (LoginSettings.getInstance().cannotAutoLogin()) {
             gotoLoginPage();
+            if(SystemCache.getInstance().isShowVersionDialog()){
+                checkVersion(false);
+            }
         } else {
                 LOG.info("logined before this launch, start auto login");
                 if (SystemCache.getInstance().isNetworkConnected()) {
@@ -113,6 +116,7 @@ public class Login extends BaseActivity implements LoginFragmentCallback{
     @Override
     protected void onResume() {
         super.onResume();
+        LOG.info("onResume()");
         if (HjtApp.getInstance().getAppService() != null) {
             HjtApp.getInstance().getAppService().setUserInLogin(false);
            /* if (HjtApp.getInstance().getAppService().isCalling()) {

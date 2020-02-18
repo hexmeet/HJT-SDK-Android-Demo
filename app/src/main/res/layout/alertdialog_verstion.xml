@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:theme="@android:style/Theme.Translucent"
+    >
+    <RelativeLayout
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/image_version"
+            />
+    <RelativeLayout
+        android:id="@+id/version_updated"
+        android:layout_marginTop="250dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/update_version"
+            android:textColor="@color/title_bar"
+            android:textSize="23sp"
+            android:layout_centerHorizontal="true"
+            />
+
+        <TextView
+            android:id="@+id/version_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/version_num"
+            android:text="1.3.666"
+            android:textColor="@color/White"
+            android:textSize="14sp"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/text"
+            />
+    </RelativeLayout>
+
+        <TextView
+            android:background="@color/White"
+            android:id="@+id/text_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/find_version"
+            android:textColor="@color/title_bar"
+            android:textSize="18sp"
+            android:layout_below="@id/version_updated"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="51dp"
+            android:paddingRight="51dp"
+            android:lineSpacingExtra="5dp"
+            android:gravity="center"
+            android:paddingTop="20dp"
+            />
+
+        <LinearLayout
+            android:layout_below="@id/text_1"
+            android:paddingTop="20dp"
+            android:background="@color/White"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="20dp"
+                android:layout_width="280dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/version_cancel"
+                    android:layout_width="0dp"
+                    android:layout_height="45dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_select_cancel"
+                    android:gravity="center"
+                    android:text="@string/later_on"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/popup_key_label"
+                    android:textSize="16sp"
+                    />
+
+                <Button
+                    android:id="@+id/version_ok"
+                    android:layout_width="0dp"
+                    android:layout_height="45dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_private_login"
+                    android:gravity="center"
+                    android:text="@string/ok"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/color_text_join"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+
+
+</LinearLayout>

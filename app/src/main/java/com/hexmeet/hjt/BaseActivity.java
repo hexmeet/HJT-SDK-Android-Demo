@@ -6,22 +6,38 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.conf.MeetingForWechat;
 import com.hexmeet.hjt.conf.WeChat;
+import com.hexmeet.hjt.me.VersionState;
+import com.hexmeet.hjt.service.UpgradeService;
 import com.hexmeet.hjt.utils.JsonUtil;
 import com.hexmeet.hjt.utils.NetworkUtil;
 import com.hexmeet.hjt.utils.StateUtil;
+import com.hexmeet.hjt.utils.UpdateVersionUtil;
 import com.hexmeet.hjt.utils.Utils;
 
 import org.apache.log4j.Logger;
+import org.greenrobot.eventbus.EventBus;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 
 import androidx.fragment.app.FragmentActivity;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class BaseActivity extends FragmentActivity {
     public Logger LOG = Logger.getLogger(this.getClass());
+    private UpdateVersionUtil dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,6 +161,88 @@ public class BaseActivity extends FragmentActivity {
             resources.updateConfiguration(configuration, resources.getDisplayMetrics());
         }
         return resources;
+    }
+
+    public void checkVersion(final boolean isOnclick){
+        SystemCache.getInstance().setShowVersionDialog(false);
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(BuildConfig.APPINFO_URL).build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if(response.isSuccessful()){
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        String platform = (String) jsonObject.get("PLATFORM");
+                        final String version = (String) jsonObject.get("VERSION");
+                        final String download_url = (String) jsonObject.get("DOWNLOAD_URL");
+                        if(platform!=null && platform.equals("android")){
+                            LOG.info("APP version : "+Utils.getVersion()+",verstion : "+version);
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Looper.prepare();//增加部分
+                                    if (Utils.getVersion().compareTo(version) < 0) {
+                                        showVersionDialog(version,download_url);
+                                    }else {
+                                        if(isOnclick){
+                                            Utils.showToast(BaseActivity.this, R.string.version);
+                                        }
+                                    }
+                                    Looper.loop();//增加部分
+                                }
+                            }).start();
+
+
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    private void showVersionDialog(String version,String download_url) {
+        dialog = new UpdateVersionUtil.Builder(this)
+                .setCancelButton(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SystemCache.getInstance().setShowRemind(true);
+                        onNotice(true);
+                        dialog.dismiss();
+                    }
+                }).setOkButton(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SystemCache.getInstance().setShowRemind(false);
+                        onNotice(false);
+                        Intent intent = new Intent(BaseActivity.this, UpgradeService.class);
+                        intent.putExtra(AppCons.APK_URL, download_url);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            startForegroundService(intent);
+                        } else {
+                            startService(intent);
+                        }
+                        Utils.showToast(BaseActivity.this,R.string.new_version);
+                        dialog.dismiss();
+                    }
+                }).setVersion(version).createTwoButtonDialog();
+        dialog.show();
+    }
+
+    private void onNotice(boolean show){
+        if(show){
+            EventBus.getDefault().post(VersionState.VISIBLE_VERSIONIMG);
+        }else {
+            EventBus.getDefault().post(VersionState.INVISIBLE_VERSIONIMG);
+        }
+
     }
 
 }

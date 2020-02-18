@@ -8,6 +8,8 @@ import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -94,6 +96,8 @@ public class CallStaticsWindow {
 
     public void show() {
         if (!isShowing()) {
+            Window window= dialog.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             dialog.show();
         }
     }

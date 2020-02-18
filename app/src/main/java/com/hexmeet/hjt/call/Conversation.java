@@ -158,7 +158,10 @@ public class Conversation extends FullscreenActivity {
         controller = new ConversationController(findViewById(R.id.control_layout), iController, getScreenWidth());
         initGesture();
         controller.startTime(startTime);
-        controller.setRoomNum(SystemCache.getInstance().getPeer().getName());
+        if(SystemCache.getInstance().getPeer().getName()!=null){
+            controller.setRoomNum(SystemCache.getInstance().getPeer().getName());
+        }
+
 
 
         controller.setNumber(SystemCache.getInstance().getParticipant());
@@ -331,7 +334,7 @@ public class Conversation extends FullscreenActivity {
 
         @Override
         public void showLocalCamera(boolean show) {
-            SystemCache.getInstance().setUserShowLocalCamera(show);
+            LOG.info("showLocalCamera : "+show);
             if(videoBoxGroup != null) {
                 videoBoxGroup.showLocalCamera(show);
             }
@@ -601,12 +604,12 @@ public class Conversation extends FullscreenActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSvcSpeakerChangedEvent(SvcSpeakerEvent event) {
-        LOG.info("SvcSpeakerEvent : "+event.getSiteName()+",index :"+event.getIndex());
+        LOG.info("SvcSpeakerEvent : "+event.getSiteName()+",index :"+event.getIndex()+",isUserVideo : "+SystemCache.getInstance().isUserVideoMode());
         svcHandler.removeMessages(ON_SVC_SPEAKER_CHANGED);
         SystemCache.getInstance().setSpeakName(event.getSiteName());
         if(!SystemCache.getInstance().isUserVideoMode()&& event.getSiteName()!=null && !event.getSiteName().equals("")){
            showSpeakName(event.getSiteName());
-        }else if (SystemCache.getInstance().isUserVideoMode()&& event.getIndex()== -1 && event.getSiteName()!=null && !event.getSiteName().equals("")){
+        }else if (SystemCache.getInstance().isUserVideoMode()&& (event.getIndex() == -1)&& (event.getSiteName()!=null && !event.getSiteName().equals(""))){
             showSpeakName(event.getSiteName());
         } else {
             audioSpeakName.setVisibility(View.GONE);
@@ -1140,7 +1143,7 @@ public class Conversation extends FullscreenActivity {
             @Override
             public void onClick(View v) {
                 String displayName = mNewUsername.getText().toString().trim();
-                if(!displayName.equals("") && !Utils.regExTest(displayName)){
+                if(!displayName.equals("")){
                     LOG.info(" new displayName : "+displayName);
                     HjtApp.getInstance().getAppService().setConfDisplayName(displayName);
                     videoBoxGroup.updateLocalName(displayName);
