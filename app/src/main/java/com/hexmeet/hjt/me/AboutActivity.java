@@ -11,6 +11,7 @@ import com.hexmeet.hjt.AppCons;
 import com.hexmeet.hjt.BaseActivity;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
+import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.utils.Utils;
 
 public class AboutActivity extends BaseActivity {
@@ -32,6 +33,7 @@ public class AboutActivity extends BaseActivity {
         copyright1.setTextSize(HjtApp.isEnVersion() ? 10 : 12);
         TextView copyright2 = (TextView) findViewById(R.id.copyright2);
         copyright2.setTextSize(HjtApp.isEnVersion() ? 10 : 12);
+        findViewById(R.id.version_remind).setVisibility(SystemCache.getInstance().isShowRemind()? View.VISIBLE : View.INVISIBLE);
 
 
         findViewById(R.id.service_terms).setOnClickListener(new OnClickListener() {
@@ -56,6 +58,13 @@ public class AboutActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+
+        findViewById(R.id.version_about).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkVersion(true);
             }
         });
     }

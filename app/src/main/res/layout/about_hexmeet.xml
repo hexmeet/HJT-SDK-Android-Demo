@@ -129,6 +129,44 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/version_about"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@id/logo_area"
+        android:background="@drawable/bg_click_item_color"
+        android:padding="15dp">
+
+        <ImageView
+            android:id="@+id/version_arrow_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/arrow_right" />
+
+        <ImageView
+            android:id="@+id/version_remind"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/version_arrow_right"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:src="@drawable/notice_version_img"
+            android:layout_marginRight="5dp"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:text="@string/update_version"
+            android:textColor="@drawable/popup_key_label"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
 </LinearLayout>
 
     <LinearLayout

@@ -34,4 +34,6 @@ public interface AppCons {
         int LOGIN_TYPE_PRIVATE = 1;
         int LOGIN_TYPE_CLOUD = 2;
     }
+
+    String APK_URL="APK_URL";
 }

@@ -276,11 +276,14 @@
     <string name="live">LIVE</string>
     <string name="privacy_policy">Privacy policy</string>
     <string name="privacy_policy_one">欢迎使用%1$s！我们非常重视您的个人信息和隐私保护。在您使用%2$s服务之前，请务必阅读并充分理解服务协议和隐私政策各条款。</string>
-    <string name="privacy_policy_two">我们将严格按照经您同意的各个条款使用您的个人信息，未经您同意，我们不会提供给任何第三方使用。</string>    <string name="privacy_policy_three">您可以阅读</string>
-    <string name="privacy_policy_four">《软件许可及服务协议》</string>
-    <string name="privacy_policy_five">《隐私政策》</string>
-    <string name="privacy_policy_six">全文了解详细信息。</string>
-    <string name="privacy_policy_seven">如您同意，请点击“同意”并开始使用我们的产品和服务。</string>
+    <string name="privacy_policy_two">我们将严格按照经您同意的各个条款使用您的个人信息，未经您同意，我们不会提供给任何第三方使用。您可以阅读《软件许可及服务协议》和《隐私政策》全文了解详细信息。</string>
+    <string name="privacy_policy_three">如您同意，请点击“同意”并开始使用我们的产品和服务。</string>
     <string name="agree">Agree</string>
     <string name="no_use">No use</string>
+    <string name="version">This is the latest version.</string>
+    <string name="update_version">Check for Updates</string>
+    <string name="find_version">New version is available! Please update for better experience.</string>
+    <string name="later_on">Later</string>
+    <string name="downloaded">Downloaded</string>
+    <string name="new_version">Getting the latest version, please wait.</string>
 </resources>

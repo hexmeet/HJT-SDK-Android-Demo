@@ -79,6 +79,8 @@ public class SystemCache {
     private String localName;
     private boolean isCamera = true;
     private Map<String, String> remoteNameUpdateState = new HashMap<>();
+    private boolean showVersionDialog = true;
+    private boolean showRemind = false;
 
     private SystemCache() {
         EventBus.getDefault().register(this);
@@ -461,5 +463,21 @@ public class SystemCache {
 
     public void setCamera(boolean camera) {
         isCamera = camera;
+    }
+
+    public boolean isShowVersionDialog() {
+        return showVersionDialog;
+    }
+
+    public void setShowVersionDialog(boolean showVersionDialog) {
+        this.showVersionDialog = showVersionDialog;
+    }
+
+    public boolean isShowRemind() {
+        return showRemind;
+    }
+
+    public void setShowRemind(boolean showRemind) {
+        this.showRemind = showRemind;
     }
 }

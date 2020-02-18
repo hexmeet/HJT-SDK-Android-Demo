@@ -29,6 +29,8 @@
         android:textSize="18dp"
         android:padding="15dp"
         android:imeOptions="flagNoExtractUi"
+        android:maxLength="32"
+        android:singleLine="true"
         />
 
     <LinearLayout

@@ -11,14 +11,12 @@ import com.alibaba.sdk.android.push.AndroidPopupActivity;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.login.Login;
 import com.hexmeet.hjt.login.LoginSettings;
-import com.hexmeet.hjt.me.ServiceTermsActivity;
 import com.hexmeet.hjt.utils.AlertDialogUtil;
 import com.hexmeet.hjt.utils.ResourceUtils;
 
 import java.util.Map;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 
 public class SplashActivity extends BaseActivity {
     private final int TIMEOUT = -100;
@@ -47,20 +45,6 @@ public class SplashActivity extends BaseActivity {
                         public void onClick(View v) {//取消
                             dialog.dismiss();
                             finish();
-                        }
-                    }).setServiceIntent(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {//服务协议
-                            Intent intent = new Intent(SplashActivity.this, ServiceTermsActivity.class);
-                            intent.putExtra(AppCons.ISTERMSOFSERVICE,true);
-                            startActivity(intent);
-                        }
-                    }).setPrivacyIntent(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {//隐私政策
-                            Intent intent = new Intent(SplashActivity.this, ServiceTermsActivity.class);
-                            intent.putExtra(AppCons.ISTERMSOFSERVICE,false);
-                            startActivity(intent);
                         }
                     }).createTwoButtonDialog();
             dialog.show();
@@ -124,71 +108,6 @@ public class SplashActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         LOG.info(" onDestroy()");
-    }
-
-
-
-    private  void  showPrivacyWindow(){
-       /* AlertDialog dialog = new AlertDialog.Builder(this).create();
-        dialog.setCancelable(false);
-        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        Window window = dialog.getWindow();
-
-        window.setContentView(R.layout.alertdialog_show_privacy);
-        window.getDecorView().setBackgroundColor(Color.TRANSPARENT);
-        dialog.show();*/
-       /* final EditText  mNewUsername = (EditText) window.findViewById(R.id.new_username);
-        Button  mUpdateNameCancel = (Button) window.findViewById(R.id.update_name_cancel);
-        Button mUpdateNameOk = (Button) window.findViewById(R.id.update_name_ok);
-        mNewUsername.setText(HjtApp.getInstance().getAppService().getDisplayName());
-        mNewUsername.setFocusable(true);
-        mNewUsername.setFocusableInTouchMode(true);
-        mNewUsername.requestFocus();
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);*/
-
-        /*mUpdateNameOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String displayName = mNewUsername.getText().toString().trim();
-                if(!displayName.equals("") && !Utils.regExTest(displayName)){
-                    LOG.info(" new displayName : "+displayName);
-                    HjtApp.getInstance().getAppService().setConfDisplayName(displayName);
-                    videoBoxGroup.updateLocalName(displayName);
-                    updateUserNameDialog.cancel();
-                }else {
-                    Utils.showToastWithCustomLayout(Conversation.this, getString(R.string.error_form));
-                }
-
-            }
-        });
-        mUpdateNameCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateUserNameDialog.cancel();
-            }
-        });*/
-
-
-
-
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(SplashActivity.this);
-        final AlertDialog dialog = builder.create();
-        View contentView = View.inflate(SplashActivity.this, R.layout.alertdialog_show_privacy, null);
-        dialog.setView(contentView);
-        //4.可以执行逻辑操作,,,按钮的监听,,,找控件还是必须通过,视图对象去找
-       /* Button btn = (Button) contentView.findViewById(R.id.btn);
-        final EditText edit_text = (EditText) contentView.findViewById(R.id.edit_text);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainActivity.this, edit_text.getText().toString(), 0).show();
-                //在自定义对话框中,,,可以进行手动的关闭对话框
-                dialog.dismiss();
-            }
-        });*/
-        //5.显示对话框
-        dialog.show();
     }
 
 
