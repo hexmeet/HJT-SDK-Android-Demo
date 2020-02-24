@@ -88,7 +88,7 @@
     <string name="more">More</string>
     <string name="login_timeout">Login timed out. Please check your network connection.</string>
     <string name="cannot_connect_location_server">Cannot connect to the location server</string>
-    <string name="invalid_username_or_password">Invalid user</string>
+    <string name="invalid_username_or_password">Incorrect account or password.</string>
     <string name="login_again">Login failed. Please try again later</string>
     <string name="login_first">Please login %s</string>
     <string name="again_exit">Touch again to exit %1$s</string>
@@ -286,4 +286,5 @@
     <string name="later_on">Later</string>
     <string name="downloaded">Downloaded</string>
     <string name="new_version">Getting the latest version, please wait.</string>
+    <string name="server_timed_out">The connection to server is timeout.</string>
 </resources>

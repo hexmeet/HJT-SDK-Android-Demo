@@ -87,7 +87,7 @@
     <string name="more">更多</string>
     <string name="login_timeout">登录超时，请检查网络</string>
     <string name="cannot_connect_location_server">不能连接到定位服务器</string>
-    <string name="invalid_username_or_password">无效的用户</string>
+    <string name="invalid_username_or_password">账号或密码错误</string>
     <string name="login_again">登录失败，请稍后再试</string>
     <string name="login_first">请先登录%s</string>
     <string name="again_exit">再按一次退出%1$s</string>
@@ -284,4 +284,5 @@
     <string name="later_on">稍后再说</string>
     <string name="downloaded">已下载</string>
     <string name="new_version">正在获取最新版本，请稍候...</string>
+    <string name="server_timed_out">连接服务器超时</string>
 </resources>

@@ -6,7 +6,9 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -38,6 +40,8 @@ import okhttp3.Response;
 public class BaseActivity extends FragmentActivity {
     public Logger LOG = Logger.getLogger(this.getClass());
     private UpdateVersionUtil dialog;
+    final  int HANDLER_UPDATED_VERSION = 1001;
+    final  int HANDLER_VERSION_TOAST = 1002;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,49 +168,70 @@ public class BaseActivity extends FragmentActivity {
     }
 
     public void checkVersion(final boolean isOnclick){
-        SystemCache.getInstance().setShowVersionDialog(false);
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(BuildConfig.APPINFO_URL).build();
-        Call call = client.newCall(request);
-        call.enqueue(new Callback() {
+        new Thread(new Runnable() {
             @Override
-            public void onFailure(Call call, IOException e) {
-            }
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if(response.isSuccessful()){
-                    try {
-                        JSONObject jsonObject = new JSONObject(response.body().string());
-                        String platform = (String) jsonObject.get("PLATFORM");
-                        final String version = (String) jsonObject.get("VERSION");
-                        final String download_url = (String) jsonObject.get("DOWNLOAD_URL");
-                        if(platform!=null && platform.equals("android")){
-                            LOG.info("APP version : "+Utils.getVersion()+",verstion : "+version);
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Looper.prepare();//增加部分
-                                    if (Utils.getVersion().compareTo(version) < 0) {
-                                        showVersionDialog(version,download_url);
-                                    }else {
-                                        if(isOnclick){
-                                            Utils.showToast(BaseActivity.this, R.string.version);
-                                        }
-                                    }
-                                    Looper.loop();//增加部分
-                                }
-                            }).start();
-
-
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+            public void run() {
+                SystemCache.getInstance().setShowVersionDialog(false);
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder().url(BuildConfig.APPINFO_URL).build();
+                Call call = client.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
                     }
-                }
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        if(response.isSuccessful()){
+                            if(response.isSuccessful()){
+                                try {
+                                    JSONObject jsonObject = new JSONObject(response.body().string());
+                                    String platform = (String) jsonObject.get("PLATFORM");
+                                    final String version = (String) jsonObject.get("VERSION");
+                                    final String download_url = (String) jsonObject.get("DOWNLOAD_URL");
+                                    if(platform!=null && platform.equals("android")){
+                                        LOG.info("APP version : "+Utils.getVersion()+",verstion : "+version);
+
+                                        if (Utils.getVersion().compareTo(version) < 0) {
+                                            Message msg = Message.obtain();
+                                            msg.what = HANDLER_UPDATED_VERSION;
+                                            Bundle bundle = new Bundle();
+                                            bundle.putString("version",version);
+                                            bundle.putString("download_url",download_url);
+                                            msg.setData(bundle);
+                                            handler.sendMessage(msg);
+                                        }else {
+                                            if (isOnclick) {
+                                                handler.sendEmptyMessage(HANDLER_VERSION_TOAST);
+                                            }
+                                        }
+
+                                    }
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        }
+                    }
+                });
+
             }
-        });
+        }).start();
     }
+
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if(msg.what==HANDLER_UPDATED_VERSION){
+                String version = msg.getData().getString("version");
+                String downloadUrl = msg.getData().getString("download_url");
+                showVersionDialog(version,downloadUrl);
+            }else if(msg.what==HANDLER_VERSION_TOAST){
+                Utils.showToast(BaseActivity.this, R.string.version);
+            }
+        }
+    };
 
     private void showVersionDialog(String version,String download_url) {
         dialog = new UpdateVersionUtil.Builder(this)

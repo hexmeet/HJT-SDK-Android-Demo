@@ -338,6 +338,10 @@ public class SdkManagerImpl implements SdkManager {
                 errorCode=LoginResultEvent.LOGIN_WRONG_NO_PERMISSION;
                 error = HjtApp.getInstance().getString(R.string.login_error_code_1112);
                 needRetry = false;
+            }else if (errorCode == LoginResultEvent.LOGIN_SDK_ERROR_8) {
+                errorCode=LoginResultEvent.LOGIN_SDK_ERROR_8;
+                error = HjtApp.getInstance().getString(R.string.server_timed_out);
+                needRetry = false;
             } else {
                 error = HjtApp.getInstance().getString(R.string.login_again) + " [" + errorCode + "]";
             }
@@ -735,6 +739,8 @@ public class SdkManagerImpl implements SdkManager {
                             EventBus.getDefault().post(event);
                         }else if(err.code == ResourceUtils.CALL_ERROR_9 && err.action.equals("downloadUserImage")){
                             return;
+                        }else if(err.code == LOGIN_ERROR_8){
+                            SdkManagerImpl.handlerError(LoginResultEvent.LOGIN_SDK_ERROR_8, err.msg ,err.arg);
                         }else {
                             SdkManagerImpl.handlerError(err.code, err.msg ,err.arg);
                         }
