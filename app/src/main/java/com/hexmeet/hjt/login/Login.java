@@ -241,6 +241,8 @@ public class Login extends BaseActivity implements LoginFragmentCallback{
                 Utils.showToastWithCustomLayout(Login.this, event.getMessage());
             }else if(event.getCode() == LoginResultEvent.LOGIN_WRONG_NO_PERMISSION){
                 Utils.showToastWithCustomLayout(Login.this, event.getMessage());
+            }else if(event.getCode() == LoginResultEvent.LOGIN_SDK_ERROR_8){
+                Utils.showToastWithCustomLayout(Login.this, event.getMessage());
             } else {
                 Utils.showToastWithCustomLayout(Login.this, event.getMessage());
             }
