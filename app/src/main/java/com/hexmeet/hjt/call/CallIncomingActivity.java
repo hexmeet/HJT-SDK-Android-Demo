@@ -131,6 +131,7 @@ public class CallIncomingActivity  extends FullscreenActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        LOG.info("onStart()");
         startRinging();
         ResourceUtils.getInstance().initScreenSize();
         pulseView.startPulse();
@@ -139,6 +140,7 @@ public class CallIncomingActivity  extends FullscreenActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        LOG.info("onStop() ");
         stopRinging();
         pulseView.finishPulse();
     }
@@ -182,6 +184,7 @@ public class CallIncomingActivity  extends FullscreenActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        LOG.info("onDestroy()");
         EventBus.getDefault().unregister(this);
         handler.removeCallbacksAndMessages(null);
     }

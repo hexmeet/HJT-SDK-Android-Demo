@@ -61,7 +61,7 @@ public class FullscreenActivity extends Activity {
         try {
             LOG.debug("Start Ringing");
              String mRingSoundFile = CopyAssets.getInstance().getRingBasePath() + "/ringtone.wav";
-            Log.i("mRingSoundFile : ",mRingSoundFile);
+            LOG.info("mRingSoundFile : "+mRingSoundFile);
             CopyAssets.getInstance().copyIfNotExist(R.raw.ringtone, mRingSoundFile);
             if (mRingerPlayer == null) {
                 mRingerPlayer = new MediaPlayer();
@@ -90,6 +90,7 @@ public class FullscreenActivity extends Activity {
 
     protected void stopRinging() {
         if (mRingerPlayer != null) {
+            LOG.info("stopRinging()");
             mRingerPlayer.stop();
             mRingerPlayer.release();
             mRingerPlayer = null;

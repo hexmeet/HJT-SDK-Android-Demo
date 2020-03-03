@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.utils.NetworkUtil;
 import com.hexmeet.hjt.utils.Utils;
+import com.hexmeet.hjt.widget.KeyboardWindow;
 import com.hexmeet.hjt.widget.NumberKeyboard;
 
 import org.apache.commons.lang3.StringUtils;
@@ -31,12 +33,11 @@ import androidx.fragment.app.Fragment;
 
 public class DialingFrag extends Fragment {
     private Logger LOG = Logger.getLogger(this.getClass());
-    private NumberKeyboard numberKeyboard;
- //   private ViewGroup closeCameraView, closeMicView;
     private LinearLayout recentContainer;
     private View recentBtn;
     private Switch closeCameraView;
     private Switch closeMicView;
+    private EditText callNumber;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class DialingFrag extends Fragment {
 
         closeCameraView = root.findViewById(R.id.close_camera_switch);
         closeMicView = root.findViewById(R.id.close_mic_switch);
+        callNumber = (EditText) root.findViewById(R.id.call_number);
 
         closeCameraView.setChecked(SystemCache.getInstance().isUserMuteVideo());
         closeCameraView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -68,13 +70,7 @@ public class DialingFrag extends Fragment {
         recentBtn = root.findViewById(R.id.btn_recent);
         recentBtn.setOnClickListener(clickListener);
 
-        numberKeyboard = new NumberKeyboard((TextView) root.findViewById(R.id.call_number), root.findViewById(R.id.number_keyboard)
-                , new NumberKeyboard.NumberKeyboardListener() {
-            @Override
-            public void onKeyClick() {
-                checkAndCloseRecentView();
-            }
-        });
+        new KeyboardWindow(getActivity(),root.findViewById(R.id.number_keyboard), callNumber);
         return root;
     }
 
@@ -83,7 +79,7 @@ public class DialingFrag extends Fragment {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.dial_btn:
-                    String number = numberKeyboard.getNumber();
+                    String number = callNumber.getText().toString();
                     if(validate(number)) {
                         String sipNumberWithoutPassword = number;
                         String password = "";
@@ -164,7 +160,7 @@ public class DialingFrag extends Fragment {
         public void onClick(View v) {
             checkAndCloseRecentView();
             String number = (String) v.getTag();
-            numberKeyboard.setNumberFromRecent(number);
+            callNumber.setText(number);
         }
     };
     private View.OnClickListener recent_del_click = new OnClickListener() {
@@ -189,7 +185,7 @@ public class DialingFrag extends Fragment {
         Matcher m = p.matcher(number);
         if (!m.matches()) {
             LOG.warn("dialing number: " + number + " NOT match format: " + R.string.format);
-            Utils.showToast(getContext(), R.string.format);
+            Utils.showToast(getContext(), R.string.call_error_1001);
             return false;
         }
 

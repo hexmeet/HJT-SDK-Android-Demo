@@ -27,6 +27,7 @@ import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.dial.RecentPreference;
 import com.hexmeet.hjt.model.LoginParams;
+import com.hexmeet.hjt.utils.DrawableEditText;
 import com.hexmeet.hjt.utils.Utils;
 
 import org.apache.log4j.Logger;
@@ -46,7 +47,8 @@ public class LoginFragment extends Fragment {
     public final static int LOGIN_TYPE_CLOUD_ANONYMOUS = 4;
     private LoginFragmentCallback callback;
     private int loginType = LOGIN_TYPE_CLOUD;
-    private FormEditText input_server, input_name, input_password, input_conf_id, input_conf_name;
+    private FormEditText input_server, input_name, input_password,  input_conf_name;
+    private FormEditText input_conf_id;
     private CheckBox closeCamera, closeMic;
     private Button loginBtn;
     private LinearLayout recentContainer;
@@ -101,6 +103,7 @@ public class LoginFragment extends Fragment {
         input_conf_name = (FormEditText) mainView.findViewById(R.id.login_conf_name);
 
         showIconDirection(false);
+
         input_conf_id.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -109,21 +112,18 @@ public class LoginFragment extends Fragment {
                     return false;
                 }
                 if (event.getAction() != MotionEvent.ACTION_UP){
-
-
                     return false;
                 }
                 if (event.getX() > input_conf_id.getWidth() - input_conf_id.getPaddingRight() - drawable.getIntrinsicWidth()){
-
+                    forbidDefaultSoftKeyboard();
                     hideInput();
-
                     boolean open = v.isSelected();
                     showRecentView(!open);
                     showIconDirection(!open);
                     v.setSelected(!open);
-                    return true;
+                }else {
+                    showInput(input_conf_id);
                 }
-                showInput(input_conf_id);
                 return false;
             }
         });
@@ -405,11 +405,7 @@ public class LoginFragment extends Fragment {
     };
 
     private void checkAndCloseRecentView() {
-        /*boolean open = recentBtn.isSelected();
-        if(open) {
-            recentBtn.setSelected(false);
-        }*/
-
+        showIconDirection(false);
         if(recentContainer.getVisibility() == View.VISIBLE) {
             recentContainer.setVisibility(View.GONE);
         }
@@ -446,11 +442,29 @@ public class LoginFragment extends Fragment {
     }
 
     public void hideInput() {
+        LOG.info("hideInput");
         InputMethodManager imm = (InputMethodManager)  getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
         View v =  getActivity().getWindow().peekDecorView();
         if (null != v) {
             //强制隐藏键盘
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
+    }
+
+    private void forbidDefaultSoftKeyboard() {
+        if (input_conf_id == null) {
+            return;
+        }
+        if (android.os.Build.VERSION.SDK_INT > 10) {
+            try {
+                Class<EditText> cls = EditText.class;
+                Method setShowSoftInputOnFocus;
+                setShowSoftInputOnFocus = cls.getMethod("setShowSoftInputOnFocus", boolean.class);
+                setShowSoftInputOnFocus.setAccessible(true);
+                setShowSoftInputOnFocus.invoke(input_conf_id, false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

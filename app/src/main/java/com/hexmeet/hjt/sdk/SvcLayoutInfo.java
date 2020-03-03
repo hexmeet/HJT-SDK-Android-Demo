@@ -7,12 +7,21 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 
 public class SvcLayoutInfo implements Parcelable {
+    private int speakerIndex;
     private String speakerName;
     private String layoutMode;
     private ArrayList<String> svcSuit = new ArrayList();
     private ArrayList<Integer> windowIdx = new ArrayList();
     private ArrayList<String> svcDeviceIds = new ArrayList();
     private boolean isOnlyLocal = false;
+
+    public int getSpeakerIndex() {
+        return speakerIndex;
+    }
+
+    public void setSpeakerIndex(int speakerIndex) {
+        this.speakerIndex = speakerIndex;
+    }
 
     public String getSpeakerName() {
         return speakerName;
@@ -76,6 +85,7 @@ public class SvcLayoutInfo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(speakerIndex);
         dest.writeString(speakerName);
         dest.writeString(layoutMode);
         dest.writeByte((byte) (this.isOnlyLocal ? 1 : 0));
@@ -88,6 +98,7 @@ public class SvcLayoutInfo implements Parcelable {
         @Override
         public SvcLayoutInfo createFromParcel(Parcel source) {
             SvcLayoutInfo state = new SvcLayoutInfo();
+            state.speakerIndex = source.readInt();
             state.speakerName = source.readString();
             state.layoutMode = source.readString();
             state.isOnlyLocal = source.readByte() != 0;
@@ -119,7 +130,7 @@ public class SvcLayoutInfo implements Parcelable {
             windowIdxs.append("'").append(s).append("'");
         }
 
-        return "Mode: ["+layoutMode+"]" + " SpeakerName: ["+speakerName+"] "+"Suits: {"+suits.toString()+"}"+" deviceIds: {"+ids.toString()+"}"+" windowIdx: {"+windowIdxs.toString()+"}";
+        return "Mode: ["+layoutMode+"]" + " speakerIndex: ["+speakerIndex+"] "+" SpeakerName: ["+speakerName+"] "+"Suits: {"+suits.toString()+"}"+" deviceIds: {"+ids.toString()+"}"+" windowIdx: {"+windowIdxs.toString()+"}";
     }
 
     public boolean checkSize(int limitSize) {

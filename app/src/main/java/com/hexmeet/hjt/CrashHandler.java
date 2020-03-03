@@ -63,6 +63,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
         }
         // android.os.Process.killProcess(android.os.Process.myPid());
         // System.exit(1);
+        HjtApp.getInstance().stopFloatService();
         Intent intent = new Intent(HjtApp.getInstance().getContext(),SplashActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         HjtApp.getInstance().getContext().startActivity(intent);

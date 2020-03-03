@@ -4,13 +4,14 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.gridlayout.widget.GridLayout;
 
 public class NumberKeyboard {
-    private TextView input;
+    private EditText input;
     private GridLayout keyboard;
     private NumberKeyboardListener listener;
 
@@ -18,7 +19,7 @@ public class NumberKeyboard {
         void onKeyClick();
     }
 
-    public NumberKeyboard(TextView inputView, View keyboard, NumberKeyboardListener listener) {
+    public NumberKeyboard(EditText inputView, View keyboard, NumberKeyboardListener listener) {
         this.listener = listener;
         input = inputView;
         input.addTextChangedListener(watcher);

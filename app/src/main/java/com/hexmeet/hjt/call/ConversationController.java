@@ -52,6 +52,7 @@ public class ConversationController implements View.OnClickListener{
         void switchVoiceMode(boolean isVoiceMode);
         void showChat();
         void changeUserName();
+        void onNoChangeLayout();
     }
 
     public ConversationController(View rootView, final IController iController, int width) {
@@ -182,7 +183,7 @@ public class ConversationController implements View.OnClickListener{
     }
 
     private void alertLayoutModeDisable() {
-        Utils.showToast(rootView.getContext(), HjtApp.getInstance().getString(R.string.layout_mode_disable));
+        iController.onNoChangeLayout();
     }
 
     public void updateAsAudioCall() {
