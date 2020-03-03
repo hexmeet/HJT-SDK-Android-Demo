@@ -6,7 +6,7 @@ buildscript {
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/releases/' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath 'com.android.tools.build:gradle:3.5.3'
         // 添加emas-services插件
         classpath 'com.aliyun.ams:emas-services:1.0.1'
 

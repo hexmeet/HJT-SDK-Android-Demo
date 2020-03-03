@@ -88,6 +88,7 @@ public class AnonymousJoinMeetActivity extends FullscreenActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        LOG.info("onStart()");
         startRinging();
         ResourceUtils.getInstance().initScreenSize();
         pulseView.startPulse();
@@ -96,12 +97,14 @@ public class AnonymousJoinMeetActivity extends FullscreenActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        LOG.info("onStop() ");
         stopRinging();
         pulseView.finishPulse();
     }
 
     @Override
     protected void onDestroy() {
+        LOG.info("onDestroy() ");
         if(dialog != null && !dialog.isShowing()) {
             dialog.dismiss();
         }

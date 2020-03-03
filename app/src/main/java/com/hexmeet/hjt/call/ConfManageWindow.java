@@ -47,6 +47,7 @@ public class ConfManageWindow {
     @RequiresApi(api = Build.VERSION_CODES.FROYO)
     public ConfManageWindow(Conversation activity) {
         initDialog(activity);
+        LOG.info("init  ConfManageWindow()");
     }
 
     @RequiresApi(api = Build.VERSION_CODES.FROYO)
@@ -90,14 +91,6 @@ public class ConfManageWindow {
                 webView.onResume();
                 webView.resumeTimers();
                 loadConference();
-            }
-        });
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                webView.onPause();
-                webView.resumeTimers();
-                webView.clearHistory();
             }
         });
     }
@@ -203,11 +196,15 @@ public class ConfManageWindow {
     public void dismiss() {
         if (isShowing()) {
             dialog.dismiss();
+            clean();
         }
     }
 
     public void clean() {
-        dismiss();
+        LOG.info("clean  ConfManageWindow()");
+        webView.onPause();
+        webView.resumeTimers();
+        webView.clearHistory();
         webView.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
         webView.destroy();
         dialog = null;

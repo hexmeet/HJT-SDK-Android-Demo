@@ -866,6 +866,7 @@ public class SdkManagerImpl implements SdkManager {
             LOG.info("CallBack. onLayoutIndication toString "+layout.toString());
             if(layout != null){
                 SvcLayoutInfo info = new SvcLayoutInfo();
+                info.setSpeakerIndex(layout.speakerIndex);
                 info.setLayoutMode(layout.mode.toString());//画廊模式
                 info.setSpeakerName(layout.speakerName);
                 List<Site> sites = layout.sites;

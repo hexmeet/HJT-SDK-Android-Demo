@@ -117,6 +117,7 @@ public class Conversation extends FullscreenActivity {
     private Button audioModeBtn;
     private AlertDialog updateUserNameDialog;
     private MeetingWindowService floatService;
+    private boolean isCheckResumeEvent = false;
 
 
     @SuppressLint("ResourceType")
@@ -130,10 +131,14 @@ public class Conversation extends FullscreenActivity {
         HjtApp.getInstance().setConversation(this);
         this.setContentView(R.layout.converstation);
 
+        audioSpeakName =(TextView) findViewById(R.id.audio_name);
         HjtApp.getInstance().startFloatService();
         floatWindowService();
-
-        resumeEvent();
+        if(!isCheckResumeEvent){
+            LOG.info("onCreate isCheckResumeEvent()");
+            isCheckResumeEvent = true;
+            resumeEvent();
+        }
         if(SystemCache.getInstance().getPeer()!=null){
             isVideoCall = SystemCache.getInstance().getPeer().isVideoCall();
         }
@@ -141,7 +146,6 @@ public class Conversation extends FullscreenActivity {
         startTime = SystemCache.getInstance().getStartTime();
         recordView = (TextView)findViewById(R.id.record_view);
         networkConditionToast = (TextView)findViewById(R.id.network_condition_toast);
-        audioSpeakName =(TextView) findViewById(R.id.audio_name);
         audioMode = (RelativeLayout)findViewById(R.id.out_audio_mode);
         audioModeBtn = (Button) findViewById(R.id.audio_mode_btn);
         microphoneMuted = (TextView) findViewById(R.id.mute_speaking);
@@ -342,9 +346,7 @@ public class Conversation extends FullscreenActivity {
 
         @Override
         public void showConferenceManager() {
-            if(confManageWindow == null) {
-                confManageWindow = new ConfManageWindow(Conversation.this);
-            }
+            confManageWindow = new ConfManageWindow(Conversation.this);
             confManageWindow.show();
         }
 
@@ -395,6 +397,16 @@ public class Conversation extends FullscreenActivity {
             LOG.info("changeUserName()");
             updateUserNameWindow();
         }
+
+        @Override
+        public void onNoChangeLayout() {
+            svcHandler.removeMessages(ON_SVC_MICROPHONEMUTED);
+            microphoneMuted.setText(R.string.layout_mode_disable);
+            microphoneMuted.setVisibility(View.VISIBLE);
+            Message msg = Message.obtain();
+            msg.what = ON_SVC_MICROPHONEMUTED;
+            svcHandler.sendMessageDelayed(msg, 2000);
+        }
     };
 
     private void isRecordVisible(boolean isVideo){
@@ -429,6 +441,12 @@ public class Conversation extends FullscreenActivity {
     @Override
     protected void onStart() {
         LOG.info("onStart");
+        if(!isCheckResumeEvent){
+            LOG.info("onStart isCheckResumeEvent()");
+            isCheckResumeEvent = true;
+            resumeEvent();
+        }
+
         HjtApp.getInstance().getAppService().startAudioMode(true);
         if(floatService!=null){
             floatService.stopFloatWindow();
@@ -492,7 +510,7 @@ public class Conversation extends FullscreenActivity {
     @Override
     protected void onDestroy() {
         LOG.info("onDestroy");
-
+        isCheckResumeEvent = false;
         unbindService(connections);
         if(EVFactory.createEngine().getCallInfo()!=null) {
             clearResource();
@@ -593,9 +611,11 @@ public class Conversation extends FullscreenActivity {
         controller.updateSignalLevel(event.getNetwork());
     }
 
-    @Subscribe(threadMode = ThreadMode.POSTING)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSvcLayoutChangedEvent(SvcLayoutInfo info) {
+        LOG.info("SvcLayoutInfo : "+info.toString());
         svcHandler.removeMessages(ON_SVC_LAYOUT_CHANGED);
+        showSpeakName(info.getSpeakerIndex(),info.getSpeakerName());
         Message msg = Message.obtain();
         msg.what = ON_SVC_LAYOUT_CHANGED;
         msg.getData().putParcelable(AppCons.BundleKeys.EXTRA_DATA, info);
@@ -604,17 +624,8 @@ public class Conversation extends FullscreenActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSvcSpeakerChangedEvent(SvcSpeakerEvent event) {
-        LOG.info("SvcSpeakerEvent : "+event.getSiteName()+",index :"+event.getIndex()+",isUserVideo : "+SystemCache.getInstance().isUserVideoMode());
         svcHandler.removeMessages(ON_SVC_SPEAKER_CHANGED);
-        SystemCache.getInstance().setSpeakName(event.getSiteName());
-        if(!SystemCache.getInstance().isUserVideoMode()&& event.getSiteName()!=null && !event.getSiteName().equals("")){
-           showSpeakName(event.getSiteName());
-        }else if (SystemCache.getInstance().isUserVideoMode()&& (event.getIndex() == -1)&& (event.getSiteName()!=null && !event.getSiteName().equals(""))){
-            showSpeakName(event.getSiteName());
-        } else {
-            audioSpeakName.setVisibility(View.GONE);
-        }
-
+        showSpeakName(event.getIndex(),event.getSiteName());
         Message msg = Message.obtain();
         msg.what = ON_SVC_SPEAKER_CHANGED;
         msg.arg1 = event.getIndex();
@@ -622,9 +633,21 @@ public class Conversation extends FullscreenActivity {
         svcHandler.sendMessage(msg);
     }
 
-    private void showSpeakName(String displayName) {
+    private void showSpeakName(int index,String displayName) {
+        LOG.info("showSpeakName : "+displayName+",index :"+index+",isUserVideo : "+SystemCache.getInstance().isUserVideoMode());
+        SystemCache.getInstance().setSpeakName(displayName);
+        if(!SystemCache.getInstance().isUserVideoMode()&& displayName!=null && !displayName.equals("")){
+            setSpeakName(displayName);
+        }else if (SystemCache.getInstance().isUserVideoMode()&& (index == -1)&& (displayName!=null && !displayName.equals(""))){
+            setSpeakName(displayName);
+        } else {
+            audioSpeakName.setVisibility(View.GONE);
+        }
+    }
+
+    private void setSpeakName(String name) {
         audioSpeakName.setVisibility(View.VISIBLE);
-        audioSpeakName.setText(displayName+"  "+getString(R.string.speaking));
+        audioSpeakName.setText(name+"  "+getString(R.string.speaking));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -705,11 +728,6 @@ public class Conversation extends FullscreenActivity {
         if(callStaticsWindow != null) {
             callStaticsWindow.clean();
             callStaticsWindow = null;
-        }
-
-        if(confManageWindow != null) {
-            confManageWindow.clean();
-            confManageWindow = null;
         }
 
         controller.clean();

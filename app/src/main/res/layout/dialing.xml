@@ -16,7 +16,7 @@
         android:padding="15dp"
         android:textSize="@dimen/title_bar_font_size" />
 
-    <TextView
+    <EditText
         android:id="@+id/call_number"
         android:layout_width="match_parent"
         android:layout_height="64dp"
@@ -27,7 +27,7 @@
         android:background="@drawable/bg_card_border"
         android:gravity="center"
         android:hint="@string/input_call_number_tips"
-        android:maxLength="24"
+        android:maxLength="32"
         android:singleLine="true"
         android:textColor="@color/font_color_313131"
         android:textColorHint="@color/appset"
@@ -128,7 +128,7 @@
 
     <include
         android:id="@+id/number_keyboard"
-        layout="@layout/number_keyboard" />
+        layout="@layout/keyboadview" />
 
     <LinearLayout
         android:id="@+id/recent_list_container"

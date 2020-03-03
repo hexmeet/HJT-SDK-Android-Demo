@@ -10,7 +10,7 @@
     >
 
     <Button
-        android:id="@+id/one"
+        android:id="@+id/one1"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_columnWeight="1"
@@ -22,7 +22,7 @@
         android:textSize="25sp" />
 
     <Button
-        android:id="@+id/two"
+        android:id="@+id/two2"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_columnWeight="1"
@@ -34,7 +34,7 @@
         android:textSize="25sp" />
 
     <Button
-        android:id="@+id/three"
+        android:id="@+id/three3"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="1px"
@@ -46,7 +46,7 @@
         android:textSize="25sp" />
 
     <Button
-        android:id="@+id/four"
+        android:id="@+id/four4"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_columnWeight="1"
@@ -58,7 +58,7 @@
         android:textSize="25sp" />
 
     <Button
-        android:id="@+id/five"
+        android:id="@+id/five5"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_columnWeight="1"
@@ -70,7 +70,7 @@
         android:textSize="25sp" />
 
     <Button
-        android:id="@+id/six"
+        android:id="@+id/six6"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_columnWeight="1"
@@ -82,7 +82,7 @@
         android:textSize="25sp" />
 
     <Button
-        android:id="@+id/seven"
+        android:id="@+id/seven7"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_columnWeight="1"
@@ -94,7 +94,7 @@
         android:textSize="25sp" />
 
     <Button
-        android:id="@+id/eight"
+        android:id="@+id/eight8"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_columnWeight="1"
@@ -106,7 +106,7 @@
         android:textSize="25sp" />
 
     <Button
-        android:id="@+id/nine"
+        android:id="@+id/nine9"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_columnWeight="1"
@@ -131,7 +131,7 @@
         android:textSize="25sp" />
 
     <Button
-        android:id="@+id/zero"
+        android:id="@+id/zero0"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_columnWeight="1"
