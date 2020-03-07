@@ -140,7 +140,7 @@ public class CallIncomingActivity  extends FullscreenActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        LOG.info("onStop() ");
+        LOG.info("onStop()");
         stopRinging();
         pulseView.finishPulse();
     }

@@ -53,7 +53,7 @@
             android:layout_height="32dp"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/arrow_right"
-            android:src="@drawable/icon_contact" />
+            android:src="@drawable/default_photo" />
 
         <TextView
             android:layout_width="match_parent"

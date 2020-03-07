@@ -181,6 +181,9 @@ public class RemoteBox extends RelativeLayout {
     }
 
     public void updateLayout(SvcLayoutInfo svcLayoutInfo) {
+        if(svcLayoutInfo==null){
+            return;
+        }
         if (!svcLayoutInfo.checkSize(AppCons.MAX_RECEIVE_STREAM)) {
             LOG.error("surface count != sitename count");
         }
@@ -191,6 +194,7 @@ public class RemoteBox extends RelativeLayout {
         speakerMode = AppSettings.getInstance().isSpeakerMode();
 
         borderView.setLayoutParams(emptyParam);
+        LOG.info("showContent : "+showContent);
         if (count == 0 || (SystemCache.getInstance().withContent() && showContent)) {
             speakerIndex = -1;
             hideAll();

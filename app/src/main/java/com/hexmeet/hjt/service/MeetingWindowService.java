@@ -110,28 +110,21 @@ public class MeetingWindowService extends Service {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             sendNotification();
         }
-        startFloatWindow(true);
+        startFloatWindow();
     }
 
-    public void startFloatWindow(boolean isCreate){
+    public void startFloatWindow(){
         try {
             boolean permissionOk = Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(HjtApp.getInstance().getContext());
             if(permissionOk) {
                 LOG.info("onStart  to show float window");
-                if(isCreate){
-                    initWindow();
-                }else {
-                    createFloatView();
-                }
-
+                initWindow();
                 hasWindow = true;
             } else {
                 LOG.info("onStop will not show float window");
                 isLoadComplete = true;
                 hasWindow = false;
-                if(!isCreate){
-                    Utils.showToast(getApplicationContext(), R.string.need_float_window_permission);
-                }
+              //  Utils.showToast(getApplicationContext(), R.string.need_float_window_permission);
             }
         } catch (Exception e) {
             LOG.error("MeetingWindowService onCreate", e);
@@ -139,6 +132,7 @@ public class MeetingWindowService extends Service {
     }
 
    private void initWindow(){
+       LOG.info("initWindow()");
        wmParams = new WindowManager.LayoutParams();
        //获取的是WindowManagerImpl.CompatModeWrapper
        mWindowManager = (WindowManager) getApplication().getSystemService(getApplication().WINDOW_SERVICE);
@@ -180,10 +174,16 @@ public class MeetingWindowService extends Service {
 
     @SuppressLint("ClickableViewAccessibility")
     private void createFloatView() {
+        if(!hasWindow){
+            Utils.showToast(getApplicationContext(), R.string.need_float_window_permission);
+            return;
+        }
+
         if(!isRegisterEventBus){
             isRegisterEventBus = true;
             EventBus.getDefault().register(this);
         }
+        LOG.info("createFloatView()");
         //关闭摄像头
         HjtApp.getInstance().getAppService().enableVideo(false);
         mFloatLayout.setVisibility(View.VISIBLE);
@@ -198,6 +198,7 @@ public class MeetingWindowService extends Service {
                     HjtApp.getInstance().getAppService().setRemoteViewToSdk(remoteBox.getAllSurfaces());
                 }
             });
+            remoteBox.setShowContent(false);
             video_surface_view.addView(remoteBox,0,fullScreenLayoutPara);
         }else {
             chronometer.setVisibility(View.VISIBLE);
@@ -382,7 +383,7 @@ public class MeetingWindowService extends Service {
                     break;
                 case ON_SVC_FLOAT_WINDOW:
                     LOG.info("hander startFloatWindow()");
-                    startFloatWindow(false);
+                    createFloatView();
                     break;
             }
         }

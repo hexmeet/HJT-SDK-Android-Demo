@@ -19,6 +19,7 @@ import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
+import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -28,9 +29,11 @@ import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.event.RenameEvent;
 import com.hexmeet.hjt.model.RestLoginResp;
+import com.hexmeet.hjt.utils.JsonUtil;
 import com.hexmeet.hjt.utils.NetworkUtil;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 
+import org.apache.http.util.EncodingUtils;
 import org.apache.log4j.Logger;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -50,8 +53,8 @@ public class ConferenceListFrag extends Fragment {
     private boolean isWebLoadComplete = false;
     private ViewGroup loadFailedInfo;
     private boolean tokenExpired = false;
-    private final String IP = "172.20.0.25:3000";
-    // private final String DEBUG_IP_ADDRESS = "http://"+IP+"/#/conferences?token=";
+    private final String IP = "172.16.0.222:3000";
+    //private final String DEBUG_IP_ADDRESS = "http://"+IP+"/#/conferences?token=";
     private final String DEBUG_IP_ADDRESS = "";
 
     @SuppressLint({"JavascriptInterface", "SetJavaScriptEnabled"})
@@ -211,11 +214,16 @@ public class ConferenceListFrag extends Fragment {
             LOG.info("JavaScript: doradoVersionUpdate");
             loadConference();
         }
+
         @JavascriptInterface
         public void clearCache(){
             LOG.info("clearCache()");
-            webView.clearCache(true);
-            loadConference();
+            destroy();
+        }
+
+        @JavascriptInterface
+        public void webLog(String json){
+            LOG.info("weblog : "+json);
         }
 
     }
@@ -271,15 +279,21 @@ public class ConferenceListFrag extends Fragment {
 
     @Override
     public void onDestroy() {
+
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+        destroy();
+    }
+
+    public void destroy() {
         if(webView!=null) {
             webView.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
             webView.clearHistory();
             webView.clearCache(true);
             webView.removeAllViews();
             webView.destroy();
+
         }
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
     }
 
     private void loadConference() {
@@ -303,7 +317,6 @@ public class ConferenceListFrag extends Fragment {
             sb.append("&lang="+ (HjtApp.isCnVersion() ? "cn" : "en"));
             String url = sb.toString();
             LOG.info("Load URL : [" + url + "]");
-            Log.i("=========",url);
             webView.loadUrl(url);
 
         } else {
@@ -326,7 +339,7 @@ public class ConferenceListFrag extends Fragment {
                     }
                 });
                 //LOG.error("JavaScript: updateToken error : url not load finished-------------333----------------");
-                // loadConference();
+                 loadConference();
             }
         });
     }

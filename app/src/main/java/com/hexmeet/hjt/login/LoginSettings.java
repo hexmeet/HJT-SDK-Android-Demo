@@ -74,10 +74,10 @@ public class LoginSettings {
         String LOGIN_NUMBER_ID_CLOUD = "cloud_number_id";
         String LOGIN_DISPLAY_CLOUD = "cloud_display";
 
-         String PRIVATE_JOINMEETING_SERVER ="private_joinMeeting_server";
-         String PRIVATE_JOINMEETING_DISPLAYNAME = "private_joinMeeting_displayname";
-         String PRIVATE_JOINMEETING_NUMBER = "private_joinMeeting_number";
-         String PRIVATE_JOINMEETING_PORT = "private_joinMeeting_port";
+        String PRIVATE_JOINMEETING_SERVER ="private_joinMeeting_server";
+        String PRIVATE_JOINMEETING_DISPLAYNAME = "private_joinMeeting_displayname";
+        String PRIVATE_JOINMEETING_NUMBER = "private_joinMeeting_number";
+        String PRIVATE_JOINMEETING_PORT = "private_joinMeeting_port";
         String USE_JOINMEETING_HTTPS = "use_joinMeeting_https";
 
         String is_CloudMuteVideo = "is_MuteVideo";

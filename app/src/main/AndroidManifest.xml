@@ -3,9 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.hexmeet.hjt">
 
-    <permission
-        android:name="${JPUSH_PKGNAME}.permission.JPUSH_MESSAGE"
-        android:protectionLevel="signature" />
 
     <supports-screens
         android:anyDensity="true"
@@ -54,13 +51,13 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- Optional. Required for location feature -->
+    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="${JPUSH_PKGNAME}.permission.JPUSH_MESSAGE" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
 
     <uses-permission android:name="android.permission.WRITEEXTERNALSTORAGE"/>
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
     <!--
     是否包含能够适用于任何屏幕密度的资源
     是否是支持较大一点的屏幕形式因素
@@ -214,6 +211,10 @@
             android:theme="@style/AppTheme.NoActionBar"
             />
 
+        <activity android:name=".me.FeedbackActivity"
+            android:screenOrientation="portrait"
+            />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${APP_FILE_PROVIDER_AUTH}"
@@ -229,36 +230,6 @@
             </intent-filter>
         </receiver>
 
-        <receiver
-            android:name=".push.JPushReceiver"
-            android:enabled="true">
-            <intent-filter>
-
-                <!-- Required 用户注册SDK的intent -->
-                <action android:name="cn.jpush.android.intent.REGISTRATION" />
-                <!-- Required 用户接收SDK消息的intent -->
-                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" />
-                <!-- Required 用户接收SDK通知栏信息的intent -->
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />
-                <!-- Required 用户打开自定义通知栏的intent -->
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />
-                <!-- 接收网络变化 连接/断开 since 1.6.3 -->
-                <action android:name="cn.jpush.android.intent.CONNECTION" />
-
-                <category android:name="${JPUSH_PKGNAME}" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name=".push.MyJPushMessageReceiver"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE" />
-
-                <category android:name="${JPUSH_PKGNAME}" />
-            </intent-filter>
-        </receiver>
         <service
             android:name=".service.AppService"
             android:exported="false"
@@ -271,18 +242,15 @@
 
         <service android:name=".service.MeetingWindowService"
             android:enabled="true"/>
-        <!-- Since JCore2.0.0 Required SDK核心功能 -->
-        <!-- 这个Service要继承JCommonService -->
-        <service
-            android:name=".PushService"
-            android:process=":pushcore">
-            <intent-filter>
-                <action android:name="cn.jiguang.user.service.action" />
-            </intent-filter>
-        </service>
+
+        <service android:name=".service.ScreenCaptureService"
+            android:foregroundServiceType="mediaProjection"
+            android:configChanges="orientation|screenSize"
+            android:enabled="true"/>
 
         <service android:name=".service.UpgradeService"
             />
+
         <!--aliyun-->
         <receiver
             android:name=".push.MyMessageReceiver"

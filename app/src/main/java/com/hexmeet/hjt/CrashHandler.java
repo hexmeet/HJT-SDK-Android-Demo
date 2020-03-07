@@ -55,18 +55,17 @@ public class CrashHandler implements UncaughtExceptionHandler {
 
         saveInfoToSD(HjtApp.getInstance().getContext(), ex);
         //Utils.showToastInNewThread(HjtApp.getInstance().getContext(), HjtApp.getInstance().getResources().getString(R.string.caught_exception_then_exit));
-
+        Intent intent = new Intent(HjtApp.getInstance().getContext(),SplashActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        HjtApp.getInstance().getContext().startActivity(intent);
         try {
-            thread.sleep(2000);
+            thread.sleep(500);
         } catch (InterruptedException e) {
             log.error(e.getMessage(), e);
         }
         // android.os.Process.killProcess(android.os.Process.myPid());
         // System.exit(1);
-        HjtApp.getInstance().stopFloatService();
-        Intent intent = new Intent(HjtApp.getInstance().getContext(),SplashActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        HjtApp.getInstance().getContext().startActivity(intent);
+
         System.exit(1);
 
         // ExitAppUtils.getInstance().exit();

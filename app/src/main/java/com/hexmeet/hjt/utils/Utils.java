@@ -255,12 +255,12 @@ public class Utils {
             log.error("loadAvatar error: no login response");
             return;
         }
-
         File file = new File(SystemCache.getInstance().getDownloadUserImage());
-        Log.i("ImageViewPath",SystemCache.getInstance().getDownloadUserImage()+"===="+file);
+        log.info("ImageViewPath : "+file);
         if(file.exists()) {
             Picasso.get().load(file).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).networkPolicy(NetworkPolicy.NO_CACHE).into(imageView);
         } else {
+            Picasso.get().load(R.drawable.default_photo).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).networkPolicy(NetworkPolicy.NO_CACHE).into(imageView);
             log.error("loadAvatar error: no userImage nothing");
         }
     }

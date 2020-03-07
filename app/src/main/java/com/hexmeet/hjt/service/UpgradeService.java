@@ -182,15 +182,16 @@ public class UpgradeService extends Service {
         }
         LOG.info("Download complete  : "+ mInstallPath.getAbsolutePath());
         String absolutePath = mInstallPath.getAbsolutePath();
+
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         LOG.info("path : "+mInstallPath.getAbsolutePath());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Uri contentUri = FileProvider.getUriForFile(this, AppCons.APP_FILE_PROVIDER_AUTH,  new File(absolutePath));
+            i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             i.setDataAndType(contentUri, "application/vnd.android.package-archive");
         }else {
-            i.setDataAndType(Uri.fromFile(new File(mInstallPath.getAbsolutePath())), "application/vnd.android.package-archive");
+            i.setDataAndType(Uri.fromFile(new File(absolutePath)), "application/vnd.android.package-archive");
         }
         startActivity(i);
     }

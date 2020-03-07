@@ -77,10 +77,14 @@ public class SystemCache {
 
     private String speakName;
     private String localName;
+    private boolean isSharedScreen = false;
     private boolean isCamera = true;
-    private Map<String, String> remoteNameUpdateState = new HashMap<>();
-    private boolean showVersionDialog = true;
     private boolean showRemind = false;
+    private boolean showVersionDialog = true;
+    private boolean visibilitySharedScreen= false;
+
+
+    private Map<String, String> remoteNameUpdateState = new HashMap<>();
 
     private SystemCache() {
         EventBus.getDefault().register(this);
@@ -168,7 +172,6 @@ public class SystemCache {
         participantNumber=null;
         if(LoginSettings.getInstance().getLoginState(false) == LoginSettings.LOGIN_STATE_IDLE) {
             isUserMuteVideo = false;
-            isUserMuteMic = false;
             loginResponse = null;
             isUserShowLocalCamera = true;
         }
@@ -178,10 +181,9 @@ public class SystemCache {
         loginResponse = null;
         isAnonymousLogin = false;
         isUserMuteVideo = false;
-        isUserMuteMic = false;
-        isUserShowLocalCamera = true;
         downloadUserImage = null;
         department=null;
+        visibilitySharedScreen= false;
         EmMessageCache.getInstance().resetIMCache();
     }
 
@@ -208,7 +210,9 @@ public class SystemCache {
                 participantsMicMuteState.clear();
                 remoteNameUpdateState.clear();
                 layoutModeEnable = true;
+                isUserShowLocalCamera = true;
                 isRecordingOn = false;
+                isSharedScreen = false;
                 repeatCount.set(0);
                 withContent = false;
                 isCamera = true;
@@ -457,12 +461,29 @@ public class SystemCache {
         speakName = name;
     }
 
+    public boolean isSharedScreen() {
+        return isSharedScreen;
+    }
+
+    public void setSharedScreen(boolean sharedScreen) {
+        this.isSharedScreen = sharedScreen;
+    }
+
+
     public boolean isCamera() {
         return isCamera;
     }
 
-    public void setCamera(boolean camera) {
-        isCamera = camera;
+    public void setCamera(boolean oclickCamera) {
+        isCamera = oclickCamera;
+    }
+
+    public boolean isShowRemind() {
+        return showRemind;
+    }
+
+    public void setShowRemind(boolean showRemind) {
+        this.showRemind = showRemind;
     }
 
     public boolean isShowVersionDialog() {
@@ -473,11 +494,11 @@ public class SystemCache {
         this.showVersionDialog = showVersionDialog;
     }
 
-    public boolean isShowRemind() {
-        return showRemind;
+    public boolean isVisibilitySharedScreen() {
+        return visibilitySharedScreen;
     }
 
-    public void setShowRemind(boolean showRemind) {
-        this.showRemind = showRemind;
+    public void setVisibilitySharedScreen(boolean visibilitySharedScreen) {
+        this.visibilitySharedScreen = visibilitySharedScreen;
     }
 }

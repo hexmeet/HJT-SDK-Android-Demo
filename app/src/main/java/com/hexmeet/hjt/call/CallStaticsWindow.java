@@ -181,7 +181,7 @@ public class CallStaticsWindow {
         } else if (rate <= 0.6f) {
             return resources.getColor(R.color.Yellow);
         } else {
-            return resources.getColor(R.color.White);
+            return resources.getColor(R.color.title_bar);
         }
     }
 

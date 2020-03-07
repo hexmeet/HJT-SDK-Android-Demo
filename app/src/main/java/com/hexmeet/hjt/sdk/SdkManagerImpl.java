@@ -2,7 +2,10 @@ package com.hexmeet.hjt.sdk;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.media.projection.MediaProjection;
+import android.os.Handler;
 import android.text.TextUtils;
+import android.view.Display;
 import android.view.SurfaceView;
 
 import com.hexmeet.hjt.AppCons;
@@ -301,6 +304,24 @@ public class SdkManagerImpl implements SdkManager {
         return contactInfo;
     }
 
+    @Override
+    public void setScreenShare(Context context,MediaProjection smediaProjection, Display display, Handler mhandler) {
+        LOG.info("startScreenShare()");
+        engine.setScreenCapture(context,smediaProjection,display,mhandler);
+    }
+
+    @Override
+    public void stopScreenShare() {
+        LOG.info("stopScreenShare()");
+        engine.stopContent();
+    }
+
+    @Override
+    public void setScreenDirection(boolean direction) {
+        LOG.info("setScreenDirection() : "+direction);
+        engine.setLandscape(direction);
+    }
+
     @SuppressLint("StringFormatInvalid")
     public static void handlerError(int errorCode, String error, ArrayList<String> time) {
         boolean needRetry = true;
@@ -380,7 +401,7 @@ public class SdkManagerImpl implements SdkManager {
             engine.leaveConference();
             return;
         }
-        
+
             Peer peer = new Peer(Peer.DIRECT_OUT);
             peer.setNumber(param.uri);
             peer.setName(param.displayName);
@@ -424,14 +445,8 @@ public class SdkManagerImpl implements SdkManager {
 
     @Override
     public void handUp() {
-        boolean remoteMute = engine.remoteMuted();
-        LOG.info(" remoteMute ： " + remoteMute);
-        if(remoteMute){
-            engine.requestRemoteUnmute(true);
-        }else {
-            engine.requestRemoteUnmute(false);
-        }
-
+      LOG.info("handUp()");
+      engine.requestRemoteUnmute(true);
     }
 
     @Override
@@ -455,7 +470,7 @@ public class SdkManagerImpl implements SdkManager {
     public void setSvcLayoutMode(int svcLayoutMode) {
        LOG.info("setSvcLayoutMode: " + (svcLayoutMode == 0 ? "Auto" : (svcLayoutMode == 1 ? "Gallery" : "Speaker")));
        LayoutType type = (svcLayoutMode == 0) ? LayoutType.typeAuto : ((svcLayoutMode == 2) ? LayoutType.type1 : LayoutType.type4);
-       LayoutRequest request = new LayoutRequest(LayoutMode.fromInt(svcLayoutMode),type, LayoutPage.typeCurrent, EVCommon.VideoSize.VIDEO_SIZE_UNKNOWN,null);
+       LayoutRequest request = new LayoutRequest(LayoutMode.fromInt(svcLayoutMode),type, LayoutPage.typeCurrent, EVEngine.VideoSize.VIDEO_SIZE_UNKNOWN,null);
        engine.setLayout(request);
     }
 
@@ -514,13 +529,9 @@ public class SdkManagerImpl implements SdkManager {
         for (StreamStats streamStats :stats) {
             signalStat.encryption = streamStats.isEncrypted;
             String streamType = streamStats.type.toString();
-            LOG.info(" streamStats.type : "+streamStats.toString());
             if(streamType.equals("Audio")){
-
-                LOG.info(" streamStats.dir : "+streamStats.dir.value());
                 int value = streamStats.dir.value();
                 if(value ==1){
-
                     ChannelStatistics arx = new ChannelStatistics();
                     arx.codec = streamStats != null ? streamStats.payloadType : "-";
                     arx.rtp_actualBitRate = (int) streamStats.realBandwidth ;
@@ -545,7 +556,6 @@ public class SdkManagerImpl implements SdkManager {
 
                 }
             }else if(streamType.equals("Video")){
-                LOG.info(" streamStats.dir : "+streamStats.dir.value());
                 String codec = "";
                 String payloadType = streamStats.payloadType;
                 String[] payload = payloadType.split(" ");
@@ -555,7 +565,7 @@ public class SdkManagerImpl implements SdkManager {
                 int value = streamStats.dir.value();
                 if(value ==1){
                     ChannelStatistics pvrx = new ChannelStatistics();
-                    pvrx.codec = streamStats != null ? codec : "-";
+                    pvrx.codec = streamStats != null ? codec +" "+streamStats.name : "-";
                     pvrx.rtp_actualBitRate = (int) streamStats.realBandwidth ;
                     pvrx.rtp_settingBitRate = streamStats != null ? (int) streamStats.negoBandwidth / 1000 : 0;
                     pvrx.packetLost = (int) streamStats.cumPacketLoss;
@@ -563,7 +573,7 @@ public class SdkManagerImpl implements SdkManager {
                     pvrx.frameRate = (int)streamStats.fps;
                     pvrx.resolution = streamStats.resolution.width +"x" +streamStats.resolution.height;
                     pvrx.encrypted = streamStats.isEncrypted;
-                    pvrx.pipeName = streamStats.name;
+                    pvrx.pipeName ="PR"; //streamStats.name;
                     pvrxList.add(pvrx);
 
                 }else {
@@ -576,26 +586,39 @@ public class SdkManagerImpl implements SdkManager {
                     pvtx.frameRate = (int)streamStats.fps;
                     pvtx.resolution = streamStats.resolution.width +"x" +streamStats.resolution.height;
                     pvtx.encrypted = streamStats.isEncrypted;
-                    pvtx.pipeName = "PS-" + streamStats.ssrc;
+                    pvtx.pipeName = "PS";// + streamStats.ssrc;
                     pvtxList.add(pvtx);
                 }
 
-
             }else if(streamType.equals("Content")){
-                ChannelStatistics cvrx = new ChannelStatistics();
-                cvrx.pipeName = "CR";
-                cvrx.codec = streamStats != null ? streamStats.payloadType : "-";
-                cvrx.rtp_actualBitRate =  (int) streamStats.realBandwidth ;
-                cvrx.rtp_settingBitRate = streamStats != null ? (int) streamStats.negoBandwidth / 1000 : 0;
-                cvrx.packetLost = (int) streamStats.cumPacketLoss;
-                cvrx.packetLostRate =(int) streamStats.packetLossRate;
-                cvrx.frameRate = (int)streamStats.fps;
-                cvrx.resolution = streamStats.resolution.width +"x" +streamStats.resolution.height;
-                cvrx.encrypted = streamStats.isEncrypted;
-                cvrxList.add(cvrx);
+                int value = streamStats.dir.value();//0  发  ，1  收
+                if(value==1){
+                    ChannelStatistics cvrx = new ChannelStatistics();
+                    cvrx.pipeName = "CR";
+                    cvrx.codec = streamStats != null ? streamStats.payloadType : "-";
+                    cvrx.rtp_actualBitRate =  (int) streamStats.realBandwidth ;
+                    cvrx.rtp_settingBitRate = streamStats != null ? (int) streamStats.negoBandwidth / 1000 : 0;
+                    cvrx.packetLost = (int) streamStats.cumPacketLoss;
+                    cvrx.packetLostRate =(int) streamStats.packetLossRate;
+                    cvrx.frameRate = (int)streamStats.fps;
+                    cvrx.resolution = streamStats.resolution.width +"x" +streamStats.resolution.height;
+                    cvrx.encrypted = streamStats.isEncrypted;
+                    cvrxList.add(cvrx);
+                }else {
+                    ChannelStatistics cvrx = new ChannelStatistics();
+                    cvrx.pipeName = "CS";
+                    cvrx.codec = streamStats != null ? streamStats.payloadType : "-";
+                    cvrx.rtp_actualBitRate =  (int) streamStats.realBandwidth ;
+                    cvrx.rtp_settingBitRate = streamStats != null ? (int) streamStats.negoBandwidth / 1000 : 0;
+                    cvrx.packetLost = (int) streamStats.cumPacketLoss;
+                    cvrx.packetLostRate =(int) streamStats.packetLossRate;
+                    cvrx.frameRate = (int)streamStats.fps;
+                    cvrx.resolution = streamStats.resolution.width +"x" +streamStats.resolution.height;
+                    cvrx.encrypted = streamStats.isEncrypted;
+                    cvrxList.add(cvrx);
+                }
+
             }
-
-
 
         }
 
@@ -678,7 +701,6 @@ public class SdkManagerImpl implements SdkManager {
 
 
     public static void getUserInfoList(UserInfo info, boolean isObtain){
-
         RestLoginResp restLoginResp = new RestLoginResp();
         FeatureSupport featureSupport = new FeatureSupport();
         restLoginResp.setUserId(info.userId);
@@ -694,6 +716,7 @@ public class SdkManagerImpl implements SdkManager {
         restLoginResp.setToken(info.token);
         restLoginResp.setDoradoVersion(info.doradoVersion);
         restLoginResp.setDeviceId(info.deviceId);
+
         EVEngine.EVFeatureSupport feature = info.featureSupport;
         if(feature!=null){
             featureSupport.setContactWebPage(feature.contactWebPage);
@@ -737,7 +760,7 @@ public class SdkManagerImpl implements SdkManager {
                             CallEvent event = new CallEvent(CallState.IDLE);
                             event.setEndReason(ResourceUtils.getInstance().getCallFailedReason(ResourceUtils.CALL_ERROR_SDK_10));
                             EventBus.getDefault().post(event);
-                        }else if(err.code == ResourceUtils.CALL_ERROR_9 && err.action.equals("downloadUserImage")){
+                        }else if(err.code == ResourceUtils.CALL_ERROR_9 || err.action.equals("downloadUserImage")){
                             return;
                         }else if(err.code == LOGIN_ERROR_8){
                             SdkManagerImpl.handlerError(LoginResultEvent.LOGIN_SDK_ERROR_8, err.msg ,err.arg);
@@ -763,7 +786,7 @@ public class SdkManagerImpl implements SdkManager {
                 if(SystemCache.getInstance().isAnonymousMakeCall()){
                     LOG.info("CallBack isCloud : "+SystemCache.getInstance().getJoinMeetingParam().isCloud());
                     LoginSettings.getInstance().setLoginState(SystemCache.getInstance().getJoinMeetingParam().isCloud() ? LoginSettings.LOGIN_CLOUD_SUCCESS : LoginSettings.LOGIN_PRIVATE_SUCCESS, true);
-                    //EventBus.getDefault().post(new LoginResultEvent(LoginResultEvent.LOGIN_SUCCESS, "success", true));
+                   // EventBus.getDefault().post(new LoginResultEvent(LoginResultEvent.LOGIN_SUCCESS, "success", true));
                     updateVideoUserImage(null);
                 }else {
                     boolean isCloudLogin = SystemCache.getInstance().isCloudLogin();
@@ -856,6 +879,10 @@ public class SdkManagerImpl implements SdkManager {
             } else {
                 LOG.info("CallBack. CallEnd ");
                 CallEvent event = new CallEvent(CallState.IDLE);
+                event.setCode(info.err.code);
+                if(!SystemCache.getInstance().getPeer().isP2P()){
+                    event.setNumber(info.peer);
+                }
                 event.setEndReason(ResourceUtils.getInstance().getCallFailedReason(info.err.code));
                 EventBus.getDefault().post(event);
             }
@@ -924,10 +951,12 @@ public class SdkManagerImpl implements SdkManager {
         }
 
         @Override
-        public void onContent(ContentInfo info) {//双流
-            LOG.info("onContent: enabled:" + info.enabled +" type : "+info.type +" dir : "+info.dir);
-            SystemCache.getInstance().setWithContent(info.enabled);
-            EventBus.getDefault().post(new ContentEvent(info.enabled));
+        public void onContent(ContentInfo info) {//双流  enabled:true 开，false 关 。 dir.Upload 发 ，dir.Download 收
+            LOG.info("onContent: enabled:" + info.toString());
+            if(info.dir== EVCommon.StreamDir.Download){
+                SystemCache.getInstance().setWithContent(info.enabled);
+                EventBus.getDefault().post(new ContentEvent(info.enabled));
+            }
         }
 
         @Override

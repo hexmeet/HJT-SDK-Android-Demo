@@ -25,10 +25,6 @@ android {
         def meizuKey = System.getenv("MEIZU_KEY") as String ?: "yours"
         def notification = System.getenv("NOTIFICATION") as String ?: "notification"
         def floatNotification = System.getenv("FLOATNOTIFICATION") as String ?: "floatNotification"
-        def privacyPolicyUrl = System.getenv("PRIVACY_URL") as String ?: "https://developer.hexmeet.com/legal/PrivacyPolicy.html"
-        def showPrivacyWindow = System.getenv("SHOW_PRIVACY_WINDOW") as String ?: "true"
-        def appVersion =  System.getenv("APPINFO_URL") as String ?: "http://swinfo.cninnovatel.com/android/com.hexmeet.hjt/appinfo.json"
-
         manifestPlaceholders = [
                 APP_FILE_PROVIDER_AUTH: appFileProviderAuth,
                 JPUSH_PKGNAME         : applicationId, //JPush上注册的包名.
@@ -66,9 +62,6 @@ android {
         buildConfigField("String", "MEIZU_KEY", '"' + meizuKey + '"')
         buildConfigField("String", "NOTIFICATION", '"' + notification + '"')
         buildConfigField("String", "FLOATNOTIFICATION", '"' + floatNotification + '"')
-        buildConfigField("String", "PRIVACY_URL",  '"' + privacyPolicyUrl + '"' )
-        buildConfigField("boolean", "SHOW_PRIVACY_WINDOW", showPrivacyWindow)
-        buildConfigField("String", "APPINFO_URL",  '"' + appVersion + '"' )
 
 
         def archiveVersionName = ((System.getenv("ARCHIVE_NAME") as String ?: "HJT_SDKDEMO-") +

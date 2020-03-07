@@ -40,6 +40,7 @@ public class ConversationController implements View.OnClickListener{
     private ViewGroup moreDetail;
     private final LinearLayout layoutChatBtn;
     private final TextView handUp;
+    private final ViewGroup shareBtn;
 
     public interface IController{
         void updateCellsAsLayoutModeChanged();
@@ -52,6 +53,7 @@ public class ConversationController implements View.OnClickListener{
         void switchVoiceMode(boolean isVoiceMode);
         void showChat();
         void changeUserName();
+        void onClickShareScreen();
         void onNoChangeLayout();
     }
 
@@ -73,7 +75,8 @@ public class ConversationController implements View.OnClickListener{
         moreDetail = (ViewGroup) rootView.findViewById(R.id.more_detail);
         layoutChatBtn = (LinearLayout) rootView.findViewById(R.id.toolbar_layout_chat);
         handUp = (TextView) rootView.findViewById(R.id.hand_up);
-
+        shareBtn = (ViewGroup) rootView.findViewById(R.id.toolbar_layout_share);
+        shareBtn.setVisibility(SystemCache.getInstance().isVisibilitySharedScreen() ? View.VISIBLE : View.GONE );
 
         adjustBottomButtons();
         adjustHangUp();
@@ -90,6 +93,7 @@ public class ConversationController implements View.OnClickListener{
         layoutModeBtn.setOnClickListener(this);
         layoutChatBtn.setOnClickListener(this);
         moreBtn.setOnClickListener(this);
+        shareBtn.setOnClickListener(this);
 
         moreDetail.getChildAt(0).setOnClickListener(this);
         moreDetail.getChildAt(1).setOnClickListener(this);
@@ -115,6 +119,7 @@ public class ConversationController implements View.OnClickListener{
             }
         };
         signalLevel.setOnClickListener(callStatisticsClick);
+
         showLocalCamera(SystemCache.getInstance().isUserShowLocalCamera());
         //是否支持会话、音频模式
         FeatureSupport featureSupport = SystemCache.getInstance().getLoginResponse().getFeatureSupport();
@@ -165,6 +170,7 @@ public class ConversationController implements View.OnClickListener{
     }
 
     public void muteVideo(boolean mute) {
+        LOG.info("muteVideo : "+mute);
         localVideoBtn.getChildAt(0).setSelected(mute);
         TextView title = (TextView) localVideoBtn.getChildAt(1);
         title.setText(mute ? R.string.enable_video : R.string.stop_video);
@@ -180,6 +186,13 @@ public class ConversationController implements View.OnClickListener{
         LOG.info("isSpeaker : "+isSpeaker);
         layoutModeBtn.getChildAt(0).setSelected(isSpeaker);
         iController.updateCellsAsLayoutModeChanged();
+    }
+
+    public void shareScreen(boolean share) {
+        LOG.info("shareScreen icon: "+share);
+        shareBtn.getChildAt(0).setSelected(share);
+        TextView title = (TextView) shareBtn.getChildAt(1);
+        title.setText(share ? R.string.stop_share :  R.string.share);
     }
 
     private void alertLayoutModeDisable() {
@@ -278,19 +291,18 @@ public class ConversationController implements View.OnClickListener{
                 iController.changeUserName();
                 moreDetail.setVisibility(View.GONE);
                 break;
+            case R.id.toolbar_layout_share:
+                iController.onClickShareScreen();
+                break;
             default:
                 break;
         }
     }
 
-    public void showVideoMode(boolean isVideoMode) {
+    public void showVideoMode(boolean isVideoMode) {//切换  语音  flase /视频  true
         ((TextView)moreDetail.getChildAt(2)).setVisibility(isVideoMode ?View.VISIBLE : View.GONE);
         iController.switchVoiceMode(isVideoMode);
-        if(isVideoMode && SystemCache.getInstance().isUserShowLocalCamera()){
-            iController.showLocalCamera(true);
-        }else {
-            iController.showLocalCamera(false);
-        }
+        iController.showLocalCamera(isVideoMode);
         ((TextView)moreDetail.getChildAt(0)).setVisibility(isVideoMode ? View.VISIBLE : View.GONE);
         //隐藏本地视频
         localVideoBtn.setVisibility(isVideoMode ? View.VISIBLE : View.GONE);
@@ -308,6 +320,16 @@ public class ConversationController implements View.OnClickListener{
         }else {
             moreBtn.setVisibility(View.VISIBLE);
         }
+
+        if(!isVideoMode){//语音模式 隐藏共享屏幕功能
+            if(SystemCache.getInstance().isSharedScreen()){
+                iController.onClickShareScreen();
+            }
+            shareBtn.setVisibility(View.GONE );
+        }else {
+            shareBtn.setVisibility(SystemCache.getInstance().isVisibilitySharedScreen() ? View.VISIBLE : View.GONE );
+        }
+
     }
 
     private void showLocalCamera(boolean show) {

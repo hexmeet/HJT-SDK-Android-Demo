@@ -43,6 +43,8 @@ class SdkHandler extends BaseSafelyHandler<SdkManager> {
     final static int HANDLER_SDK_P2P_MAKE_CALL = 10030;
     final static int HANDLER_SDK_REFUSE_P2P_MAKE_CALL = 10031;
     final static int HANDLER_SDK_CONFDISPLAYNAME = 10032;
+    final static int HANDLER_SDK_STOP_SCREENSHARE = 10033;
+    final static int HANDLER_SDK_SCREEN_DIRECTION = 10034;
 
     final static int HANDLER_LOGIN = 20001;
     final static int HANDLER_LOGOUT = 20002;
@@ -203,6 +205,12 @@ class SdkHandler extends BaseSafelyHandler<SdkManager> {
                 case HANDLER_SDK_CONFDISPLAYNAME:
                     String displayName = (String) msg.obj;
                     ref.setConfDisplayName(displayName);
+                    break;
+                case HANDLER_SDK_STOP_SCREENSHARE:
+                    ref.stopScreenShare();
+                    break;
+                case HANDLER_SDK_SCREEN_DIRECTION:
+                    ref.setScreenDirection(msg.arg1 == 1);
                     break;
                 default:
                     break;

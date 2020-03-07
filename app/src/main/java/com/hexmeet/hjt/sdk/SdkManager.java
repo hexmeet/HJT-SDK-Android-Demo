@@ -1,6 +1,10 @@
 package com.hexmeet.hjt.sdk;
 
 
+import android.content.Context;
+import android.media.projection.MediaProjection;
+import android.os.Handler;
+import android.view.Display;
 import android.view.SurfaceView;
 
 import com.hexmeet.hjt.model.LoginParams;
@@ -96,4 +100,10 @@ public interface  SdkManager {
     String getIMGroupId();
 
     EVEngine.ContactInfo getIMContactInfo(String userId);
+
+    void setScreenShare(Context context, MediaProjection smediaProjection, Display display, Handler mhandler);
+
+    void stopScreenShare();
+
+    void setScreenDirection(boolean direction);
 }

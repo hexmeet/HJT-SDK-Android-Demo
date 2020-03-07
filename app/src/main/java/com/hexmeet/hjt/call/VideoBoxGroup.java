@@ -212,10 +212,8 @@ public class VideoBoxGroup {
     }
 
     public void updateMessageView(int margin) {
-        if(messagePara!=null){
-            messagePara.topMargin = Math.max(margin, 40);
-            message.setLayoutParams(messagePara);
-        }
+        messagePara.topMargin = Math.max(margin, 40);
+        message.setLayoutParams(messagePara);
     }
 
     public void showMessage(boolean show) {

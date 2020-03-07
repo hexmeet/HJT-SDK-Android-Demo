@@ -60,6 +60,7 @@ public class DialingFrag extends Fragment {
         });
 
         closeMicView.setChecked(SystemCache.getInstance().isUserMuteMic());
+
         closeMicView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -92,6 +93,7 @@ public class DialingFrag extends Fragment {
                         HjtApp.getInstance().getAppService().setVideoMode(true);
                         HjtApp.getInstance().getAppService().enableVideo(!closeCameraView.isChecked());
                         HjtApp.getInstance().getAppService().muteMic(closeMicView.isChecked());
+                        LOG.info("ONCLICK");
                         ((HexMeet)getActivity()).dialOut(sipNumberWithoutPassword, password);
                     }
                     break;

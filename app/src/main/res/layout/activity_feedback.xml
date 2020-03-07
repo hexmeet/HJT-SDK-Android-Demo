@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:background="@color/hexmeet_bg"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".me.FeedbackActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/White"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/feedback_title"
+            android:textColor="@color/title_bar"
+            android:textSize="@dimen/title_bar_font_size" />
+
+        <ImageView
+            android:id="@+id/feedback_btn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:padding="21dp"
+            android:src="@drawable/icon_back_black" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        >
+        <TextView
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/problem"
+            android:textColor="@color/sub_title_bar"
+            android:textSize="@dimen/text_size" />
+
+        <TextView
+            android:id="@+id/text_count"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0/200"
+            android:textColor="@color/sub_title_bar"
+            android:textSize="@dimen/text_size"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/White"
+        android:paddingBottom="20dp"
+        >
+        <EditText
+            android:id="@+id/et_content"
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:padding="8dp"
+            android:gravity="left|top"
+            android:hint="@string/feedback_description"
+            android:textSize="@dimen/feedback_font_size"
+            android:maxLength="200"
+            android:background="@drawable/feedback_text_bg"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:overScrollMode="never"
+                android:layout_below="@id/et_content" />
+
+            <TextView
+                android:id="@+id/photo_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/problem_screenshots"
+                android:textSize="12dp"
+                android:layout_toRightOf="@id/recycler"
+                android:layout_below="@id/et_content"
+                android:visibility="gone"
+                />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        >
+        <TextView
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/contact_infomation"
+            android:textColor="@color/sub_title_bar"
+            android:textSize="@dimen/text_size" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/White"
+        >
+
+        <com.andreabaccega.widget.FormEditText
+            android:id="@+id/login_server"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/feedback_text_bg"
+            android:hint="@string/feedback_mobile_number"
+            android:padding="10dp"
+            android:textColor="@color/font_color_313131"
+            android:textColorHint="@color/hexmeet_light_gray"
+            android:textSize="18sp"
+            android:ellipsize="start"
+            android:singleLine="true" />
+
+    </RelativeLayout>
+
+    <Button
+        android:layout_marginTop="30dp"
+        android:layout_width="350dp"
+        android:layout_height="45dp"
+        android:background="@drawable/btn_private_login"
+        android:layout_gravity="center"
+        android:text="提交"
+        android:textAllCaps="false"
+        android:textColor="@drawable/color_text_join"
+        android:textSize="16sp" />
+
+</LinearLayout>
