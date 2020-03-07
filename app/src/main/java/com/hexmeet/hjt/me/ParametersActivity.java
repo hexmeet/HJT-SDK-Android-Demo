@@ -60,6 +60,13 @@ public class ParametersActivity extends BaseActivity {
             }
         });
 
+        findViewById(R.id.feedback_view).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FeedbackActivity.actionStart(ParametersActivity.this);
+            }
+        });
+
         Switch autoAnswer = (Switch) findViewById(R.id.auto_answer_switch);
         autoAnswer.setChecked(AppSettings.getInstance().isAutoAnswer());
         autoAnswer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

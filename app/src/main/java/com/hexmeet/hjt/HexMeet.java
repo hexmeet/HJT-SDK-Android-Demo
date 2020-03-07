@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,11 +29,13 @@ import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.call.AnonymousJoinMeetActivity;
 import com.hexmeet.hjt.call.ConnectActivity;
 import com.hexmeet.hjt.call.Conversation;
+import com.hexmeet.hjt.call.PasswordDialog;
 import com.hexmeet.hjt.chat.ChatFrag;
 import com.hexmeet.hjt.conf.ConferenceListFrag;
 import com.hexmeet.hjt.conf.JsJoinMeeting;
 import com.hexmeet.hjt.contacts.ContactsFrag;
 import com.hexmeet.hjt.dial.DialingFrag;
+import com.hexmeet.hjt.event.CallEvent;
 import com.hexmeet.hjt.event.FileMessageEvent;
 import com.hexmeet.hjt.event.LoginResultEvent;
 import com.hexmeet.hjt.event.ServerReachableEvent;
@@ -49,8 +52,6 @@ import com.hexmeet.hjt.utils.Utils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.lang.ref.WeakReference;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
@@ -80,6 +81,7 @@ public class HexMeet extends BaseActivity implements OnClickListener {
     private RelativeLayout.LayoutParams contentLp;
     private int tabAvatarSize = ScreenUtil.dp_to_px(26);
     private ImageView upgradeHint;
+    private RelativeLayout networkAnomaly;
 
 
     public static void actionStart(Context context) {
@@ -136,6 +138,7 @@ public class HexMeet extends BaseActivity implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+
         if (savedInstanceState != null && savedInstanceState.getString("currentTab") != null) {
             currentTab = HexMeetTab.fromTabName(savedInstanceState.getString("currentTab"));
         }
@@ -204,7 +207,6 @@ public class HexMeet extends BaseActivity implements OnClickListener {
             }
         }
 
-        showUpgradeHint(SystemCache.getInstance().isShowRemind());
         if(contentLp != null) {
             View contentView = findViewById(R.id.content);
             LOG.info("margin: " +contentLp.bottomMargin);
@@ -312,6 +314,7 @@ public class HexMeet extends BaseActivity implements OnClickListener {
         tabContacts = (TextView) tabLayout.findViewById(R.id.contacts);
         tabMe = (TextView) tabLayout.findViewById(R.id.me);
         upgradeHint = (ImageView) findViewById(R.id.upgrade_hint);
+        networkAnomaly = (RelativeLayout)findViewById(R.id.network_anomaly);
         //是否支持通讯录功能
         tabContacts.setVisibility(SystemCache.getInstance().getLoginResponse().getFeatureSupport().isContactWebPage() ? View.VISIBLE : View.GONE);
 
@@ -615,15 +618,10 @@ public class HexMeet extends BaseActivity implements OnClickListener {
     public void onRegEvent(RegisterState state) {
         LOG.info("RegisterState : "+state);
         updateTip(state, NetworkUtil.isCloudReachable());
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onVersionEvent(VersionState state) {
-        LOG.info("VersionState : "+state);
-        if(state==VersionState.VISIBLE_VERSIONIMG){
-            showUpgradeHint(true);
-        }else if(state==VersionState.INVISIBLE_VERSIONIMG){
-            showUpgradeHint(false);
+        if(state==RegisterState.SUCCESS){
+            networkAnomaly.setVisibility(View.GONE);
+        }else if(state==RegisterState.IDLE){
+            networkAnomaly.setVisibility(View.VISIBLE);
         }
     }
 
@@ -678,6 +676,15 @@ public class HexMeet extends BaseActivity implements OnClickListener {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onVersionEvent(VersionState state) {
+        LOG.info("VersionState : "+state);
+        if(state==VersionState.VISIBLE_VERSIONIMG){
+            showUpgradeHint(true);
+        }else if(state==VersionState.INVISIBLE_VERSIONIMG){
+            showUpgradeHint(false);
+        }
+    }
 
     public void showUpgradeHint(boolean show) {
         LOG.info("showUpgradeHint : "+show);
@@ -685,4 +692,33 @@ public class HexMeet extends BaseActivity implements OnClickListener {
             upgradeHint.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
         }
     }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCallStateEvent(CallEvent event) {
+        if (event.getCallState() == CallState.IDLE) {
+            LOG.info("event : "+event.getCode());
+            if(event.getCode()==CallEvent.MRU_NORMAL || event.getCode()==CallEvent.MRU_OPERATOR_DISCONNECT){
+                dialogTip(true,event.getNumber());
+            }else if(event.getCode()==CallEvent.EP_NO_PACKET_RECEIVED || event.getCode()==CallEvent.MRU_NO_PACKET_RECEIVED){
+                dialogTip(false,event.getNumber());
+            }
+
+        }
+    }
+    PasswordDialog dialog;
+    private void dialogTip(boolean mru,String number) {
+        dialog= new PasswordDialog.Builder(HexMeet.this).setOkButton(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        }).setNetwork(mru)
+                .setPasswordDialog(false)
+                .setNumber(number)
+                .createTwoButtonDialog();
+        dialog.show();
+    }
+
+
 }

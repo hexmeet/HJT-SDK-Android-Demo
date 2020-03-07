@@ -73,7 +73,7 @@ public class ConnectActivity extends FullscreenActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        LOG.info(" onStart()");
+        LOG.info("onStart()");
         ResourceUtils.getInstance().initScreenSize();
         startRinging();
         pulseView.startPulse();
@@ -82,7 +82,7 @@ public class ConnectActivity extends FullscreenActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        LOG.info("onStop() ");
+        LOG.info("onStop()");
         stopRinging();
         pulseView.finishPulse();
     }

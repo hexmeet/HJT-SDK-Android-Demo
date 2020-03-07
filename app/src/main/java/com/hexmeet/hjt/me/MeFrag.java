@@ -29,6 +29,7 @@ public class MeFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.me, container, false);
+
         avatar = (ImageView) root.findViewById(R.id.avatar);
         username = (TextView) root.findViewById(R.id.username);
         displayName = (TextView)  root.findViewById(R.id.displayName);
@@ -112,7 +113,6 @@ public class MeFrag extends Fragment {
             getActivity().finish();
         }
     }
-
 
     public void onLoginName(String name,String userName) {
         LOG.info("onLoginName()");

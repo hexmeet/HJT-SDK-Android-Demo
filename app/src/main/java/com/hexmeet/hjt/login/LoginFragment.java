@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,7 +28,6 @@ import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.dial.RecentPreference;
 import com.hexmeet.hjt.model.LoginParams;
-import com.hexmeet.hjt.utils.DrawableEditText;
 import com.hexmeet.hjt.utils.Utils;
 
 import org.apache.log4j.Logger;
@@ -131,6 +131,7 @@ public class LoginFragment extends Fragment {
         closeCamera = (CheckBox) mainView.findViewById(R.id.close_camera);
         closeMic = (CheckBox) mainView.findViewById(R.id.close_mic);
 
+
         if(loginType == LOGIN_TYPE_CLOUD || loginType == LOGIN_TYPE_CLOUD_ANONYMOUS) {
             input_server.setVisibility(View.GONE);
         } else {
@@ -187,6 +188,13 @@ public class LoginFragment extends Fragment {
             closeCamera.setChecked(LoginSettings.getInstance().isMuteVideo(false));
             closeMic.setChecked(LoginSettings.getInstance().isMuteMic(false));
         }
+        closeMic.setChecked(SystemCache.getInstance().isUserMuteMic());
+        closeMic.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SystemCache.getInstance().setUserMuteMic(isChecked);
+            }
+        });
     }
 
     private View.OnClickListener click = new View.OnClickListener() {

@@ -4,15 +4,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.hexmeet.hjt.AppCons;
 import com.hexmeet.hjt.BaseActivity;
+import com.hexmeet.hjt.CallState;
 import com.hexmeet.hjt.HexMeet;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.PermissionWrapper;
 import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.call.AnonymousJoinMeetActivity;
+import com.hexmeet.hjt.call.PasswordDialog;
+import com.hexmeet.hjt.event.CallEvent;
 import com.hexmeet.hjt.event.LoginResultEvent;
 import com.hexmeet.hjt.model.LoginParams;
 import com.hexmeet.hjt.utils.ProgressUtil;
@@ -87,6 +91,7 @@ public class Login extends BaseActivity implements LoginFragmentCallback{
 
     private void turnPage() {
         if (LoginSettings.getInstance().cannotAutoLogin()) {
+            progress.dismiss();
             gotoLoginPage();
             if(SystemCache.getInstance().isShowVersionDialog()){
                 checkVersion(false);
@@ -96,7 +101,14 @@ public class Login extends BaseActivity implements LoginFragmentCallback{
                 if (SystemCache.getInstance().isNetworkConnected()) {
                     progress.showDelayed(500);
                     LOG.info("network connected, start auto login");
-                    LoginService.getInstance().autoLogin();
+                    new Thread() {@Override
+                        public void run() { super.run();
+                            try { Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace(); }
+                            LoginService.getInstance().autoLogin();
+                        }
+                    }.start();
                 }
         }
     }
@@ -116,7 +128,6 @@ public class Login extends BaseActivity implements LoginFragmentCallback{
     @Override
     protected void onResume() {
         super.onResume();
-        LOG.info("onResume()");
         if (HjtApp.getInstance().getAppService() != null) {
             HjtApp.getInstance().getAppService().setUserInLogin(false);
            /* if (HjtApp.getInstance().getAppService().isCalling()) {
@@ -258,5 +269,32 @@ public class Login extends BaseActivity implements LoginFragmentCallback{
         }
         LOG.info("handleWebInvite Login Invited to dialOut");
         dialOut();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCallStateEvent(CallEvent event) {
+        if (event.getCallState() == CallState.IDLE) {
+            LOG.info("event : "+event.getCode()+",number : "+event.getNumber());
+            if(event.getCode()==CallEvent.MRU_NORMAL || event.getCode()==CallEvent.MRU_OPERATOR_DISCONNECT){
+                dialogTip(true,event.getNumber());
+            }else if(event.getCode()==CallEvent.EP_NO_PACKET_RECEIVED || event.getCode()==CallEvent.MRU_NO_PACKET_RECEIVED){
+                dialogTip(false,event.getNumber());
+            }
+
+        }
+    }
+    PasswordDialog dialog;
+    private void dialogTip(boolean mru,String number) {
+        dialog= new PasswordDialog.Builder(Login.this).setOkButton(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        }).setNetwork(mru)
+                .setPasswordDialog(false)
+                .setNumber(number)
+                .createTwoButtonDialog();
+        LOG.info("show dialog Tip");
+        dialog.show();
     }
 }

@@ -9,7 +9,6 @@ import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +21,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -227,6 +224,11 @@ public class ContactsFrag extends Fragment {
 
         }
 
+        @JavascriptInterface
+        public void webLog(String json){
+            LOG.info("weblog : "+json);
+        }
+
     }
 
     private void meetingP2p(final String json) {
@@ -330,7 +332,6 @@ public class ContactsFrag extends Fragment {
             sb.append("&lang="+ (HjtApp.isCnVersion() ? "cn" : "en"));
             String url = sb.toString();
             LOG.info("Load URL : [" + url + "]");
-            Log.i("=========",url);
             mContactsWeb.loadUrl(url);
 
         } else {

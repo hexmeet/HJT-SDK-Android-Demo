@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="135dp"
         android:padding="10dp"
+        android:layout_marginTop="5dp"
         android:background="@drawable/bg_click_item_colors">
 
         <com.hexmeet.hjt.utils.MLRoundedImageView
@@ -18,7 +19,7 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/icon_contact" />
+            android:src="@drawable/default_photo" />
 
         <ImageView
             android:id="@+id/arrow_right"

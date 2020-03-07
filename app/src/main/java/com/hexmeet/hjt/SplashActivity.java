@@ -11,7 +11,7 @@ import com.alibaba.sdk.android.push.AndroidPopupActivity;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.login.Login;
 import com.hexmeet.hjt.login.LoginSettings;
-import com.hexmeet.hjt.utils.AlertDialogUtil;
+import com.hexmeet.hjt.utils.PrivacyPolicyDialogUtil;
 import com.hexmeet.hjt.utils.ResourceUtils;
 
 import java.util.Map;
@@ -21,7 +21,7 @@ import androidx.annotation.NonNull;
 public class SplashActivity extends BaseActivity {
     private final int TIMEOUT = -100;
     private final int WAIT_SERVICE = 100;
-    private AlertDialogUtil dialog;
+    private PrivacyPolicyDialogUtil dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +32,7 @@ public class SplashActivity extends BaseActivity {
             return;
         }
         if ((HjtApp.isCnVersion() && BuildConfig.SHOW_PRIVACY_WINDOW) && (!LoginSettings.getInstance().getPrivacyPolicy() && !SystemCache.getInstance().isInviteMakeCall())){
-            dialog = new AlertDialogUtil.Builder(SplashActivity.this)
+            dialog = new PrivacyPolicyDialogUtil.Builder(SplashActivity.this)
                     .setPositiveButton(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {//同意
@@ -89,7 +89,7 @@ public class SplashActivity extends BaseActivity {
         if(result == PermissionWrapper.RESULT_PERMISSIONS_PASS) {
             turnPage();
         } else if (result == PermissionWrapper.RESULT_PERMISSIONS_REJECT) {
-             finish();
+            finish();
         }
     }
 

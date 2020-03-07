@@ -155,7 +155,7 @@ public class ConfManageWindow {
                 } else {
                     progressBar.setProgress(newProgress);
                 }
-              // progressBar.setProgress(newProgress);
+                // progressBar.setProgress(newProgress);
             }
 
             @Override
@@ -264,7 +264,6 @@ public class ConfManageWindow {
         @JavascriptInterface
         public void shareWechat(String json){
             LOG.info("JavaScript: shareWechat <"+json+">");
-            dismiss();
             if(conversation != null) {
                 conversation.shareToWechat(json);
             }
@@ -299,6 +298,13 @@ public class ConfManageWindow {
                         progressLayout.setVisibility(View.GONE);
                     }
                 });
+            }
+        }
+
+        @JavascriptInterface
+        public void webLog(String json){
+            if(conversation!=null){
+                LOG.info("weblog : "+json);
             }
         }
     }

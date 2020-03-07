@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
@@ -42,6 +41,7 @@ public class BaseActivity extends FragmentActivity {
     private UpdateVersionUtil dialog;
     final  int HANDLER_UPDATED_VERSION = 1001;
     final  int HANDLER_VERSION_TOAST = 1002;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

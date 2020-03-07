@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -61,6 +62,13 @@ public class InviteActivity extends BaseActivity{
 
         invite_camera1 = (CheckBox)findViewById(R.id.invite_camera);
         invite_mic = (CheckBox)findViewById(R.id.invite_mic);
+        invite_mic.setChecked(SystemCache.getInstance().isUserMuteMic());
+        invite_mic.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SystemCache.getInstance().setUserMuteMic(isChecked);
+            }
+        });
         displayNameEdit.setText(LoginSettings.getInstance().getInviteUserName());
         boolean isNetworkOk = NetworkUtil.isNetConnected(this);
         SystemCache.getInstance().setNetworkConnected(isNetworkOk);

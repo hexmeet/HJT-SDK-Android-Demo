@@ -90,7 +90,7 @@ public class FullscreenActivity extends Activity {
 
     protected void stopRinging() {
         if (mRingerPlayer != null) {
-            LOG.info("stopRinging()");
+            LOG.info(" stopRinging() ");
             mRingerPlayer.stop();
             mRingerPlayer.release();
             mRingerPlayer = null;

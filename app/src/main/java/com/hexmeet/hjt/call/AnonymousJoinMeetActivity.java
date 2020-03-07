@@ -47,7 +47,7 @@ public class AnonymousJoinMeetActivity extends FullscreenActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        LOG.info("onCreate()");
         EventBus.getDefault().register(this);
         param = SystemCache.getInstance().getJoinMeetingParam();
 
@@ -97,14 +97,14 @@ public class AnonymousJoinMeetActivity extends FullscreenActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        LOG.info("onStop() ");
+        LOG.info("onStop()");
         stopRinging();
         pulseView.finishPulse();
     }
 
     @Override
     protected void onDestroy() {
-        LOG.info("onDestroy() ");
+        LOG.info("onDestroy()");
         if(dialog != null && !dialog.isShowing()) {
             dialog.dismiss();
         }

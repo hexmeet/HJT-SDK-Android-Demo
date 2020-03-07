@@ -81,6 +81,8 @@
             android:text="@string/tab_me"
             android:textColor="#999999"
             android:textSize="10sp" />
+
+
     </LinearLayout>
 
     <RelativeLayout
@@ -90,13 +92,42 @@
         android:layout_above="@id/tabs_row"
         android:background="#e1e1e1"
         android:orientation="horizontal" />
-
     <FrameLayout
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="53dp">
     </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/network_anomaly"
+        android:layout_marginTop="48dp"
+        android:background="@color/network_status_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/network_status"
+            android:src="@drawable/image_warning"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginRight="10dp"
+            />
+
+        <TextView
+            android:layout_centerHorizontal="true"
+            android:id="@+id/network_status"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="@string/network_exception"
+            android:textColor="@color/network_status_text"
+            android:textSize="13sp" />
+    </RelativeLayout>
+
+
 
     <ImageView
         android:id="@+id/upgrade_hint"

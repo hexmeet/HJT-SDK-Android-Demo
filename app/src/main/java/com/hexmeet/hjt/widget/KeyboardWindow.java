@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
@@ -17,14 +16,14 @@ import org.apache.log4j.Logger;
 import java.lang.reflect.Method;
 
 @SuppressLint("AppCompatCustomView")
-public class KeyboardWindow  extends EditText{
+public class KeyboardWindow extends EditText{
     private Logger LOG = Logger.getLogger(this.getClass());
     private View anchorView;
     private EditText editText;
-    private int[] commonButtonIds = new int[]{R.id.zero,R.id.one, R.id.two, R.id.three, R.id.four,
+    private int[] commonButtonIds = new int[]{R.id.zero, R.id.one, R.id.two, R.id.three, R.id.four,
            R.id.five, R.id.six, R.id.seven, R.id.eight, R.id.nine};
 
-    public KeyboardWindow(Context context,View anchorView, EditText editText) {
+    public KeyboardWindow(Context context, View anchorView, EditText editText) {
         super(context);
         KeyboardWindow(anchorView,editText);
     }
@@ -73,7 +72,7 @@ public class KeyboardWindow  extends EditText{
         //①给数字键设置点击监听
         for (int i = 0; i < commonButtonIds.length; i++) {
             final Button button = view.findViewById(commonButtonIds[i]);
-            button.setOnClickListener(new View.OnClickListener() {
+            button.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int curSelection = editText.getSelectionStart();
@@ -91,7 +90,7 @@ public class KeyboardWindow  extends EditText{
         }
 
         //②给*按键设置点击监听
-        view.findViewById(R.id.buttonDot).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.buttonDot).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 int curSelection = editText.getSelectionStart();
@@ -108,7 +107,7 @@ public class KeyboardWindow  extends EditText{
         });
 
         //③给叉按键设置点击监听
-        view.findViewById(R.id.buttonCross).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.buttonCross).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 int length = editText.getText().toString().length();
@@ -121,7 +120,7 @@ public class KeyboardWindow  extends EditText{
             }
         });
         //长按删除时间
-        view.findViewById(R.id.buttonCross).setOnLongClickListener(new View.OnLongClickListener() {
+        view.findViewById(R.id.buttonCross).setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 editText.setText("");

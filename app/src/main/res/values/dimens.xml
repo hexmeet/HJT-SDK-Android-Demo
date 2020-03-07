@@ -103,4 +103,5 @@
     <dimen name="qr_code_wh">240dp</dimen>
     <dimen name="me_icon_wh">20dp</dimen>
     <dimen name="text_size" >16sp</dimen>
+    <dimen name="feedback_font_size">18sp</dimen>
 </resources>

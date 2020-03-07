@@ -182,7 +182,7 @@ public class StateUtil {
             StateUtil.setStatusBar(activity,true,false);
             StateUtil.setStatusTextColor(true,activity);
         }else {
-            StateAppBar.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.white));
+          //  StateAppBar.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.white));
             //状态栏亮色模式，设置状态栏黑色文字、图标
             StatusBarUtils.StatusBarLightMode(activity);
         }

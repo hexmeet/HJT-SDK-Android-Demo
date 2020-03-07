@@ -20,21 +20,21 @@ import com.hexmeet.hjt.me.ServiceTermsActivity;
 
 import androidx.annotation.NonNull;
 
-public class AlertDialogUtil extends Dialog {
+public class PrivacyPolicyDialogUtil extends Dialog {
 
-    public AlertDialogUtil(Context context, int theme) {
+    public PrivacyPolicyDialogUtil(Context context, int theme) {
         super(context, theme);
     }
 
     public static class Builder {
         private View layout;
-        private AlertDialogUtil dialog;
+        private PrivacyPolicyDialogUtil dialog;
         private View.OnClickListener positiveButtonClickListener;
         private View.OnClickListener negativeButtonClickListener;
         ForegroundColorSpan colorSpan;
 
         public Builder(final Context context) {
-            dialog = new AlertDialogUtil(context, R.style.dialog);
+            dialog = new PrivacyPolicyDialogUtil(context, R.style.dialog);
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             layout = inflater.inflate(R.layout.alertdialog_show_privacy, null);
             TextView title = (TextView) layout.findViewById(R.id.title_dialog);
@@ -84,7 +84,7 @@ public class AlertDialogUtil extends Dialog {
             sb.setSpan(colorSpan,63,69, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             content_one.setText(sb);
-            content_one.setMovementMethod(LinkMovementMethod.getInstance());
+            content_one.setMovementMethod(LinkMovementMethod.getInstance());//必须添加 不然文字点击不生效
             content_one.setHighlightColor(Color.TRANSPARENT);//点击文字设置透明
             dialog.setContentView(layout);
             dialog.setCancelable(false);
@@ -103,7 +103,7 @@ public class AlertDialogUtil extends Dialog {
             return this;
         }
 
-        public AlertDialogUtil createTwoButtonDialog() {
+        public PrivacyPolicyDialogUtil createTwoButtonDialog() {
             layout.findViewById(R.id.dialog_ok).setOnClickListener(positiveButtonClickListener);
             layout.findViewById(R.id.dialog_cancel).setOnClickListener(negativeButtonClickListener);
             return dialog;

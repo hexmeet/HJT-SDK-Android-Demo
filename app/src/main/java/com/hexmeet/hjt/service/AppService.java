@@ -8,15 +8,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.projection.MediaProjection;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
+import android.view.Display;
 import android.view.SurfaceView;
 
 import com.alibaba.sdk.android.push.CommonCallback;
@@ -26,7 +29,6 @@ import com.hexmeet.hjt.AppSettings;
 import com.hexmeet.hjt.CallState;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.RegisterState;
-import com.hexmeet.hjt.TagAliasOperatorHelper;
 import com.hexmeet.hjt.cache.EmMessageCache;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.event.CallEvent;
@@ -274,7 +276,6 @@ public class AppService extends Service {
         sdkManager.setMicMute(mute);
     }
 
-
     public void muteVideo(boolean video) {
         sdkManager.enableVideo(video);
     }
@@ -306,6 +307,7 @@ public class AppService extends Service {
     }
 
     public void endCall() {
+        LOG.info("endCall()");
         mSdkHandler.sendEmptyMessage(SdkHandler.HANDLER_SDK_DROP_CALL);
     }
     public void switchCamera() {
@@ -450,7 +452,6 @@ public class AppService extends Service {
         if(event.getCode() == LoginResultEvent.LOGIN_SUCCESS){
             String username = SystemCache.getInstance().getLoginResponse().getUsername();
             String telephone = SystemCache.getInstance().getLoginResponse().getCellphone();
-            TagAliasOperatorHelper.setAlias(getApplicationContext(),username,true);
             PushServiceFactory.getCloudPushService().bindAccount(username+"__"+telephone, new CommonCallback() {
                 @Override
                 public void onSuccess(String s) {
@@ -708,6 +709,24 @@ public class AppService extends Service {
 
     public  EVEngine.ContactInfo getImageUrl(String userId){
        return   sdkManager.getIMContactInfo(userId);
+    }
+
+    public void startScreenShare(Context context,MediaProjection smediaProjection, Display display, Handler mhandler) {
+       sdkManager.setScreenShare(context,smediaProjection,display,mhandler);
+    }
+
+    public void stopShare(){
+        /*Message msg = Message.obtain(mSdkHandler);
+        msg.what = SdkHandler.HANDLER_SDK_STOP_SCREENSHARE;
+        msg.sendToTarget();*/
+        sdkManager.stopScreenShare();
+    }
+
+    public void setDirection(boolean direction){
+        Message message = Message.obtain();
+        message.what = SdkHandler.HANDLER_SDK_SCREEN_DIRECTION;
+        message.arg1 = direction ? 1 : 0;
+        mSdkHandler.sendMessage(message);
     }
 
 }
