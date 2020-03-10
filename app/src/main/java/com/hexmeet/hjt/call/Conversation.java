@@ -644,6 +644,7 @@ public class Conversation extends FullscreenActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSvcSpeakerChangedEvent(SvcSpeakerEvent event) {
         svcHandler.removeMessages(ON_SVC_SPEAKER_CHANGED);
+        LOG.info("onSvcSpeakerChangedEvent : "+event.toString());
         showSpeakName(event.getIndex(),event.getSiteName());
         Message msg = Message.obtain();
         msg.what = ON_SVC_SPEAKER_CHANGED;
@@ -665,6 +666,7 @@ public class Conversation extends FullscreenActivity {
     }
 
     private void setSpeakName(String name) {
+        LOG.info("setSpeakName : "+name);
         audioSpeakName.setVisibility(View.VISIBLE);
         audioSpeakName.setText(name+"  "+getString(R.string.speaking));
     }
