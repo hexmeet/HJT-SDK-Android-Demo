@@ -206,10 +206,11 @@ public class RemoteBox extends RelativeLayout {
 
         int siteIcon = R.drawable.icon_local_mute_small;
 
-        int indexInArray = !TextUtils.isEmpty(svcLayoutInfo.getSpeakerName()) ? svcLayoutInfo.getSvcSuit().indexOf(svcLayoutInfo.getSpeakerName()) : -1;
+       /* int indexInArray = !TextUtils.isEmpty(svcLayoutInfo.getSpeakerName()) ? svcLayoutInfo.getSvcSuit().indexOf(svcLayoutInfo.getSpeakerName()) : -1;
         speakerIndex = speakerMode ? 0 : (indexInArray == -1 ? -1 : svcLayoutInfo.getWindowIdx().get(indexInArray));
-
-        LOG.info("Speaker? [" + speakerMode + "], speakerIndex: " + speakerIndex + " speakerName: " + svcLayoutInfo.getSpeakerName());
+      */
+        speakerIndex = svcLayoutInfo.getSpeakerIndex();
+        LOG.info("Speaker? [" + speakerMode + "], speakerIndex  : " + speakerIndex + " speakerName: " + svcLayoutInfo.getSpeakerName());
 
         if (count == 1 || speakerMode) {
             layoutSurface(svcLayoutInfo.getWindowIdx().get(0), width, height, 0, 0);
@@ -324,8 +325,9 @@ public class RemoteBox extends RelativeLayout {
 
     public void updateSpeaker(int index, String speaker) {
         int indexInArray = !TextUtils.isEmpty(speaker) && svcLayoutInfo != null ? svcLayoutInfo.getSvcSuit().indexOf(speaker) : -1;
-        speakerIndex = indexInArray == -1 ? -1 : svcLayoutInfo.getWindowIdx().get(indexInArray);
-        if (svcLayoutInfo != null) {
+       // speakerIndex = indexInArray == -1 ? -1 : svcLayoutInfo.getWindowIdx().get(indexInArray);
+        speakerIndex = index;
+        if (svcLayoutInfo != null && speakerIndex == -1) {
             svcLayoutInfo.setSpeakerName(speaker);
         }
         LOG.info("Update SVC speaker index: [" + speakerIndex + "]");
