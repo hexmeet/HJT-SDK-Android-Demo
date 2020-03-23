@@ -31,6 +31,7 @@ import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.call.P2pCallActivity;
 import com.hexmeet.hjt.event.CallEvent;
+import com.hexmeet.hjt.event.UserInfoEvent;
 import com.hexmeet.hjt.model.RestLoginResp;
 import com.hexmeet.hjt.sdk.Peer;
 import com.hexmeet.hjt.utils.JsonUtil;
@@ -192,9 +193,6 @@ public class ContactsFrag extends Fragment {
         @JavascriptInterface
         public void p2pCall(String json){
             LOG.info("JavaScript: p2pCall <"+json+">");
-           /* if(hexMeet != null) {
-                hexMeet.showCallIncomingWindow(json);
-            }*/
             meetingP2p(json);
 
         }
@@ -214,10 +212,17 @@ public class ContactsFrag extends Fragment {
         }
 
         @JavascriptInterface
+        public void clearCache(){
+            LOG.info("JavaScript: clearCache() ");
+            clearWebview();
+            loadConference();
+        }
+
+        @JavascriptInterface
         public void tokenExpired(){
             LOG.info("JavaScript: tokenExpired");
             if(!SystemCache.getInstance().isAnonymousMakeCall() && isResumed()) {
-                HjtApp.getInstance().getAppService().loginInLoop(true);
+                HjtApp.getInstance().getAppService().getUserInfo();
             } else {
                 tokenExpired = true;
             }
@@ -226,7 +231,7 @@ public class ContactsFrag extends Fragment {
 
         @JavascriptInterface
         public void webLog(String json){
-            LOG.info("weblog : "+json);
+            LOG.info("JavaScript: weblog : "+json);
         }
 
     }
@@ -273,6 +278,13 @@ public class ContactsFrag extends Fragment {
 
     }
 
+    private void clearWebview() {
+        if(mContactsWeb!=null) {
+            mContactsWeb.clearHistory();
+            mContactsWeb.clearCache(true);
+        }
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -292,7 +304,7 @@ public class ContactsFrag extends Fragment {
         mContactsWeb.onResume();
         mContactsWeb.resumeTimers();
         if(tokenExpired) {
-            HjtApp.getInstance().getAppService().loginInLoop(true);
+            HjtApp.getInstance().getAppService().getUserInfo();
         } else {
             loadConference();
         }
@@ -307,10 +319,8 @@ public class ContactsFrag extends Fragment {
 
     @Override
     public void onDestroy() {
+        LOG.info("onDestroy()");
         if(mContactsWeb!=null) {
-            mContactsWeb.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
-            mContactsWeb.clearHistory();
-            mContactsWeb.clearCache(true);
             mContactsWeb.removeAllViews();
             mContactsWeb.destroy();
         }
@@ -347,7 +357,6 @@ public class ContactsFrag extends Fragment {
     }
 
     public void updateTokenForWeb() {
-        //LOG.error("JavaScript: updateToken error : url not load finished-------------222----------------");
         if(tokenExpired) {
             tokenExpired = false;
             loadConference();
@@ -376,6 +385,7 @@ public class ContactsFrag extends Fragment {
                         LOG.info("JavaScript: new token,return value: "+value);
                     }
                 });
+                loadConference();
             }
         });
     }
@@ -406,6 +416,13 @@ public class ContactsFrag extends Fragment {
             return true;
         } else {
             return false;
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLoginRespEvent(UserInfoEvent event) {
+        if(event!=null){
+            updateTokenForWeb();
         }
     }
 }

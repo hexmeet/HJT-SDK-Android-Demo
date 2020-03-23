@@ -108,18 +108,16 @@
                 android:background="@drawable/bg_input_box"
                 android:gravity="center"
                 android:maxLines="1"
-                android:maxLength="24"
+                android:maxLength="32"
                 android:singleLine="true"
-                android:hint="@string/join_meeting_id"
+                android:hint="@string/input_call_number_tips"
                 android:padding="10dp"
                 android:textColor="@color/font_color_313131"
                 android:textColorHint="@color/hexmeet_light_gray"
                 android:textSize="18sp"
                 android:visibility="gone"
                 android:drawableRight="@drawable/select_drop_down"
-                whatever:emptyErrorString="@string/error_empty"
-                whatever:testErrorString="@string/error_form"
-                whatever:testType="alphaNumeric" />
+                whatever:emptyErrorString="@string/error_empty" />
 
             <com.andreabaccega.widget.FormEditText
                 android:id="@+id/login_conf_name"

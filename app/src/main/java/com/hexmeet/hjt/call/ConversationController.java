@@ -36,11 +36,12 @@ public class ConversationController implements View.OnClickListener{
     private boolean barShowing = true;
     private IController iController;
     private int screenWidthWithoutNavigationBar;
-    private LinearLayout videoSwitchBtn, videoSwitchIndicator;
+    private LinearLayout videoSwitchBtn;
     private ViewGroup moreDetail;
     private final LinearLayout layoutChatBtn;
     private final TextView handUp;
     private final ViewGroup shareBtn;
+    private final TextView updateUserName;
 
     public interface IController{
         void updateCellsAsLayoutModeChanged();
@@ -55,6 +56,7 @@ public class ConversationController implements View.OnClickListener{
         void changeUserName();
         void onClickShareScreen();
         void onNoChangeLayout();
+        void onHangUp();
     }
 
     public ConversationController(View rootView, final IController iController, int width) {
@@ -75,6 +77,7 @@ public class ConversationController implements View.OnClickListener{
         moreDetail = (ViewGroup) rootView.findViewById(R.id.more_detail);
         layoutChatBtn = (LinearLayout) rootView.findViewById(R.id.toolbar_layout_chat);
         handUp = (TextView) rootView.findViewById(R.id.hand_up);
+        updateUserName = (TextView) rootView.findViewById(R.id.update_user_name);
         shareBtn = (ViewGroup) rootView.findViewById(R.id.toolbar_layout_share);
         shareBtn.setVisibility(SystemCache.getInstance().isVisibilitySharedScreen() ? View.VISIBLE : View.GONE );
 
@@ -94,11 +97,12 @@ public class ConversationController implements View.OnClickListener{
         layoutChatBtn.setOnClickListener(this);
         moreBtn.setOnClickListener(this);
         shareBtn.setOnClickListener(this);
+        updateUserName.setOnClickListener(this);
 
         moreDetail.getChildAt(0).setOnClickListener(this);
         moreDetail.getChildAt(1).setOnClickListener(this);
         moreDetail.getChildAt(2).setOnClickListener(this);
-        moreDetail.getChildAt(3).setOnClickListener(this);
+        //moreDetail.getChildAt(3).setOnClickListener(this);
         updateHandUpMenu(SystemCache.getInstance().isRemoteMuted());
         moreBtn.setOnClickListener(this);
 
@@ -108,7 +112,6 @@ public class ConversationController implements View.OnClickListener{
         peopleNumber=(TextView)rootView.findViewById(R.id.people_number);
 
         videoSwitchBtn = (LinearLayout) rootView.findViewById(R.id.video_content_switch);
-        videoSwitchIndicator = (LinearLayout) rootView.findViewById(R.id.switch_indicator);
 
         videoSwitchBtn.setOnClickListener(this);
 
@@ -122,11 +125,12 @@ public class ConversationController implements View.OnClickListener{
 
         showLocalCamera(SystemCache.getInstance().isUserShowLocalCamera());
         //是否支持会话、音频模式
-        FeatureSupport featureSupport = SystemCache.getInstance().getLoginResponse().getFeatureSupport();
+        FeatureSupport featureSupport = SystemCache.getInstance().getFeatureSupport();
         if(featureSupport!=null){
             layoutChatBtn.setVisibility(featureSupport.isChatInConference() &&  EmMessageCache.getInstance().isIMAddress() ? View.VISIBLE : View.GONE);
             ((TextView)moreDetail.getChildAt(2)).setVisibility(featureSupport.isSwitchingToAudioConference() ? View.VISIBLE : View.GONE);
-            ((TextView)moreDetail.getChildAt(3)).setVisibility(featureSupport.isSitenameIsChangeable() ? View.VISIBLE : View.GONE);
+            //((TextView)moreDetail.getChildAt(3)).setVisibility(featureSupport.isSitenameIsChangeable() ? View.VISIBLE : View.GONE);
+            updateUserName.setVisibility(featureSupport.isSitenameIsChangeable() ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -138,7 +142,7 @@ public class ConversationController implements View.OnClickListener{
         handUp.setVisibility(remoteMute ? View.VISIBLE : View.GONE );
        if(!SystemCache.getInstance().isUserVideoMode() && remoteMute && moreBtn.getVisibility()==View.GONE){
             moreBtn.setVisibility(View.VISIBLE);
-        }else if(!SystemCache.getInstance().isUserVideoMode() && !remoteMute && moreBtn.getVisibility()==View.VISIBLE){
+        }else if(!SystemCache.getInstance().isUserVideoMode() && !remoteMute && updateUserName.getVisibility()==View.GONE && moreBtn.getVisibility()==View.VISIBLE){
             moreBtn.setVisibility(View.GONE);
         }
     }
@@ -161,18 +165,22 @@ public class ConversationController implements View.OnClickListener{
         hangUpBtn.setLayoutParams(lp);
     }
 
+
     public void muteMic(boolean mute) {
         LOG.info("muteMic icon: "+mute);
         micMuteBtn.getChildAt(0).setSelected(mute);
         TextView title = (TextView) micMuteBtn.getChildAt(1);
+        title.setTextColor(mute ? rootView.getResources().getColor(R.color.text_color):rootView.getResources().getColor(R.color.White));
         title.setText(mute ? R.string.unmute :  R.string.mute);
         iController.updateCellLocalMuteState(mute);
     }
 
+    @SuppressLint("ResourceAsColor")
     public void muteVideo(boolean mute) {
         LOG.info("muteVideo : "+mute);
         localVideoBtn.getChildAt(0).setSelected(mute);
         TextView title = (TextView) localVideoBtn.getChildAt(1);
+        title.setTextColor(mute ? rootView.getResources().getColor(R.color.text_color):rootView.getResources().getColor(R.color.White));
         title.setText(mute ? R.string.enable_video : R.string.stop_video);
     }
 
@@ -224,7 +232,7 @@ public class ConversationController implements View.OnClickListener{
         switch (v.getId()) {
             case R.id.toolbar_hangup:
                 LOG.info("End call as click HangUp");
-                HjtApp.getInstance().getAppService().endCall();
+                iController.onHangUp();
                 break;
             case R.id.hand_up:
                 if(SystemCache.getInstance().isRemoteMuted()) {
@@ -300,6 +308,7 @@ public class ConversationController implements View.OnClickListener{
     }
 
     public void showVideoMode(boolean isVideoMode) {//切换  语音  flase /视频  true
+        LOG.info("showVideoMode : "+isVideoMode);
         ((TextView)moreDetail.getChildAt(2)).setVisibility(isVideoMode ?View.VISIBLE : View.GONE);
         iController.switchVoiceMode(isVideoMode);
         iController.showLocalCamera(isVideoMode);
@@ -315,7 +324,7 @@ public class ConversationController implements View.OnClickListener{
             HjtApp.getInstance().getAppService().enableVideo(false);
         }
         //判断申请发言是否开启，如果没开启隐藏 ，开启则显示
-        if(!isVideoMode && handUp.getVisibility()==View.GONE){
+        if(!isVideoMode && handUp.getVisibility()==View.GONE && updateUserName.getVisibility()==View.GONE){
             moreBtn.setVisibility(View.GONE);
         }else {
             moreBtn.setVisibility(View.VISIBLE);
@@ -348,9 +357,6 @@ public class ConversationController implements View.OnClickListener{
             if(videoSwitchBtn.getVisibility() == View.VISIBLE) {
                 adjustSwitcherLayout(false);
             }
-            if(videoSwitchIndicator.getVisibility() == View.VISIBLE) {
-                adjustSwitcherIndicator(false);
-            }
             iController.updateMarginTopForMessageOverlay(titleBar.getHeight());
             handler.sendEmptyMessageDelayed(0, 10000);
         }
@@ -366,16 +372,6 @@ public class ConversationController implements View.OnClickListener{
         videoSwitchBtn.setLayoutParams(lp);
     }
 
-    private void adjustSwitcherIndicator(boolean isBottom) {
-        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) videoSwitchIndicator.getLayoutParams();
-        if(isBottom) {
-            lp.bottomMargin = ScreenUtil.dp_to_px(10);
-        } else {
-            lp.bottomMargin = (ScreenUtil.dp_to_px(10) + bottomBar.getHeight());
-        }
-        videoSwitchIndicator.setLayoutParams(lp);
-    }
-
     public void hideBar() {
         if(moreDetail.getVisibility() == View.VISIBLE) {
             moreDetail.setVisibility(View.GONE);
@@ -388,9 +384,6 @@ public class ConversationController implements View.OnClickListener{
             barShowing = false;
             if(videoSwitchBtn.getVisibility() == View.VISIBLE) {
                 adjustSwitcherLayout(true);
-            }
-            if(videoSwitchIndicator.getVisibility() == View.VISIBLE) {
-                adjustSwitcherIndicator(true);
             }
             iController.updateMarginTopForMessageOverlay(0);
         }
@@ -428,19 +421,15 @@ public class ConversationController implements View.OnClickListener{
     public void showSwitchAsContent(boolean withContent) {
         if(withContent) {
             videoSwitchBtn.setVisibility(View.VISIBLE);
-            videoSwitchIndicator.setVisibility(View.VISIBLE);
             ((TextView)videoSwitchBtn.getChildAt(0)).setText(R.string.content);
             onContentShow();
             if(barShowing) {
                 adjustSwitcherLayout(false);
-                adjustSwitcherIndicator(false);
             } else {
                 adjustSwitcherLayout(true);
-                adjustSwitcherIndicator(true);
             }
         } else {
             videoSwitchBtn.setVisibility(View.INVISIBLE);
-            videoSwitchIndicator.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -448,18 +437,12 @@ public class ConversationController implements View.OnClickListener{
         videoSwitchBtn.setSelected(true);
         videoSwitchBtn.getChildAt(0).setSelected(true);
         videoSwitchBtn.getChildAt(1).setSelected(false);
-
-        videoSwitchIndicator.getChildAt(0).setSelected(true);
-        videoSwitchIndicator.getChildAt(1).setSelected(false);
     }
 
     public void onVideoShow() {
         videoSwitchBtn.setSelected(false);
         videoSwitchBtn.getChildAt(0).setSelected(false);
         videoSwitchBtn.getChildAt(1).setSelected(true);
-
-        videoSwitchIndicator.getChildAt(0).setSelected(false);
-        videoSwitchIndicator.getChildAt(1).setSelected(true);
     }
 
     @SuppressLint("HandlerLeak")

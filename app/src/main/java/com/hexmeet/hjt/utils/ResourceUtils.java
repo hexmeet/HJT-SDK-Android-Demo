@@ -22,6 +22,7 @@ public class ResourceUtils {
 
     private static ResourceUtils instance = null;
     public static final int CALL_ERROR = 0;
+    public static final int CALL_ERROR_8 = 8;
     public static final int CALL_ERROR_9 = 9;
     public static final int CALL_ERROR_1001 = 1001;
     public static final int CALL_ERROR_1 = 1;
@@ -40,6 +41,7 @@ public class ResourceUtils {
     public static final int CALL_ERROR_4055 = 4055;
     public static final int CALL_ERROR_4051 = 4051;
     public static final int CALL_ERROR_4049 = 4049;
+    public static final int CALL_ERROR_4057 = 4057;
 
     public static final int CALL_ERROR_SDK_101 = 101;
     public static final int CALL_ERROR_SDK_10 = 10;
@@ -147,11 +149,17 @@ public class ResourceUtils {
             return HjtApp.getInstance().getString(R.string.call_error_sdk_10);
         }else if(code == CALL_ERROR_SDK_14){
             return HjtApp.getInstance().getString(R.string.call_error_sdk_14);
-        }else if(code == CALL_ERROR || code == CALL_ERROR_9){
+        }else if(code == CALL_ERROR){
             return null;
+        }else if(code == CALL_ERROR_8){
+            return HjtApp.getInstance().getString(R.string.call_error_sdk_8);
+        }else if(code == CALL_ERROR_9){
+            return HjtApp.getInstance().getString(R.string.call_error_sdk_9);
         }else if(code == CALL_ERROR_1){
             return HjtApp.getInstance().getString(R.string.server_unavailable);
-        } else {
+        } else if(code == CALL_ERROR_4057){
+            return HjtApp.getInstance().getString(R.string.call_error_4057);
+        }else {
             /*int startIndex = message.indexOf("[");
             if(startIndex >= 0) {
                 int endIndex = message.indexOf("]");

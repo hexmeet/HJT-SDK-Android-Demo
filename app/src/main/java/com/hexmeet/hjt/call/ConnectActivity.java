@@ -91,6 +91,7 @@ public class ConnectActivity extends FullscreenActivity {
     protected void onDestroy() {
         LOG.info("onDestroy()");
         if(dialog != null && !dialog.isShowing()) {
+            dialog.clean();
             dialog.dismiss();
         }
         handler.removeCallbacksAndMessages(null);

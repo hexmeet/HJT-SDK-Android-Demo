@@ -241,7 +241,11 @@
         </service>
 
         <service android:name=".service.MeetingWindowService"
-            android:enabled="true"/>
+            android:enabled="true">
+            <intent-filter android:priority="1000" >
+                <action android:name="com.hexmeet.hjt.service.MeetingWindowService" />
+            </intent-filter>
+        </service>
 
         <service android:name=".service.ScreenCaptureService"
             android:foregroundServiceType="mediaProjection"

@@ -164,7 +164,7 @@
     <string name="join">加入</string>
     <string name="login_private">私有部署登录</string>
 
-    <string name="join_meeting_id">输入会议ID</string>
+    <string name="join_meeting_id">输入会议ID(加*密码)</string>
     <string name="join_meeting_name">会议中显示的用户名</string>
 
     <string name="error_empty">输入不能为空</string>
@@ -225,11 +225,15 @@
     <string name="call_error_4051">对方不在线</string>
     <string name="call_error_4055">加入失败,会议已锁定</string>
     <string name="call_error_4049">呼叫失败，对方正在通话中</string>
+    <string name="call_error_4057">该会议室已被占用</string>
     <string name="call_again">入会失败,请重试</string>
 
     <string name="call_error_sdk_101">对方已挂断</string>
     <string name="call_error_sdk_10">呼叫失败，对方忙</string>
     <string name="call_error_sdk_14">呼叫超时，对方未接听</string>
+    <string name="call_error_sdk_8">服务器不可达</string>
+    <string name="call_error_sdk_9">无效服务器</string>
+
     <string name="meeting_progress">会议正在进行中</string>
     <string name="meeting_run">正在运行</string>
     <string name="displayname_max_length">会议中显示的用户名的长度不能超过16</string>
@@ -296,4 +300,5 @@
     <string name="open_share">共享屏幕功能已打开</string>
     <string name="network_exception">网络异常，请检查网络</string>
     <string name="end_of_meeting">会议结束或被主持人挂断</string>
+    <string name="leave_meeting">您确定离开该会议？</string>
 </resources>

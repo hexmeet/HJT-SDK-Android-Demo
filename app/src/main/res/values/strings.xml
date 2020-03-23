@@ -165,7 +165,7 @@
     <string name="login_private">Private Cloud Login</string>
 
     <string name="join">Join</string>
-    <string name="join_meeting_id">Meeting ID</string>
+    <string name="join_meeting_id">Meeting ID(plus *password)</string>
     <string name="join_meeting_name">Username in meeting</string>
 
     <string name="error_empty">Can not be empty</string>
@@ -226,10 +226,14 @@
     <string name="call_error_4051">The other party is not online.</string>
     <string name="call_error_4055">Join failed, conference is locked.</string>
     <string name="call_error_4049">Call failed due to the party is in call.</string>
+    <string name="call_error_4057">The meeting room is being used.</string>
 
     <string name="call_error_sdk_101">The other party has hung up.</string>
     <string name="call_error_sdk_10">Call failed due to the party is busy.</string>
     <string name="call_error_sdk_14">Call timeout, the party has not answer.</string>
+    <string name="call_error_sdk_8">Server unreachable.</string>
+    <string name="call_error_sdk_9">Invalid server.</string>
+
     <string name="call_again">Join failed, please retry.</string>
     <string name="meeting_progress">The meeting is in progress.</string>
     <string name="meeting_run">Running</string>
@@ -298,4 +302,6 @@
     <string name="open_share">共享屏幕功能已打开</string>
     <string name="network_exception">Network unavailable. Please check and try again.</string>
     <string name="end_of_meeting">Meeting ended or terminated by meeting host.</string>
+    <string name="leave_meeting">Are you sure to leave the meeting?</string>
+    <string name="username_character">The username can not contain %1$s</string>
 </resources>

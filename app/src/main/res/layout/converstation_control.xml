@@ -370,27 +370,4 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/switch_indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:orientation="horizontal"
-        android:padding="10dp"
-        android:visibility="invisible">
-
-        <View
-            android:layout_width="25dp"
-            android:layout_height="6dp"
-            android:background="@drawable/bg_content_switch_indicator" />
-
-        <View
-            android:layout_width="25dp"
-            android:layout_height="6dp"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/bg_content_switch_indicator" />
-    </LinearLayout>
-
-
 </RelativeLayout>

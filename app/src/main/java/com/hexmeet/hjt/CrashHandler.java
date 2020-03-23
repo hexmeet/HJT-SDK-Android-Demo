@@ -42,6 +42,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
     @SuppressWarnings("static-access")
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
+        log.info("Throwable : "+ex);
         if (isOOM(ex)) {
             SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss");
             String date = sDateFormat.format(new Date());
@@ -55,16 +56,17 @@ public class CrashHandler implements UncaughtExceptionHandler {
 
         saveInfoToSD(HjtApp.getInstance().getContext(), ex);
         //Utils.showToastInNewThread(HjtApp.getInstance().getContext(), HjtApp.getInstance().getResources().getString(R.string.caught_exception_then_exit));
-        Intent intent = new Intent(HjtApp.getInstance().getContext(),SplashActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        HjtApp.getInstance().getContext().startActivity(intent);
         try {
-            thread.sleep(500);
+            thread.sleep(2000);
         } catch (InterruptedException e) {
             log.error(e.getMessage(), e);
         }
         // android.os.Process.killProcess(android.os.Process.myPid());
         // System.exit(1);
+        HjtApp.getInstance().stopFloatService();
+        Intent intent = new Intent(HjtApp.getInstance().getContext(),SplashActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        HjtApp.getInstance().getContext().startActivity(intent);
 
         System.exit(1);
 

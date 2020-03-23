@@ -1,6 +1,8 @@
 package com.hexmeet.hjt.dial;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -72,6 +74,7 @@ public class DialingFrag extends Fragment {
         recentBtn.setOnClickListener(clickListener);
 
         new KeyboardWindow(getActivity(),root.findViewById(R.id.number_keyboard), callNumber);
+        callNumber.addTextChangedListener(watcher);
         return root;
     }
 
@@ -80,7 +83,7 @@ public class DialingFrag extends Fragment {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.dial_btn:
-                    String number = callNumber.getText().toString();
+                    String number = callNumber.getText().toString().trim();
                     if(validate(number)) {
                         String sipNumberWithoutPassword = number;
                         String password = "";
@@ -195,4 +198,23 @@ public class DialingFrag extends Fragment {
 
         return true;
     }
+
+    private TextWatcher watcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            checkAndCloseRecentView();
+            if (s.length() == 0) {
+                // No entered text so will show hint
+                callNumber.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+            } else {
+                callNumber.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {}
+    };
 }

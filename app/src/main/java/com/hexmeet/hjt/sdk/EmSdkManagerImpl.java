@@ -35,6 +35,7 @@ public class EmSdkManagerImpl implements EmSdkManager{
         engine.setRootCA(path);
         emListenr = new EMListenr();
         engine.addIMEventListener(emListenr);
+
         EmMessageCache.getInstance().initCache();
     }
 
@@ -47,7 +48,7 @@ public class EmSdkManagerImpl implements EmSdkManager{
     @Override
     public void emLogin() {
         LOG.info("Login()");
-        engine.login("172.24.0.63",6060,"basic","bob","bob123");
+       // engine.login("172.24.0.63",6060,"basic","bob","bob123");
     }
 
     @Override
@@ -91,6 +92,11 @@ public class EmSdkManagerImpl implements EmSdkManager{
         engine.logout();
     }
 
+    @Override
+    public String emSdkLog() {
+        return engine.compressLog();
+    }
+
 
     class EMListenr extends EMEventListener {
 
@@ -107,6 +113,7 @@ public class EmSdkManagerImpl implements EmSdkManager{
         @Override
         public void onLoginSucceed() {
             LOG.info("onIMLoginSucceed  ");
+            EmMessageCache.getInstance().setIMAddress(true);
             EventBus.getDefault().post(new EmLoginSuccessEvent(true));
         }
 

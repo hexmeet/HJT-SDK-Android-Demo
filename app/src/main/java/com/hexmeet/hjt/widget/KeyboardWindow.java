@@ -33,7 +33,6 @@ public class KeyboardWindow extends EditText{
         LOG.info("initView");
         this.anchorView = anchorView;
         this.editText = editText;
-        editText.addTextChangedListener(watcher);
         initConfig();
         initView();
     }
@@ -147,28 +146,6 @@ public class KeyboardWindow extends EditText{
             }
 
     }
-
-    private TextWatcher watcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (s.length() == 0) {
-                // No entered text so will show hint
-                editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-            } else {
-                editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
-        }
-    };
 
     @Override
     public boolean onTextContextMenuItem(int id) {

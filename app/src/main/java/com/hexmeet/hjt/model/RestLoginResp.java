@@ -26,15 +26,6 @@ public class RestLoginResp {
     public String token;
     public String doradoVersion;
     public long deviceId;
-    public FeatureSupport featureSupport;
-
-    public FeatureSupport getFeatureSupport() {
-        return featureSupport;
-    }
-
-    public void setFeatureSupport(FeatureSupport featureSupport) {
-        this.featureSupport = featureSupport;
-    }
 
     public long getUserId() {
         return userId;
@@ -143,7 +134,7 @@ public class RestLoginResp {
 
     public RestLoginResp() {}
 
-    public RestLoginResp(long userId, String username, String displayName, String org, String email, String cellphone, String telephone, String dept, boolean everChangedPasswd, String customizedH5UrlPrefix, String token, String doradoVersion, long deviceId, FeatureSupport featureSupport) {
+    public RestLoginResp(long userId, String username, String displayName, String org, String email, String cellphone, String telephone, String dept, boolean everChangedPasswd, String customizedH5UrlPrefix, String token, String doradoVersion, long deviceId) {
         this.userId = userId;
         this.username = username;
         this.displayName = displayName;
@@ -157,7 +148,6 @@ public class RestLoginResp {
         this.token = token;
         this.doradoVersion = doradoVersion;
         this.deviceId = deviceId;
-        this.featureSupport = featureSupport;
     }
 
     @Override
@@ -176,7 +166,6 @@ public class RestLoginResp {
                 ", token='" + token + '\'' +
                 ", doradoVersion='" + doradoVersion + '\'' +
                 ", deviceId=" + deviceId +
-                ", featureSupport=" + featureSupport +
                 '}';
     }
 }

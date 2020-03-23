@@ -1,6 +1,7 @@
 package com.hexmeet.hjt.me;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -171,6 +172,7 @@ public class MeDetailActivity extends BaseActivity {
         super.onStop();
         EventBus.getDefault().unregister(this);
         if(dialog != null) {
+            dialog.clean();
             dialog.dismiss();
         }
     }
@@ -262,6 +264,7 @@ public class MeDetailActivity extends BaseActivity {
         }
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {

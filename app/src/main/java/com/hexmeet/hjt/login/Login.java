@@ -153,6 +153,10 @@ public class Login extends BaseActivity implements LoginFragmentCallback{
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(dialog != null && !dialog.isShowing()) {
+            dialog.clean();
+            dialog.dismiss();
+        }
         loginFragment = null;
         EventBus.getDefault().unregister(this);
     }

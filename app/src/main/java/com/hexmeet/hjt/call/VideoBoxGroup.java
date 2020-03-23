@@ -1,21 +1,28 @@
 package com.hexmeet.hjt.call;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.hexmeet.hjt.HjtApp;
+import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.cache.SystemCache;
+import com.hexmeet.hjt.event.AudioMode;
 import com.hexmeet.hjt.sdk.MessageOverlayInfo;
 import com.hexmeet.hjt.sdk.SvcLayoutInfo;
 import com.hexmeet.hjt.utils.ResourceUtils;
 import com.hexmeet.hjt.widget.MarqueeView;
 
 import org.apache.log4j.Logger;
+import org.greenrobot.eventbus.EventBus;
 
 public class VideoBoxGroup {
     private Logger LOG = Logger.getLogger(this.getClass());
@@ -31,6 +38,8 @@ public class VideoBoxGroup {
     private boolean remoteCellReady = false;
     private MarqueeView message;
     private boolean isContentSurfaceShowing = false;
+    private AudioMessage audioMessage;
+    private RelativeLayout.LayoutParams audioViewPara;
 
     public VideoBoxGroup(RelativeLayout rootView) {
         this.rootView = rootView;
@@ -58,7 +67,24 @@ public class VideoBoxGroup {
         rootView.addView(contentBox.getSurfaceView(), 1, nullPar);
         rootView.addView(remoteBox, 2, fullScreenLayoutPara);
         rootView.addView(localBox.getSurfaceView(), 3, SystemCache.getInstance().isUserShowLocalCamera() && !isContentSurfaceShowing ? localLayoutParaForSvc : nullPar);
+        //本地名称
+        rootView.addView(localBox.getLocalCellInfoView(rootView.getContext()), 4, localBox.getCellInfoLayoutParams());
+        updateLocalMute(localMute);
 
+        //语音模式
+        audioMessage = new AudioMessage(remoteBox.getContext());
+        audioMessage.setListener(new AudioMessage.ButtonOnClickListener() {
+            @Override
+            public void onClickListener() {
+                audioMessage.setVisibility(View.GONE);
+                HjtApp.getInstance().getAppService().setVideoMode(true);
+                EventBus.getDefault().post(AudioMode.video);
+            }
+        });
+        rootView.addView(audioMessage, 5, audioViewPara);
+        updateAudioView(SystemCache.getInstance().isUserVideoMode());
+
+        //字幕
         message = new MarqueeView(rootView.getContext());
         message.setMarquessRepeatedListener(new MarqueeView.MarquessRepeatedListener() {
             @Override
@@ -67,27 +93,10 @@ public class VideoBoxGroup {
                 SystemCache.getInstance().clearOverlayMessage();
             }
         });
-        rootView.addView(message, 4, messagePara);
+        rootView.addView(message, 6, messagePara);
         message.setVisibility(View.GONE);
-
-        rootView.addView(localBox.getLocalCellInfoView(rootView.getContext()), 5, localBox.getCellInfoLayoutParams());
-        updateLocalMute(localMute);
-
     }
 
-    public void newRemote(){
-        LOG.info("NEWREMOTE()");
-        remoteBox = new RemoteBox(rootView.getContext(),false);
-        remoteBox.setSvcListener(new RemoteBox.SvcSurfaceListener() {
-            @Override
-            public void onAllSurfaceReady() {
-                remoteCellReady = true;
-                HjtApp.getInstance().getAppService().setRemoteViewToSdk(remoteBox.getAllSurfaces());
-
-            }
-        });
-        rootView.addView(remoteBox, 2, fullScreenLayoutPara);
-    }
 
     public void updateLocalMute(boolean localMute){
         LOG.info("LOCAL MUTE : "+localMute);
@@ -130,9 +139,11 @@ public class VideoBoxGroup {
         localLayoutParaForSvc.rightMargin = (ResourceUtils.horizontalMargin + ResourceUtils.screenHeight/35);
 
         messagePara = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        audioViewPara = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
     }
 
     public boolean updateSvcLayout(SvcLayoutInfo info) {
+
         LOG.info("VideoBoxGrp: updateSvcLayout remoteCellReady? "+remoteCellReady );
         if(remoteBox != null && remoteCellReady) {
             remoteBox.updateLayout(info);
@@ -250,7 +261,9 @@ public class VideoBoxGroup {
     public boolean updateMessageOverlay(MessageOverlayInfo messageOverlayInfo) {
         if(remoteCellReady && message != null) {
             LOG.info("Update SVC Message overlay -> "+messageOverlayInfo.toString());
-
+            if(!SystemCache.getInstance().isUserVideoMode()){
+                updateAudioView(SystemCache.getInstance().isUserVideoMode());
+            }
             if(messageOverlayInfo != null) {
                 applyMessage(messageOverlayInfo);
             }
@@ -327,5 +340,17 @@ public class VideoBoxGroup {
             return contentBox.onScale(detector);
         }
         return false;
+    }
+
+    public void updateAudioView(boolean isAudioMode) {
+        if(audioMessage!=null){
+            audioMessage.setVisibility(isAudioMode ? View.GONE :  View.VISIBLE );
+            if(!isAudioMode){
+                remoteBox.hideAll();
+                remoteBox.setLayoutParams(nullPar);
+            }else {
+                remoteBox.setLayoutParams(fullScreenLayoutPara);
+            }
+        }
     }
 }

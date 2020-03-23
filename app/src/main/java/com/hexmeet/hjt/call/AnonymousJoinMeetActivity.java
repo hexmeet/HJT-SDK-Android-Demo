@@ -56,13 +56,11 @@ public class AnonymousJoinMeetActivity extends FullscreenActivity {
             return;
         }
 
-        HjtApp.getInstance().getAppService().setUserInLogin(false);
-
         setContentView(R.layout.connect);
         conn_to_text = (TextView) findViewById(R.id.conn_to_text);
         endCallBtn = findViewById(R.id.end_call);
         pulseView = (PulseView)findViewById(R.id.pulse_view);
-
+        HjtApp.getInstance().getAppService().setUserInLogin(false);
         setupEvent();
 
         conn_to_text.setText(param.getConferenceNumber());
@@ -106,6 +104,7 @@ public class AnonymousJoinMeetActivity extends FullscreenActivity {
     protected void onDestroy() {
         LOG.info("onDestroy()");
         if(dialog != null && !dialog.isShowing()) {
+            dialog.clean();
             dialog.dismiss();
         }
         handler.removeCallbacksAndMessages(null);

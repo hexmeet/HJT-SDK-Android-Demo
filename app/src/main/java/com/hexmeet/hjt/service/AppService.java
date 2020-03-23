@@ -116,7 +116,7 @@ public class AppService extends Service {
         LOG.info("onCallStateEvent ："+event.getCallState());
         if(event.getCallState() == CallState.CONNECTED) {
             initAudioMode(true);
-            if(SystemCache.getInstance().getLoginResponse().getFeatureSupport().isChatInConference()){
+            if(SystemCache.getInstance().getFeatureSupport().isChatInConference()){
                 anonymousLoginIM();
             }
         }
@@ -130,9 +130,9 @@ public class AppService extends Service {
         }
 
         if(event.getCallState() == CallState.IDLE){
-            cancelFloatIndicator();
+            //cancelFloatIndicator();
             uninitAudioMode(true);
-            if(SystemCache.getInstance().getLoginResponse().getFeatureSupport().isChatInConference()){
+            if(SystemCache.getInstance().getFeatureSupport().isChatInConference()){
                 logoutIm();
                 EmMessageCache.getInstance().resetIMCache();
             }
@@ -201,7 +201,7 @@ public class AppService extends Service {
     }
 
     public void cameraDirection(int driection) {
-        Log.i("camear Direction : ",""+driection);
+        LOG.info("camera Direction " + driection);
         Message message = Message.obtain();
         message.what = SdkHandler.HANDLER_SDK_DRECTION;
         message.arg1=driection;
@@ -663,7 +663,7 @@ public class AppService extends Service {
         IMLoginParams params = new IMLoginParams();
         params.setServer(server);
         params.setPort(Integer.parseInt(port));
-        params.setDisplayName(loginResponse.getDisplayName());
+        params.setDisplayName(HjtApp.getInstance().getAppService().getDisplayName());
         params.setUserId(String.valueOf(loginResponse.getUserId()));
 
         Message msg = Message.obtain();
@@ -727,6 +727,10 @@ public class AppService extends Service {
         message.what = SdkHandler.HANDLER_SDK_SCREEN_DIRECTION;
         message.arg1 = direction ? 1 : 0;
         mSdkHandler.sendMessage(message);
+    }
+
+    public String getEmSdkLog(){
+        return emSdkMeanager.emSdkLog();
     }
 
 }

@@ -41,9 +41,11 @@ import com.hexmeet.hjt.FullscreenActivity;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.RegisterState;
+import com.hexmeet.hjt.cache.EmMessageCache;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.conf.MeetingForWechat;
 import com.hexmeet.hjt.conf.WeChat;
+import com.hexmeet.hjt.event.AudioMode;
 import com.hexmeet.hjt.event.CallEvent;
 import com.hexmeet.hjt.event.ContentEvent;
 import com.hexmeet.hjt.event.LiveEvent;
@@ -60,6 +62,7 @@ import com.hexmeet.hjt.event.RemoteMuteEvent;
 import com.hexmeet.hjt.event.RemoteNameEvent;
 import com.hexmeet.hjt.event.RestRequestEvent;
 import com.hexmeet.hjt.event.SvcSpeakerEvent;
+import com.hexmeet.hjt.event.UserInfoEvent;
 import com.hexmeet.hjt.groupchat.GroupChatActivity;
 import com.hexmeet.hjt.sdk.ChannelStatList;
 import com.hexmeet.hjt.sdk.MessageOverlayInfo;
@@ -114,13 +117,11 @@ public class Conversation extends FullscreenActivity {
     private TextView recordView, networkConditionToast;
     private AudioManager audio;
     private TextView audioSpeakName;
-    private RelativeLayout audioMode;
     private TextView microphoneMuted;
-    private Button audioModeBtn;
-    private AlertDialog updateUserNameDialog;
     private MeetingWindowService floatService;
     private MediaProjectionManager mProjectionManager;
     private boolean isCheckResumeEvent = false;//检测是否有双流
+    private boolean isBind = false; //是否绑定服务
 
     @SuppressLint("ResourceType")
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -142,17 +143,11 @@ public class Conversation extends FullscreenActivity {
             isCheckResumeEvent = true;
             resumeEvent();
         }
-        if(SystemCache.getInstance().getPeer()!=null){
-            isVideoCall = SystemCache.getInstance().getPeer().isVideoCall();
-        }
 
         startTime = SystemCache.getInstance().getStartTime();
         recordView = (TextView)findViewById(R.id.record_view);
         networkConditionToast = (TextView)findViewById(R.id.network_condition_toast);
-        audioMode = (RelativeLayout)findViewById(R.id.out_audio_mode);
-        audioModeBtn = (Button) findViewById(R.id.audio_mode_btn);
         microphoneMuted = (TextView) findViewById(R.id.mute_speaking);
-        audioModeBtn.setOnClickListener(clickListener);
 
 
         audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -165,10 +160,12 @@ public class Conversation extends FullscreenActivity {
         controller = new ConversationController(findViewById(R.id.control_layout), iController, getScreenWidth());
         initGesture();
         controller.startTime(startTime);
-        if(SystemCache.getInstance().getPeer().getName()!=null){
-            controller.setRoomNum(SystemCache.getInstance().getPeer().getName());
+        if(SystemCache.getInstance().getPeer()!=null){
+            isVideoCall = SystemCache.getInstance().getPeer().isVideoCall();
+            if(SystemCache.getInstance().getPeer().getName()!=null){
+                controller.setRoomNum(SystemCache.getInstance().getPeer().getName());
+            }
         }
-
 
 
         controller.setNumber(SystemCache.getInstance().getParticipant());
@@ -180,18 +177,6 @@ public class Conversation extends FullscreenActivity {
         mProjectionManager = (MediaProjectionManager) getSystemService(
                 Context.MEDIA_PROJECTION_SERVICE);
 
-        //判断是否是语音模式
-        LOG.info("isUserVideoMode : "+SystemCache.getInstance().isUserVideoMode());
-        //前提必须是否支持语音模式在进行判断
-        if(SystemCache.getInstance().getLoginResponse().getFeatureSupport().switchingToAudioConference){
-            audioMode.setVisibility(SystemCache.getInstance().isUserVideoMode() ? View.GONE :  View.VISIBLE );
-            controller.showVideoMode(SystemCache.getInstance().isUserVideoMode());
-            if(SystemCache.getInstance().getSpeakName()!=null && !SystemCache.getInstance().getSpeakName().equals("")){
-                audioSpeakName.setText(SystemCache.getInstance().getSpeakName()+"  "+getString(R.string.speaking));
-                audioSpeakName.setVisibility(SystemCache.getInstance().isUserVideoMode() ? View.GONE : View.VISIBLE );
-            }
-        }
-
 
         if (!isVideoCall) {
             controller.updateAsAudioCall();
@@ -199,6 +184,18 @@ public class Conversation extends FullscreenActivity {
 
         videoBoxGroup = new VideoBoxGroup((RelativeLayout) findViewById(R.id.root));
         svcHandler.postDelayed(buildTask, 500);
+
+        //判断是否是语音模式
+        LOG.info("isUserVideoMode : "+SystemCache.getInstance().isUserVideoMode());
+        //前提必须是否支持语音模式在进行判断
+        if(SystemCache.getInstance().getFeatureSupport()!=null && SystemCache.getInstance().getFeatureSupport().isSwitchingToAudioConference()){
+            controller.showVideoMode(SystemCache.getInstance().isUserVideoMode());
+            if(SystemCache.getInstance().getSpeakName()!=null && !SystemCache.getInstance().getSpeakName().equals("")){
+                audioSpeakName.setText(SystemCache.getInstance().getSpeakName()+"  "+getString(R.string.speaking));
+                audioSpeakName.setVisibility(SystemCache.getInstance().isUserVideoMode() ? View.GONE : View.VISIBLE );
+            }
+        }
+
         mDummyPreviewView = (SurfaceView) findViewById(R.id.dummyPreviewView);
         if (isVideoCall) {
             signalIntensityScanner.sendEmptyMessageDelayed(1, 5000);
@@ -305,17 +302,6 @@ public class Conversation extends FullscreenActivity {
         }
     }
 
-    private View.OnClickListener clickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (v.getId() == R.id.audio_mode_btn) {
-                audioMode.setVisibility(View.GONE);
-                //audioSpeakName.setVisibility(View.GONE);
-                controller.showVideoMode(!SystemCache.getInstance().isUserVideoMode());
-                HjtApp.getInstance().getAppService().setVideoMode(true);
-            }
-        }
-    };
 
     private ConversationController.IController iController = new ConversationController.IController() {
         @Override
@@ -342,6 +328,7 @@ public class Conversation extends FullscreenActivity {
         @Override
         public void showLocalCamera(boolean show) {
             if(videoBoxGroup != null) {
+                LOG.info("showLocalCamera : "+show);
                 videoBoxGroup.showLocalCamera(show);
             }
         }
@@ -370,7 +357,10 @@ public class Conversation extends FullscreenActivity {
             SystemCache.getInstance().setUserVideoMode(isVoiceMode);
             HjtApp.getInstance().getAppService().setVideoMode(isVoiceMode);
             //开启或隐藏audio按钮
-            audioMode.setVisibility(isVoiceMode ? View.GONE :  View.VISIBLE );
+          //  audioMode.setVisibility(isVoiceMode ? View.GONE :  View.VISIBLE );
+            if(videoBoxGroup != null) {
+                videoBoxGroup.updateAudioView(isVoiceMode);
+            }
             //切换为语音状态下 显示SpeakName
             if(SystemCache.getInstance().getSpeakName()!=null && !SystemCache.getInstance().getSpeakName().equals("")){
                 audioSpeakName.setText(SystemCache.getInstance().getSpeakName()+"  "+getString(R.string.speaking));
@@ -419,6 +409,11 @@ public class Conversation extends FullscreenActivity {
             msg.what = ON_SVC_MICROPHONEMUTED;
             svcHandler.sendMessageDelayed(msg, 2000);
         }
+
+        @Override
+        public void onHangUp() {
+            unmuteAudioDialog(false);
+        }
     };
 
     public void  stopScreenCapture(){
@@ -446,6 +441,7 @@ public class Conversation extends FullscreenActivity {
         if(!isCheckResumeEvent){
             LOG.info("onStart isCheckResumeEvent()");
             isCheckResumeEvent = true;
+            EventBus.getDefault().register(this);
             resumeEvent();
         }
         HjtApp.getInstance().getAppService().startAudioMode(true);
@@ -460,7 +456,7 @@ public class Conversation extends FullscreenActivity {
         }
 
 
-        if (isVideoCall) {
+        if (isVideoCall && SystemCache.getInstance().isUserVideoMode()) {
             LOG.info("isLocalCamera : "+SystemCache.getInstance().isCamera());
             if(SystemCache.getInstance().isCamera()){
                 HjtApp.getInstance().getAppService().muteVideo(true);
@@ -482,11 +478,15 @@ public class Conversation extends FullscreenActivity {
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onStop() {
-        LOG.info("onStop() ");
         LOG.info("onStop isCalling ? "+HjtApp.getInstance().getAppService().isCalling());//false 手动挂断
         if (isVideoCall && HjtApp.getInstance().getAppService().isCalling() && !SystemCache.getInstance().isSharedScreen()) {
-            floatService.svcHandler.sendEmptyMessage(ON_SVC_FLOAT_WINDOW);
+          //  floatService.svcHandler.sendEmptyMessage(ON_SVC_FLOAT_WINDOW);
             closeLocalVideo();
+            if(floatService!=null){
+                LOG.info("show float windows");
+                floatService.createFloatView();
+                EventBus.getDefault().unregister(this);
+            }
         }
         if(SystemCache.getInstance().isSharedScreen()){
             closeLocalVideo();
@@ -523,7 +523,11 @@ public class Conversation extends FullscreenActivity {
     @Override
     protected void onDestroy() {
         LOG.info("onDestroy");
-        unbindService(connections);
+        if(isBind && connections!=null){
+            LOG.info("unbindService()");
+            unbindService(connections);
+            isBind = false;
+        }
         if(EVFactory.createEngine().getCallInfo()!=null) {
             clearResource();
         }
@@ -594,6 +598,15 @@ public class Conversation extends FullscreenActivity {
         }
 
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAudioEvent(AudioMode event) {
+        LOG.info("onAudioEvent ");
+        if(event != null) {
+            controller.showVideoMode(!SystemCache.getInstance().isUserVideoMode());
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNetworkEvent(NetworkEvent event) {
         svcHandler.removeMessages(ON_SVC_NETWORK_TOAST);
@@ -615,7 +628,7 @@ public class Conversation extends FullscreenActivity {
             svcHandler.sendMessageDelayed(msg, 2000);
             return;
         }else if(event.getCode()==NetworkEvent.EV_WARN_UNMUTE_AUDIO_INDICATION) {
-            unmuteAudioIndication();
+            unmuteAudioDialog(true);
             return;
         }
         networkConditionToast.setVisibility(View.VISIBLE);
@@ -680,7 +693,7 @@ public class Conversation extends FullscreenActivity {
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onLiveEvent(LiveEvent event) {
-        LOG.info("onLiveEvent = "+ event);
+        LOG.info("onLiveEvent = "+ event.toString());
         if(event != null) {
             recordView.setText(event.isRecording() ? getText(R.string.live) : getText(R.string.record));
         }
@@ -730,6 +743,7 @@ public class Conversation extends FullscreenActivity {
             if(SystemCache.getInstance().isAnonymousMakeCall()) {
                 clearAnonymousData();
             }
+            EmMessageCache.getInstance().resetIMCache();
             HjtApp.getInstance().stopFloatService();
             // after a call we try to login back to original login-ed server
             //LoginService.getInstance().autoLogin();
@@ -741,7 +755,6 @@ public class Conversation extends FullscreenActivity {
         SystemCache.getInstance().setParticipant(null);
         SystemCache.getInstance().setUserVideoMode(true);
         SystemCache.getInstance().setSpeakName(null);
-        SystemCache.getInstance().setLocalName(SystemCache.getInstance().getLoginResponse().getDisplayName());
         SystemCache.getInstance().setRemoteMuted(false);
     }
 
@@ -757,25 +770,10 @@ public class Conversation extends FullscreenActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onLoginEvent(LoginResultEvent event) {
-        LOG.info("isAnonymousCall : ["+event.isAnonymous()+"] ,isSuccess : "+event.getCode());
-        if(event.getCode() == LoginResultEvent.LOGIN_SUCCESS && confManageWindow != null) {
+    public void onLoginRespEvent(UserInfoEvent event) {
+        LOG.info("confManageWindow  updateTokenForWeb()");
+        if(confManageWindow != null){
             confManageWindow.updateTokenForWeb();
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onRestResultEvent(RestRequestEvent event) {
-        if (event.what == RestRequestEvent.EVENT_MIC_MUTE) {
-            if(!event.isSuccess()) {
-                LOG.error("Notify MRU  mic mute state failed. "+ event.getFailedMessage());
-            }
-        } else if (event.what == RestRequestEvent.EVENT_HAND_UP) {
-            if(!event.isSuccess()) {
-                LOG.error("Hand up failed. "+ event.getFailedMessage());
-            } else {
-                LOG.error("Hand up Success");
-            }
         }
     }
 
@@ -803,12 +801,11 @@ public class Conversation extends FullscreenActivity {
     @Subscribe(threadMode = ThreadMode.POSTING)
     public void onPeopleNumber(PeopleNumberEvent numberEvent) {
         LOG.info("peopleNumber : "+numberEvent.getNumber());
-        //controller.setNumber(numberEvent.getNumber());
-            svcHandler.removeMessages(ON_SVC_PEOPLE_NUMBER);
-            Message msg = Message.obtain();
-            msg.what = ON_SVC_PEOPLE_NUMBER;
-            msg.obj = numberEvent.getNumber();
-            svcHandler.sendMessageDelayed(msg, 500);
+        svcHandler.removeMessages(ON_SVC_PEOPLE_NUMBER);
+        Message msg = Message.obtain();
+        msg.what = ON_SVC_PEOPLE_NUMBER;
+        msg.obj = numberEvent.getNumber();
+        svcHandler.sendMessageDelayed(msg, 500);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -919,7 +916,10 @@ public class Conversation extends FullscreenActivity {
                         networkConditionToast.setVisibility(View.GONE);
                         break;
                     case ON_SVC_PEOPLE_NUMBER:
-                        controller.setNumber((String) msg.obj);
+                        if(controller!=null){
+                            LOG.info("send controller number");
+                            controller.setNumber((String) msg.obj);
+                        }
                         break;
                     case ON_SVC_MICROPHONEMUTED:
                         microphoneMuted.setVisibility(View.GONE);
@@ -1135,7 +1135,9 @@ public class Conversation extends FullscreenActivity {
         });
     }
     //主持人正在解除静音，是否同意解除静音dialog
-    private  void  unmuteAudioIndication(){
+
+    private  void unmuteAudioDialog(boolean isUnMuteAudio){
+        LOG.info("isUnMuteAudio : "+isUnMuteAudio);
         final AlertDialog muteAudioDialog = new AlertDialog.Builder(this).create();
         muteAudioDialog.setCancelable(false);
         muteAudioDialog.show();
@@ -1143,15 +1145,25 @@ public class Conversation extends FullscreenActivity {
         Window window = muteAudioDialog.getWindow();
         window.setContentView(R.layout.alertdialog_audio_indication);
         window.getDecorView().setBackgroundColor(Color.TRANSPARENT);
+        TextView title =(TextView) window.findViewById(R.id.title_context);
+        if(isUnMuteAudio){
+            title.setText(getString(R.string.audio_indication));
+        }else {
+            title.setText(getString(R.string.leave_meeting));
+        }
 
         Button cancel = (Button) window.findViewById(R.id.cancel_audio);
         Button ok = (Button) window.findViewById(R.id.ok_audio);
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HjtApp.getInstance().getAppService().muteMic(false);
-                if(controller != null) {
-                    controller.muteMic(false);
+                if(isUnMuteAudio){
+                    HjtApp.getInstance().getAppService().muteMic(false);
+                    if(controller != null) {
+                        controller.muteMic(false);
+                    }
+                }else {
+                    HjtApp.getInstance().getAppService().endCall();
                 }
                 muteAudioDialog.cancel();
             }
@@ -1165,7 +1177,7 @@ public class Conversation extends FullscreenActivity {
     }
     //修改会中名字dialog
     private  void  updateUserNameWindow(){
-        updateUserNameDialog = new AlertDialog.Builder(this).create();
+        AlertDialog updateUserNameDialog = new AlertDialog.Builder(this).create();
         updateUserNameDialog.setCancelable(false);
         updateUserNameDialog.show();
         updateUserNameDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
@@ -1187,13 +1199,13 @@ public class Conversation extends FullscreenActivity {
             @Override
             public void onClick(View v) {
                 String displayName = mNewUsername.getText().toString().trim();
-                if(!displayName.equals("") && !Utils.regExTest(displayName)){
+                if(!displayName.equals("") && Utils.regExTest(displayName)){
                     LOG.info(" new displayName : "+displayName);
                     HjtApp.getInstance().getAppService().setConfDisplayName(displayName);
                     videoBoxGroup.updateLocalName(displayName);
                     updateUserNameDialog.cancel();
                 }else {
-                    Utils.showToastWithCustomLayout(Conversation.this, getString(R.string.error_form));
+                    Utils.showToastWithCustomLayout(Conversation.this, getString(R.string.username_character,"”,<,>."));
                 }
 
             }
@@ -1210,7 +1222,7 @@ public class Conversation extends FullscreenActivity {
 
     public void floatWindowService(){
         Intent intent = new Intent(Conversation.this, MeetingWindowService.class);
-        bindService(intent, connections, BIND_AUTO_CREATE | BIND_ABOVE_CLIENT);
+        isBind = bindService(intent, connections, BIND_AUTO_CREATE | BIND_ABOVE_CLIENT);
     }
 
     private ServiceConnection connections = new ServiceConnection() {

@@ -16,6 +16,7 @@ import com.hexmeet.hjt.event.RemoteNameEvent;
 import com.hexmeet.hjt.event.RemoteNameUpdateEvent;
 import com.hexmeet.hjt.login.JoinMeetingParam;
 import com.hexmeet.hjt.login.LoginSettings;
+import com.hexmeet.hjt.model.FeatureSupport;
 import com.hexmeet.hjt.model.RestLoginResp;
 import com.hexmeet.hjt.sdk.MessageOverlayInfo;
 import com.hexmeet.hjt.sdk.Peer;
@@ -41,6 +42,7 @@ public class SystemCache {
     private boolean isWifiConnect = true;
 
     private RestLoginResp loginResponse;
+    private FeatureSupport featureSupport;
 
     private RegisterState registerState = RegisterState.IDLE;
     private boolean isRegServerConnect = true;
@@ -173,11 +175,12 @@ public class SystemCache {
         if(LoginSettings.getInstance().getLoginState(false) == LoginSettings.LOGIN_STATE_IDLE) {
             isUserMuteVideo = false;
             loginResponse = null;
+            featureSupport = null;
             isUserShowLocalCamera = true;
         }
-        EmMessageCache.getInstance().resetIMCache();
     }
     public void resetLoginCache() {
+        featureSupport = null;
         loginResponse = null;
         isAnonymousLogin = false;
         isUserMuteVideo = false;
@@ -500,5 +503,13 @@ public class SystemCache {
 
     public void setVisibilitySharedScreen(boolean visibilitySharedScreen) {
         this.visibilitySharedScreen = visibilitySharedScreen;
+    }
+
+    public FeatureSupport getFeatureSupport() {
+        return featureSupport;
+    }
+
+    public void setFeatureSupport(FeatureSupport featureSupport) {
+        this.featureSupport = featureSupport;
     }
 }

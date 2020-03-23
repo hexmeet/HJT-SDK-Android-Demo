@@ -10,6 +10,7 @@ import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -69,7 +70,6 @@ public class GroupChatActivity extends BaseActivity implements ChattingFooter.On
         }
     };
     private TextView number;
-    private String userId;
     private ImageView mChatBack;
 
 
@@ -81,16 +81,20 @@ public class GroupChatActivity extends BaseActivity implements ChattingFooter.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         EventBus.getDefault().register(this);
         LOG.info("onCreate()");
         setContentView(R.layout.activity_group_chat);
         initView();
 
-        userId = String.valueOf(SystemCache.getInstance().getLoginResponse().getUserId());
+
         initImMessageBody();
     }
 
     private void initImMessageBody() {
+        List<IMGroupContactInfo> contactInfo = EmMessageCache.getInstance().getContactInfo();
+        LOG.info("initImMessageBody() : "+contactInfo.size());
         List<EmMessageBody> messageBody = EmMessageCache.getInstance().getMessageBody();
         if(messageBody!=null){
             for (int i=0;i < messageBody.size();i ++){
@@ -122,7 +126,7 @@ public class GroupChatActivity extends BaseActivity implements ChattingFooter.On
                 return false;
             }
         });
-        number.setText(getString(R.string.group_chat)+"("+SystemCache.getInstance().getParticipant()+")");
+        number.setText(getString(R.string.chat)+"("+SystemCache.getInstance().getParticipant()+")");
 
         mChatBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,20 +140,25 @@ public class GroupChatActivity extends BaseActivity implements ChattingFooter.On
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void OnSendTextMessageRequest(final CharSequence text) {
-        EMEngine.UserInfo isSelf = HjtApp.getInstance().getAppService().getImUserInfo();
-        EmMessageBody body = new EmMessageBody();
-        body.setGroupId(isSelf.userid);
-        body.setContent(text.toString());
-        body.setTime(TimeUtil.currentTime(Calendar.getInstance().getTimeInMillis()));
-        body.setFrom(isSelf.userid);
-        //发送到适配器
-        addNewsAdapter(body);
-        //保存当前信息
-        EmMessageCache.getInstance().addMessageBody(body);
-        //发送到sdk
-        HjtApp.getInstance().getAppService().sendMessage(text.toString());
-        //刷新
-        showLastMessage();
+        if(EmMessageCache.getInstance().isIMSuccess()){
+            EMEngine.UserInfo isSelf = HjtApp.getInstance().getAppService().getImUserInfo();
+            if(isSelf!=null){
+                EmMessageBody body = new EmMessageBody();
+                body.setGroupId(isSelf.userid);
+                body.setContent(text.toString());
+                body.setTime(TimeUtil.currentTime(Calendar.getInstance().getTimeInMillis()));
+                body.setFrom(isSelf.userid);
+                //发送到适配器
+                addNewsAdapter(body);
+                //保存当前信息
+                EmMessageCache.getInstance().addMessageBody(body);
+                //发送到sdk
+                HjtApp.getInstance().getAppService().sendMessage(text.toString());
+                //刷新
+                showLastMessage();
+            }
+        }
+
     }
 
 
@@ -245,7 +254,9 @@ public class GroupChatActivity extends BaseActivity implements ChattingFooter.On
     };
     //获取新消息
     private void addNewsAdapter(EmMessageBody messageBody) {
+       String userId = String.valueOf(SystemCache.getInstance().getLoginResponse().getUserId());
         List<IMGroupContactInfo> contactInfo = EmMessageCache.getInstance().getContactInfo();
+        LOG.info("contactInfo ： "+contactInfo.size());
         for (int i=0;i < contactInfo.size();i ++){
             if(messageBody.getFrom().equals(contactInfo.get(i).getEmUserId())){
                 if(userId.equals(contactInfo.get(i).getEvUserId())){

@@ -29,6 +29,7 @@ public class EmMessageCache {
     boolean isInitialed = false;
     private String groupId;
     boolean isIMAddress = false;
+    boolean isIMSuccess = false;
 
     public static EmMessageCache getInstance() {
         if(instance == null) {
@@ -52,6 +53,7 @@ public class EmMessageCache {
     }
 
     public void addMessageBody(EmMessageBody messageBody) {
+        LOG.info("addMessageBody()");
         if(emMessageBodies ==null){
             emMessageBodies = new ArrayList<EmMessageBody>();
         }
@@ -90,6 +92,7 @@ public class EmMessageCache {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEmLoginSuccessEvent(EmLoginSuccessEvent event) {
         LOG.info("onEmLoginSuccessEvent : "+event.isLoginSucceed());
+        setIMSuccess(event.isLoginSucceed());
         HjtApp.getInstance().getAppService().joinGroupChat();
     }
 
@@ -97,18 +100,19 @@ public class EmMessageCache {
     public void onEMGroupMemberInfo(GroupMemberInfo event) {
         if(event!=null){
             EVEngine.ContactInfo info = HjtApp.getInstance().getAppService().getImageUrl(event.getEvUserId());
-            if(info!=null){
                 IMGroupContactInfo contactInfo = new IMGroupContactInfo();
-                contactInfo.setId(String.valueOf(info.id));
-                contactInfo.setDisplayName(info.displayName);
-                contactInfo.setImageUrl(info.imageUrl);
+                if(info!=null){
+                    contactInfo.setId(String.valueOf(info.id));
+                    contactInfo.setDisplayName(info.displayName);
+                    contactInfo.setImageUrl(info.imageUrl);
+                }
                 contactInfo.setEmUserId(event.emUserId);
                 contactInfo.setEvUserId(event.evUserId);
                 contactInfos.add(contactInfo);
                 for (SystemStateChangeCallback callback : callbacks) {
                     callback.onGroupMemberInfo();
                 }
-            }
+
         }
 
     }
@@ -123,6 +127,7 @@ public class EmMessageCache {
         emMessageBodies.clear();
         groupId = null;
         contactInfos.clear();
+        isIMSuccess= false;
     }
 
     public String getGroupId() {
@@ -139,6 +144,14 @@ public class EmMessageCache {
 
     public void setIMAddress(boolean IMAddress) {
         isIMAddress = IMAddress;
+    }
+
+    public boolean isIMSuccess() {
+        return isIMSuccess;
+    }
+
+    public void setIMSuccess(boolean IMSuccess) {
+        isIMSuccess = IMSuccess;
     }
 }
 

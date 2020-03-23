@@ -28,6 +28,7 @@ import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.event.RenameEvent;
+import com.hexmeet.hjt.event.UserInfoEvent;
 import com.hexmeet.hjt.model.RestLoginResp;
 import com.hexmeet.hjt.utils.JsonUtil;
 import com.hexmeet.hjt.utils.NetworkUtil;
@@ -202,7 +203,7 @@ public class ConferenceListFrag extends Fragment {
         public void tokenExpired(){
             LOG.info("JavaScript: tokenExpired");
             if(!SystemCache.getInstance().isAnonymousMakeCall() && isResumed()) {
-               HjtApp.getInstance().getAppService().loginInLoop(true);
+                HjtApp.getInstance().getAppService().getUserInfo();
             } else {
                 tokenExpired = true;
             }
@@ -210,26 +211,27 @@ public class ConferenceListFrag extends Fragment {
         }
 
         @JavascriptInterface
-        public void doradoVersionUpdate(){
-            LOG.info("JavaScript: doradoVersionUpdate");
+        public void clearCache(){
+            LOG.info("JavaScript: clearCache() ");
+            clearWebview();
             loadConference();
         }
 
         @JavascriptInterface
-        public void clearCache(){
-            LOG.info("clearCache()");
-            destroy();
-        }
-
-        @JavascriptInterface
         public void webLog(String json){
-            LOG.info("weblog : "+json);
+            LOG.info("JavaScript: weblog() : "+json);
         }
 
     }
 
+    private void clearWebview() {
+        if(webView!=null) {
+            webView.clearHistory();
+            webView.clearCache(true);
+        }
+    }
+
     public void updateTokenForWeb() {
-        //LOG.error("JavaScript: updateToken error : url not load finished-------------222----------------");
         if(tokenExpired) {
             tokenExpired = false;
             loadConference();
@@ -264,7 +266,7 @@ public class ConferenceListFrag extends Fragment {
         webView.onResume();
         webView.resumeTimers();
         if(tokenExpired) {
-            HjtApp.getInstance().getAppService().loginInLoop(true);
+            HjtApp.getInstance().getAppService().getUserInfo();
         } else {
             loadConference();
         }
@@ -279,25 +281,16 @@ public class ConferenceListFrag extends Fragment {
 
     @Override
     public void onDestroy() {
-
+        LOG.info("onDestroy()");
         EventBus.getDefault().unregister(this);
-        super.onDestroy();
-        destroy();
-    }
-
-    public void destroy() {
         if(webView!=null) {
-            webView.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
-            webView.clearHistory();
-            webView.clearCache(true);
             webView.removeAllViews();
             webView.destroy();
-
         }
+        super.onDestroy();
     }
 
     private void loadConference() {
-        //LOG.error("JavaScript: updateToken error : url not load finished--------------111----------------");
         RestLoginResp restLoginResp = SystemCache.getInstance().getLoginResponse();
         if (restLoginResp != null && NetworkUtil.isNetConnected(getContext())) {
             loadFailedInfo.setVisibility(View.GONE);
@@ -338,7 +331,6 @@ public class ConferenceListFrag extends Fragment {
                         LOG.info("JavaScript: new token,return value: "+value);
                     }
                 });
-                //LOG.error("JavaScript: updateToken error : url not load finished-------------333----------------");
                  loadConference();
             }
         });
@@ -365,6 +357,12 @@ public class ConferenceListFrag extends Fragment {
         LOG.info("JavaScript: new displayName ["+displayName+"]");
         webView.evaluateJavascript("javascript:updateLoginUser('" +displayName+ "')",null);
 
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLoginRespEvent(UserInfoEvent event) {
+        if(event!=null){
+            updateTokenForWeb();
+        }
     }
 
 }

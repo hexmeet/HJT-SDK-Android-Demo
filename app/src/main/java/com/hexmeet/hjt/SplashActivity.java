@@ -108,6 +108,7 @@ public class SplashActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         LOG.info(" onDestroy()");
+        autoLoginHandler.removeCallbacksAndMessages(null);
     }
 
 

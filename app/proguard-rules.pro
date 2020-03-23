@@ -94,6 +94,7 @@
 -keep class com.hexmeet.hjt.cache.* {*;}
 -keep class com.hexmeet.hjt.call.* {*;}
 -keep class com.hexmeet.hjt.conf.* {*;}
+-keep class com.hexmeet.hjt.contacts.* {*;}
 -keep class com.hexmeet.hjt.dial.* {*;}
 -keep class com.hexmeet.hjt.event.* {*;}
 -keep class com.hexmeet.hjt.login.* {*;}
@@ -269,4 +270,16 @@
 -dontwarn com.yalantis.ucrop**
 -keep class com.yalantis.ucrop** { *; }
 -keep interface com.yalantis.ucrop** { *; }
+
+#keep crashreporter
+-keep class com.alibaba.motu.crashreporter.MotuCrashReporter{ *;}
+-keep class com.alibaba.motu.crashreporter.ReporterConfigure{*;}
+-keep class com.alibaba.motu.crashreporter.utrestapi.UTRestReq{*;}
+-keep interface com.alibaba.motu.crashreporter.IUTCrashCaughtListener{*;}
+-keep interface com.alibaba.motu.crashreporter.ICrashReportSendListener{*;}
+-keep interface com.alibaba.motu.crashreporter.ICrashReportDataListener{*;}
+-keep interface com.ut.mini.crashhandler.*{*;}
+-keep class com.uc.crashsdk.**{*;}
+-keep class com.alibaba.motu.crashreporter.YouKuCrashReporter{public *;}
+-keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod
 

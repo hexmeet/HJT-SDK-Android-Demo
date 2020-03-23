@@ -23,4 +23,6 @@ public interface EmSdkManager {
     void joinGroup(String groupName);
 
     void logout();
+
+    String emSdkLog();
 }
