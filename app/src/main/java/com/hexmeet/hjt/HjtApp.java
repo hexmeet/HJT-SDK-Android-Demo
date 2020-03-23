@@ -15,6 +15,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.view.OrientationEventListener;
 
+import com.alibaba.ha.adapter.AliHaAdapter;
+import com.alibaba.ha.adapter.AliHaConfig;
+import com.alibaba.ha.adapter.Plugin;
 import com.alibaba.sdk.android.man.MANService;
 import com.alibaba.sdk.android.man.MANServiceProvider;
 import com.alibaba.sdk.android.push.CloudPushService;
@@ -209,6 +212,7 @@ public class HjtApp extends Application {
         //阿里云推送
         initCloudChannel(this);
         floatWindowNotificationChannel(this);
+        initCrashLog();//阿里云crash日志
 
         ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         int normalHeap = activityManager.getMemoryClass();
@@ -440,5 +444,20 @@ public class HjtApp extends Application {
             channel.enableVibration(false);//震动不可用
             manager.createNotificationChannel(channel);
         }
+    }
+
+    private void initCrashLog() {
+        AliHaConfig config = new AliHaConfig();
+        config.appKey = BuildConfig.ALIYUN_KEY;         //appkey
+        config.appVersion = Utils.getVersion();         //应用的版本号
+        config.appSecret = BuildConfig.ALIYUN_SECRET;  //appsecret
+        config.channel = BuildConfig.APPLICATION_ID; //应用的渠道号标记，自定义
+        config.userNick = null;
+        config.application = this;
+        config.context = getApplicationContext();
+        config.isAliyunos = false;          //是否为yunos
+        //启动CrashReporter
+        AliHaAdapter.getInstance().addPlugin(Plugin.crashreporter);
+        AliHaAdapter.getInstance().start(config);
     }
 }

@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
     android:gravity="center"
     android:orientation="vertical">
 
@@ -35,20 +34,17 @@
             android:textColor="@color/title_bar"
             android:layout_marginBottom="20dp"/>
 
-      <TextView
-          android:background="@color/appset"
-          android:layout_width="match_parent"
-          android:layout_height="1dp"/>
-
-        <TextView
+        <Button
+            android:layout_marginBottom="10dp"
             android:id="@+id/call_ok"
-            android:textColor="@color/Blue"
-            android:gravity="center"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:background="@drawable/btn_private_login"
+            android:layout_gravity="center"
             android:text="@string/ok"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:textSize="@dimen/title_bar_font_size"
-            />
+            android:textAllCaps="false"
+            android:textColor="@drawable/color_text_join"
+            android:textSize="16sp" />
 
     </LinearLayout>
 

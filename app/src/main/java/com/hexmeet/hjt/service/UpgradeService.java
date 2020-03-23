@@ -67,18 +67,20 @@ public class UpgradeService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         mUpgradeAddress = intent.getStringExtra(AppCons.APK_URL);
-        String fileName = mUpgradeAddress.substring(mUpgradeAddress.lastIndexOf("/") + 1);
-        mInstallPath = new File(mSDCardPath, fileName);
-        LOG.info("mInstallPath : "+ mInstallPath.getAbsolutePath());
-        mDownloadProgress = 0;
-        createDownloadNotity();
+        if(mUpgradeAddress!=null){
+            String fileName = mUpgradeAddress.substring(mUpgradeAddress.lastIndexOf("/") + 1);
+            mInstallPath = new File(mSDCardPath, fileName);
+            LOG.info("mInstallPath : "+ mInstallPath.getAbsolutePath());
+            mDownloadProgress = 0;
+            createDownloadNotity();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                downloadAPK();
-            }
-        }).start();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    downloadAPK();
+                }
+            }).start();
+        }
 
         return super.onStartCommand(intent, flags, startId);
     }

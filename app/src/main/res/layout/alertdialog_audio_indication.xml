@@ -8,17 +8,20 @@
     android:layout_gravity="center"
     >
     <TextView
+        android:id="@+id/title_context"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/audio_indication"
+        android:text="@string/leave_meeting"
         android:textSize="15sp"
         android:textColor="@color/title_bar"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/standard_padding"
         />
 
     <LinearLayout
         android:layout_marginTop="20dp"
-        android:layout_width="277dp"
-        android:layout_height="45dp"
+        android:layout_width="270dp"
+        android:layout_height="40dp"
         android:layout_gravity="center"
         android:layout_marginBottom="5dp"
         android:gravity="center"
@@ -27,7 +30,7 @@
         <Button
             android:id="@+id/cancel_audio"
             android:layout_width="0dp"
-            android:layout_height="45dp"
+            android:layout_height="40dp"
             android:layout_weight="1"
             android:background="@drawable/btn_select_cancel"
             android:gravity="center"
@@ -41,7 +44,7 @@
         <Button
             android:id="@+id/ok_audio"
             android:layout_width="0dp"
-            android:layout_height="45dp"
+            android:layout_height="40dp"
             android:layout_marginLeft="20dp"
             android:layout_weight="1"
             android:background="@drawable/btn_private_login"

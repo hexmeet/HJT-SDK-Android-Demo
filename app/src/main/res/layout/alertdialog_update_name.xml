@@ -28,6 +28,7 @@
         android:background="@color/dialog_update_name_color"
         android:textSize="18dp"
         android:padding="15dp"
+        android:maxLength="32"
         android:imeOptions="flagNoExtractUi"
         />
 

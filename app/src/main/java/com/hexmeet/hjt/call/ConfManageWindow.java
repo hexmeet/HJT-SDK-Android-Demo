@@ -285,7 +285,7 @@ public class ConfManageWindow {
         @JavascriptInterface
         public void tokenExpired(){
             LOG.info("JavaScript: tokenExpired");
-            HjtApp.getInstance().getAppService().loginInLoop(true);
+            HjtApp.getInstance().getAppService().getUserInfo();
         }
 
         @JavascriptInterface
@@ -304,7 +304,7 @@ public class ConfManageWindow {
         @JavascriptInterface
         public void webLog(String json){
             if(conversation!=null){
-                LOG.info("weblog : "+json);
+                LOG.info("JavaScript: weblog : "+json);
             }
         }
     }

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
+import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.chat.ImMsgBean;
@@ -88,11 +89,17 @@ public class GroupAdapter extends RecyclerView.Adapter{
     }
 
     private void fromImgRightLayout(RightViewHolder holder, ImMsgBean imMsgBean, int position) {
-        holder.mChatRightUsername.setText(SystemCache.getInstance().getLoginResponse().displayName);
+        holder.mChatRightUsername.setText(HjtApp.getInstance().getAppService().getDisplayName());
       //  holder.mRightContext.setText(imMsgBean.getContent());
         holder.mRightContext.setText(imMsgBean.getContent());
-        Glide.with(holder.mRightImg.getContext()).load(imMsgBean.getImageUrl()).apply(RequestOptions.bitmapTransform(new CircleCrop()))
-                .into(holder.mRightImg);
+        if(imMsgBean.getImageUrl()!=null){
+            Glide.with(holder.mRightImg.getContext()).load(imMsgBean.getImageUrl()).apply(RequestOptions.bitmapTransform(new CircleCrop()))
+                    .into(holder.mRightImg);
+        }else {
+            Glide.with(holder.mRightImg.getContext()).load(R.drawable.default_photo).apply(RequestOptions.bitmapTransform(new CircleCrop()))
+                    .into(holder.mRightImg);
+        }
+
         if (position != 0) {
             String showTime = TimeUtil.getTime(imMsgBean.getTime(), mData.get(position - 1)
                     .getTime());
@@ -118,8 +125,14 @@ public class GroupAdapter extends RecyclerView.Adapter{
         holder.mLeftUsername.setText(imMsgBean.getName());
        // holder.mLeftContext.setText(imMsgBean.getContent());
         holder.mLeftContext.setText(imMsgBean.getContent());
-        Glide.with(holder.mLeftImg.getContext()).load(imMsgBean.getImageUrl()).apply(RequestOptions.bitmapTransform(new CircleCrop()))
-                .into(holder.mLeftImg);
+        if(imMsgBean.getImageUrl()!=null){
+            Glide.with(holder.mLeftImg.getContext()).load(imMsgBean.getImageUrl()).apply(RequestOptions.bitmapTransform(new CircleCrop()))
+                    .into(holder.mLeftImg);
+        }else {
+            Glide.with(holder.mLeftImg.getContext()).load(R.drawable.default_photo).apply(RequestOptions.bitmapTransform(new CircleCrop()))
+                    .into(holder.mLeftImg);
+        }
+
         if (position != 0) {
             String showTime = TimeUtil.getTime(imMsgBean.getTime(), mData.get(position - 1)
                     .getTime());

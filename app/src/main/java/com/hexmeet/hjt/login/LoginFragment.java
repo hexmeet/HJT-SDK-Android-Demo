@@ -5,7 +5,9 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -103,7 +105,7 @@ public class LoginFragment extends Fragment {
         input_conf_name = (FormEditText) mainView.findViewById(R.id.login_conf_name);
 
         showIconDirection(false);
-
+        input_conf_id.addTextChangedListener(watcher);
         input_conf_id.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -298,6 +300,7 @@ public class LoginFragment extends Fragment {
         LOG.info("displayName length : "+trimmedLength);
         if(TextUtils.isEmpty(displayName)) {
             displayName = Build.MODEL;
+            input_conf_name.setText(displayName);
         }
 
         SystemCache.getInstance().getJoinMeetingParam().setConferenceNumber(numberWithoutPassword);
@@ -475,5 +478,16 @@ public class LoginFragment extends Fragment {
             }
         }
     }
+
+    private TextWatcher watcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            checkAndCloseRecentView();
+        }
+        @Override
+        public void afterTextChanged(Editable s) {}
+    };
 
 }

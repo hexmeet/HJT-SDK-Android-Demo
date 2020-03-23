@@ -187,6 +187,7 @@ public class RemoteBox extends RelativeLayout {
         if (!svcLayoutInfo.checkSize(AppCons.MAX_RECEIVE_STREAM)) {
             LOG.error("surface count != sitename count");
         }
+        LOG.info("SvcLayoutInfo : "+svcLayoutInfo.toString());
         this.svcLayoutInfo = svcLayoutInfo;
         SystemCache.getInstance().setSpeakName(svcLayoutInfo.getSpeakerName());
         int count = svcLayoutInfo.getSvcSuit().size();
@@ -279,6 +280,7 @@ public class RemoteBox extends RelativeLayout {
             remoteDeviceName = SystemCache.getInstance().getRemoteDeviceName(deviceId);
 
         }
+        LOG.info("muted : "+muted+",remoteDeviceName : "+remoteDeviceName);
 
         if (TextUtils.isEmpty(svcLayoutInfo.getSvcSuit().get(indexInArray))) {
             msgInfo[cellIndex].setLayoutParams(emptyParam);

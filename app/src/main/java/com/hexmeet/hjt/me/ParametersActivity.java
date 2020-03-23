@@ -126,6 +126,9 @@ public class ParametersActivity extends BaseActivity {
 
         // add sdk logs
         File fileSDK = new File(sdkPath);
+        String emSdkLog = HjtApp.getInstance().getAppService().getEmSdkLog();
+        File fileEmSDK = new File(emSdkLog);
+
 
         List<Uri> uris = new ArrayList<>();
         if (file1.exists()) {
@@ -143,7 +146,6 @@ public class ParametersActivity extends BaseActivity {
             if (!crashdir.exists()) {
                 crashdir.mkdirs();
             }
-
             // move to external directory
             File fileSDKTemp = new File(Environment.getExternalStorageDirectory().toString() + "/crash"
                     + "/hjt_sdk.gz");
@@ -155,6 +157,25 @@ public class ParametersActivity extends BaseActivity {
                 LOG.warn("re_diagnosis onClick, move " + fileSDK.getPath() + " to " + fileSDKTemp.getPath()
                         + " failed.");
             }
+        }
+
+        if (fileEmSDK.exists()) {
+            File crashdir = new File(Environment.getExternalStorageDirectory().toString() + "/crash");
+            if (!crashdir.exists()) {
+                crashdir.mkdirs();
+            }
+
+            File fileEmSDKTemp = new File(Environment.getExternalStorageDirectory().toString() + "/crash"
+                    + "/hjt_emsdk.gz");
+            if (Utils.copyFile(fileEmSDK, fileEmSDKTemp)) {
+                LOG.info("re_diagnosis onClick, move " + fileSDK.getPath() + " to " + fileEmSDKTemp.getPath()
+                        + " succeed.");
+                uris.add(getFileUri(fileEmSDKTemp));
+            } else {
+                LOG.warn("re_diagnosis onClick, move " + fileSDK.getPath() + " to " + fileEmSDKTemp.getPath()
+                        + " failed.");
+            }
+
         }
 
         intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, (ArrayList<? extends Parcelable>) uris);

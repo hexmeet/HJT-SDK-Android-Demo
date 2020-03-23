@@ -12,26 +12,6 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true" />
 
-    <RelativeLayout
-        android:id="@+id/out_audio_mode"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/background_audio_only"
-        android:visibility="gone"
-        >
-        <Button
-            android:id="@+id/audio_mode_btn"
-            android:layout_width="@dimen/button_audio"
-            android:layout_height="@dimen/button_audio"
-            android:text="@string/switch_to_video"
-            android:layout_centerInParent="true"
-            android:background="@drawable/buttom_bg"
-            android:textColor="@color/White"
-            android:textSize="@dimen/button_size"
-            android:textAllCaps="false"
-            />
-    </RelativeLayout>
-
     <TextView
         android:id="@+id/record_view"
         android:layout_width="wrap_content"

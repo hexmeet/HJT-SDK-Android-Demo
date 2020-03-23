@@ -107,6 +107,7 @@ public class SdkManagerImpl implements SdkManager {
         engine.setBandwidth(AppCons.DEFAULT_BITRATE);
         //engine.enablePreviewFrameCb(StreamType.Video, true);
         //engine.enablePreviewFrameCb(StreamType.Content, true);
+        updateVideoUserImage(null);
         engine.addEventListener(new EVListenr());
         SystemCache.getInstance().setSdkReady(true);
     }
@@ -348,9 +349,13 @@ public class SdkManagerImpl implements SdkManager {
                 errorCode=LoginResultEvent.LOGIN_WRONG_INVALID_NAME;
                 error = HjtApp.getInstance().getString(R.string.invalid_username_or_password);
                 needRetry = false;
-            } else if (errorCode == LOGIN_ERROR_8 || errorCode == LOGIN_ERROR_9) {
+            } else if (errorCode == LOGIN_ERROR_8 ) {
                 errorCode=LoginResultEvent.LOGIN_WRONG_LOCATION_SERVER;
-                error = HjtApp.getInstance().getString(R.string.cannot_connect_location_server);
+                error = HjtApp.getInstance().getString(R.string.call_error_sdk_8);
+                needRetry = false;
+            }else if (errorCode == LOGIN_ERROR_9) {
+                errorCode=LoginResultEvent.LOGIN_WRONG_LOCATION_SERVER;
+                error = HjtApp.getInstance().getString(R.string.call_error_sdk_9);
                 needRetry = false;
             }else if (error.contains("400 Bad Request")) {
                 errorCode = LoginResultEvent.LOGIN_WRONG_NET;
@@ -702,7 +707,6 @@ public class SdkManagerImpl implements SdkManager {
 
     public static void getUserInfoList(UserInfo info, boolean isObtain){
         RestLoginResp restLoginResp = new RestLoginResp();
-        FeatureSupport featureSupport = new FeatureSupport();
         restLoginResp.setUserId(info.userId);
         restLoginResp.setUsername(info.username);
         restLoginResp.setDisplayName(info.displayName);
@@ -719,12 +723,13 @@ public class SdkManagerImpl implements SdkManager {
 
         EVEngine.EVFeatureSupport feature = info.featureSupport;
         if(feature!=null){
+            FeatureSupport featureSupport = new FeatureSupport();
             featureSupport.setContactWebPage(feature.contactWebPage);
             featureSupport.setChatInConference(feature.chatInConference);
             featureSupport.setP2pCall(feature.p2pCall);
             featureSupport.setSwitchingToAudioConference(feature.switchingToAudioConference);
             featureSupport.setSitenameIsChangeable(feature.sitenameIsChangeable);
-            restLoginResp.setFeatureSupport(featureSupport);
+            SystemCache.getInstance().setFeatureSupport(featureSupport);
         }
         SystemCache.getInstance().setLoginResponse(restLoginResp);
         if(isObtain){
@@ -760,10 +765,8 @@ public class SdkManagerImpl implements SdkManager {
                             CallEvent event = new CallEvent(CallState.IDLE);
                             event.setEndReason(ResourceUtils.getInstance().getCallFailedReason(ResourceUtils.CALL_ERROR_SDK_10));
                             EventBus.getDefault().post(event);
-                        }else if(err.code == ResourceUtils.CALL_ERROR_9 || err.action.equals("downloadUserImage")){
+                        }else if(err.action.equals("downloadUserImage")){
                             return;
-                        }else if(err.code == LOGIN_ERROR_8){
-                            SdkManagerImpl.handlerError(LoginResultEvent.LOGIN_SDK_ERROR_8, err.msg ,err.arg);
                         }else {
                             SdkManagerImpl.handlerError(err.code, err.msg ,err.arg);
                         }

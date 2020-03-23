@@ -284,7 +284,9 @@ public class Utils {
     }
 
     public static boolean regExTest(String name){
-        String regEx = "^[@.\\-_()a-zA-Z0-9\\u4e00-\\u9fa5\\u0020]{1,32}$";
+        //String limitEx="^[<>‘；：”“]{1,32}$";
+       // String regEx = "^[<> ”“]$";
+        String regEx="[<>'”“'\\\" ']";
 
         Pattern pattern = Pattern.compile(regEx);
         Matcher m = pattern.matcher(name);

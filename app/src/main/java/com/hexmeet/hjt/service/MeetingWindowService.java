@@ -173,9 +173,11 @@ public class MeetingWindowService extends Service {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void createFloatView() {
+    public void createFloatView() {
+        //关闭摄像头
+        HjtApp.getInstance().getAppService().enableVideo(false);
         if(!hasWindow){
-            Utils.showToast(getApplicationContext(), R.string.need_float_window_permission);
+            Utils.showToast(HjtApp.getInstance().getContext(),getString(R.string.need_float_window_permission,getString(R.string.app_name)));
             return;
         }
 
@@ -184,8 +186,7 @@ public class MeetingWindowService extends Service {
             EventBus.getDefault().register(this);
         }
         LOG.info("createFloatView()");
-        //关闭摄像头
-        HjtApp.getInstance().getAppService().enableVideo(false);
+
         mFloatLayout.setVisibility(View.VISIBLE);
         if(SystemCache.getInstance().isUserVideoMode()){//true 视频 false 音频
             chronometer.setVisibility(View.GONE);
@@ -199,8 +200,10 @@ public class MeetingWindowService extends Service {
                 }
             });
             remoteBox.setShowContent(false);
+            onSvcLayoutChangedEvent(SystemCache.getInstance().getSvcLayoutInfo());
             video_surface_view.addView(remoteBox,0,fullScreenLayoutPara);
         }else {
+            LOG.info("Audio Mode");
             chronometer.setVisibility(View.VISIBLE);
             timericon.setVisibility(View.VISIBLE);
             video_surface_view.setVisibility(View.GONE);
@@ -282,8 +285,10 @@ public class MeetingWindowService extends Service {
            LOG.info("mWindowManager!=null ");
            isAddWindowManager = false;
            mFloatLayout.setVisibility(View.GONE);
-          //mWindowManager.removeViewImmediate(mFloatLayout);//removeViewImmediate为同步删除
-          //mWindowManager.removeView(mFloatLayout);removeView为异步删除
+       }
+       if(remoteBox!=null){
+           LOG.info("float window release remotebox ");
+           remoteBox.release();
        }
        svcHandler.removeCallbacksAndMessages(null);
     }
@@ -298,7 +303,7 @@ public class MeetingWindowService extends Service {
         }
         if (mWindowManager!=null && mFloatLayout != null && isAddWindowManager){
             mFloatLayout.setVisibility(View.GONE);
-            mWindowManager.removeViewImmediate(mFloatLayout);//mWindowManager.removeView(mFloatLayout);
+            mWindowManager.removeViewImmediate(mFloatLayout);// 同步删除, mWindowManager.removeView(mFloatLayout) 异步删除;
         }
     }
     @Subscribe(threadMode = ThreadMode.POSTING)
@@ -331,7 +336,7 @@ public class MeetingWindowService extends Service {
     public void onRemoteNameEvent(RemoteNameEvent event) {
         svcHandler.removeMessages(ON_SVC_REMOTE_UPDATE_NAME);
         LOG.info("RemoteNameEvent : "+event.isLocal());
-        if(event != null) {
+        if(event != null && !event.isLocal()) {
             Message msg = Message.obtain();
             msg.what = ON_SVC_REMOTE_UPDATE_NAME;
             Bundle bundle = new Bundle();
@@ -378,7 +383,6 @@ public class MeetingWindowService extends Service {
                     String displayName = msg.getData().getString("displayName");
                     if(remoteBox != null) {
                         remoteBox.updateRemoteName(deviceId,displayName);
-                        sendMessageDelayed(Message.obtain(msg), 1000);
                     }
                     break;
                 case ON_SVC_FLOAT_WINDOW:

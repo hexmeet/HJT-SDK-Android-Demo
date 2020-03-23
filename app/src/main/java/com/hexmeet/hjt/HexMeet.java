@@ -292,8 +292,6 @@ public class HexMeet extends BaseActivity implements OnClickListener {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-
         handler.removeCallbacksAndMessages(null);
         if(HjtApp.getInstance().getAppService() != null) {
             HjtApp.getInstance().getAppService().setUserInLogin(false);
@@ -302,7 +300,12 @@ public class HexMeet extends BaseActivity implements OnClickListener {
         if (screenReceiverRegistered && screenReceiver != null) {
             unregisterReceiver(screenReceiver);
         }
+        if(dialog != null && !dialog.isShowing()) {
+            dialog.clean();
+            dialog.dismiss();
+        }
         EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
     private void initViews() {
@@ -316,7 +319,9 @@ public class HexMeet extends BaseActivity implements OnClickListener {
         upgradeHint = (ImageView) findViewById(R.id.upgrade_hint);
         networkAnomaly = (RelativeLayout)findViewById(R.id.network_anomaly);
         //是否支持通讯录功能
-        tabContacts.setVisibility(SystemCache.getInstance().getLoginResponse().getFeatureSupport().isContactWebPage() ? View.VISIBLE : View.GONE);
+        if(SystemCache.getInstance().getFeatureSupport()!=null){
+            tabContacts.setVisibility(SystemCache.getInstance().getFeatureSupport().isContactWebPage() ? View.VISIBLE : View.GONE);
+        }
 
         tabConference.setOnClickListener(this);
         tabChat.setOnClickListener(this);
@@ -600,15 +605,6 @@ public class HexMeet extends BaseActivity implements OnClickListener {
         }
     }
 
-    public void updateLoginToken() {
-        if(conferenceListFrag != null && contactsFrag!=null) {
-            conferenceListFrag.updateTokenForWeb();
-            contactsFrag.updateTokenForWeb();
-        } else {
-            LOG.info("conferenceListFrag not resume, so not update token to web view");
-        }
-    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onServerReachableEvent(ServerReachableEvent event) {
         updateTip(SystemCache.getInstance().getRegisterState(), event.isReachable());
@@ -633,7 +629,6 @@ public class HexMeet extends BaseActivity implements OnClickListener {
         }
 
         if(event.getCode() == LoginResultEvent.LOGIN_SUCCESS) {
-            updateLoginToken();
             if(meFrag != null) {
                 LOG.info("updated meFrag displayName and userName");
                 meFrag.onLoginName(SystemCache.getInstance().getLoginResponse().getDisplayName(),SystemCache.getInstance().getLoginResponse().getUsername());

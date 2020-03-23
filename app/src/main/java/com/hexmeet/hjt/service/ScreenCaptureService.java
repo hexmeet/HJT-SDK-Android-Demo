@@ -190,6 +190,7 @@ public class ScreenCaptureService extends Service {
         if (mWindowManager!=null && mFloatLayout != null ){
             mWindowManager.removeViewImmediate(mFloatLayout);//mWindowManager.removeView(mFloatLayout);
         }
+        mHandler.removeCallbacksAndMessages(null);
         HjtApp.getInstance().getAppService().stopShare();
         EventBus.getDefault().unregister(this);
     }

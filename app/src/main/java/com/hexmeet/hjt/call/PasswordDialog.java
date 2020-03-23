@@ -191,4 +191,7 @@ public class PasswordDialog extends Dialog {
     public  void setName(String userName){
         inputBox.setText(userName);
     }
+    public void clean(){
+        inputBox = null;
+    }
 }
