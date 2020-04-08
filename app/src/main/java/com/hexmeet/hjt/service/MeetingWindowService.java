@@ -174,8 +174,6 @@ public class MeetingWindowService extends Service {
 
     @SuppressLint("ClickableViewAccessibility")
     public void createFloatView() {
-        //关闭摄像头
-        HjtApp.getInstance().getAppService().enableVideo(false);
         if(!hasWindow){
             Utils.showToast(HjtApp.getInstance().getContext(),getString(R.string.need_float_window_permission,getString(R.string.app_name)));
             return;
@@ -363,9 +361,11 @@ public class MeetingWindowService extends Service {
             switch (msg.what) {
                 case ON_SVC_LAYOUT_CHANGED:
                     SvcLayoutInfo svcLayoutInfo = msg.getData().getParcelable(AppCons.BundleKeys.EXTRA_DATA);
-                    LOG.info("SvcLayoutInfo: " + svcLayoutInfo.toString());
-                    if (remoteBox != null && remoteCellReady) {
-                        remoteBox.updateLayout(svcLayoutInfo);
+                    if(svcLayoutInfo !=null){
+                        LOG.info("SvcLayoutInfo: " + svcLayoutInfo.toString());
+                        if (remoteBox != null && remoteCellReady) {
+                            remoteBox.updateLayout(svcLayoutInfo);
+                        }
                     }
                     break;
                 case ON_SVC_SPEAKER_CHANGED:

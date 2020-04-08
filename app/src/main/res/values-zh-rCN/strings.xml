@@ -213,6 +213,7 @@
     <string name="call_error_1001">无效的会议号码</string>
     <string name="call_error_2005">会议号码不存在或者此会议还未开始，请检查后重试</string>
     <string name="call_error_2001">您呼叫的云平台尚未激活</string>
+    <string name="call_error_2003">没有可用的会议端口资源</string>
     <string name="call_error_2007">呼叫超时，请重试</string>
     <string name="call_error_2009">您呼叫的群组尚未绑定云会议室</string>
     <string name="call_error_2011">您呼叫的云会议室已过期</string>
@@ -302,4 +303,5 @@
     <string name="end_of_meeting">会议结束或被主持人挂断</string>
     <string name="leave_meeting">您确定离开该会议？</string>
     <string name="username_character">会议中显示的用户名不能包含 %1$s</string>
+    <string name="content_permission">由于没有权限，发送内容被拒绝</string>
 </resources>

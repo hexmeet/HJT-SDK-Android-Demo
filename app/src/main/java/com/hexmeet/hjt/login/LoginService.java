@@ -1,5 +1,6 @@
 package com.hexmeet.hjt.login;
 
+import com.hexmeet.hjt.BuildConfig;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.model.LoginParams;
@@ -35,6 +36,16 @@ public class LoginService {
             params.setUser_name(LoginSettings.getInstance().getUserName(isCloudLogin));
             boolean https = isCloudLogin || LoginSettings.getInstance().useHttps();
             String port = isCloudLogin ? null : LoginSettings.getInstance().getPrivatePort();
+            if(isCloudLogin){
+                if(!BuildConfig.CLOUD_SERVER_PROTOCOL_HTTPS){
+                    https = false;
+                }
+                String cloudServerPort = BuildConfig.CLOUD_SERVER_PORT;
+                LOG.info("cloudServerPort :" + cloudServerPort);
+                if(cloudServerPort!=null && !cloudServerPort.equals("")){
+                    port = BuildConfig.CLOUD_SERVER_PORT;
+                }
+            }
             SystemCache.getInstance().setCloudLogin(isCloudLogin);
             LOG.info("autoLogin()  https : "+https+",port : "+port);
             HjtApp.getInstance().getAppService().loginInThread(params, https, port);

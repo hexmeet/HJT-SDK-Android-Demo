@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 public class PreLoginFragment extends Fragment {
     private LoginFragmentCallback callback;
     private int loginType = AppCons.LoginType.LOGIN_TYPE_CLOUD;
+    private ImageView loginBack;
 
     @Override
     public void onAttach(Context context) {
@@ -69,7 +70,13 @@ public class PreLoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View mainView = inflater.inflate(R.layout.login_pre, container, false);
-        mainView.findViewById(R.id.login_back).setOnClickListener(click);
+        loginBack = (ImageView)mainView.findViewById(R.id.login_back);
+        if(!BuildConfig.CLOUD_SERVER_ONLY){
+            loginBack.setVisibility(View.VISIBLE);
+            loginBack.setOnClickListener(click);
+        }else {
+            loginBack.setVisibility(View.GONE);
+        }
         mainView.findViewById(R.id.login_join_meeting).setOnClickListener(click);
         mainView.findViewById(R.id.login_btn).setOnClickListener(click);
 
@@ -80,9 +87,14 @@ public class PreLoginFragment extends Fragment {
         if(loginType == AppCons.LoginType.LOGIN_TYPE_CLOUD) {
             View trialView = mainView.findViewById(R.id.apply_use);
             View appview = mainView.findViewById(R.id.app_view);
-            appview.setVisibility(View.VISIBLE);
-            trialView.setVisibility(View.VISIBLE);
-            trialView.setOnClickListener(click);
+            if(!BuildConfig.TRIAL_APPLICATION_URL.equals("CLOSED")){
+                appview.setVisibility(View.VISIBLE);
+                trialView.setVisibility(View.VISIBLE);
+                trialView.setOnClickListener(click);
+            }else {
+                trialView.setVisibility(View.GONE);
+                appview.setVisibility(View.GONE);
+            }
         }
         return mainView;
     }

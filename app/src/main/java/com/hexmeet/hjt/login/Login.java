@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.hexmeet.hjt.AppCons;
 import com.hexmeet.hjt.BaseActivity;
+import com.hexmeet.hjt.BuildConfig;
 import com.hexmeet.hjt.CallState;
 import com.hexmeet.hjt.HexMeet;
 import com.hexmeet.hjt.HjtApp;
@@ -60,10 +61,17 @@ public class Login extends BaseActivity implements LoginFragmentCallback{
         super.onCreate(savedInstanceState);
         LOG.debug("Login onCreate()");
         EventBus.getDefault().register(this);
-        MainLoginFragment fragment = MainLoginFragment.newInstance();
-        getSupportFragmentManager().beginTransaction()
-                .replace(android.R.id.content, fragment, MainLoginFragment.class.getName())
-                .addToBackStack(null).commitAllowingStateLoss();
+        if(BuildConfig.CLOUD_SERVER_ONLY){
+            PreLoginFragment fragment = PreLoginFragment.newInstance(AppCons.LoginType.LOGIN_TYPE_CLOUD);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(android.R.id.content, fragment, PreLoginFragment.class.getName())
+                    .addToBackStack(null).commitAllowingStateLoss();
+        }else {
+            MainLoginFragment fragment = MainLoginFragment.newInstance();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(android.R.id.content, fragment, MainLoginFragment.class.getName())
+                    .addToBackStack(null).commitAllowingStateLoss();
+        }
 
         progress = new ProgressUtil(Login.this, 60000, new Runnable() {
             @Override

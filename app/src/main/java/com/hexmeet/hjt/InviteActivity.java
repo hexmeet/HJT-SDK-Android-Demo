@@ -115,8 +115,8 @@ public class InviteActivity extends BaseActivity{
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         handler.removeCallbacksAndMessages(null);
+        super.onDestroy();
     }
 
     private boolean isSdkOk() {

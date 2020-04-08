@@ -64,4 +64,10 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
     @Override
     public void onReq(BaseReq req) {
     }
+
+    @Override
+    protected void onDestroy() {
+        api.detach();
+        super.onDestroy();
+    }
 }

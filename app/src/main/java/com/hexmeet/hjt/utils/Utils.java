@@ -286,7 +286,7 @@ public class Utils {
     public static boolean regExTest(String name){
         //String limitEx="^[<>‘；：”“]{1,32}$";
        // String regEx = "^[<> ”“]$";
-        String regEx="[<>'”“'\\\" ']";
+        String regEx="[<>'”“'\\\"']";
 
         Pattern pattern = Pattern.compile(regEx);
         Matcher m = pattern.matcher(name);

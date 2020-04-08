@@ -92,6 +92,7 @@ public class FullscreenActivity extends Activity {
         if (mRingerPlayer != null) {
             LOG.info(" stopRinging() ");
             mRingerPlayer.stop();
+            mRingerPlayer.reset();
             mRingerPlayer.release();
             mRingerPlayer = null;
         }

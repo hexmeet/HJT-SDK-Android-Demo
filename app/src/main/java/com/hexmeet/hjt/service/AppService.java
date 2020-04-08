@@ -377,17 +377,11 @@ public class AppService extends Service {
         }
     }
 
-    private RemoteSurfaceTask remoteSurfaceTask;
-
     public void setRemoteViewToSdk(Object[] surfaceView) {
-        if(remoteSurfaceTask != null) {
-            mSdkHandler.removeCallbacks(remoteSurfaceTask);
-        }
         if(surfaceView == null) {
             sdkManager.setRemoteSurface(null);
         } else {
             sdkManager.setRemoteSurface(surfaceView);
-            mSdkHandler.post(remoteSurfaceTask);
         }
     }
 

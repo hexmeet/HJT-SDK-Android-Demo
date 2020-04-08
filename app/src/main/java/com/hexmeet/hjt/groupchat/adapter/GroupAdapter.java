@@ -17,6 +17,9 @@ import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.chat.ImMsgBean;
 import com.hexmeet.hjt.groupchat.utils.TimeUtil;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import org.apache.log4j.Logger;
 
@@ -53,7 +56,9 @@ public class GroupAdapter extends RecyclerView.Adapter{
     }
 
     public void clearList(){
-        mData.clear();
+        if(mData!=null){
+            mData.clear();
+        }
     }
 
     @NonNull
@@ -90,20 +95,22 @@ public class GroupAdapter extends RecyclerView.Adapter{
 
     private void fromImgRightLayout(RightViewHolder holder, ImMsgBean imMsgBean, int position) {
         holder.mChatRightUsername.setText(HjtApp.getInstance().getAppService().getDisplayName());
-      //  holder.mRightContext.setText(imMsgBean.getContent());
         holder.mRightContext.setText(imMsgBean.getContent());
-        if(imMsgBean.getImageUrl()!=null){
-            Glide.with(holder.mRightImg.getContext()).load(imMsgBean.getImageUrl()).apply(RequestOptions.bitmapTransform(new CircleCrop()))
+        /*if(imMsgBean.getImageUrl()!=null){   会议中聊天不需要头像，需要头像时再放开
+            Picasso.get().load(imMsgBean.getImageUrl())
+                    .error(R.drawable.default_photo)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
                     .into(holder.mRightImg);
         }else {
-            Glide.with(holder.mRightImg.getContext()).load(R.drawable.default_photo).apply(RequestOptions.bitmapTransform(new CircleCrop()))
+            Picasso.get().load(R.drawable.default_photo)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
                     .into(holder.mRightImg);
-        }
+        }*/
 
         if (position != 0) {
             String showTime = TimeUtil.getTime(imMsgBean.getTime(), mData.get(position - 1)
-                    .getTime());
-            LOG.info(" showTime : "+showTime+",position -1 : "+mData.get(position - 1)
                     .getTime());
             if (showTime != null) {
                 String timeShowString = TimeUtil.getTimeShowString(imMsgBean.getTime(), false);
@@ -123,20 +130,23 @@ public class GroupAdapter extends RecyclerView.Adapter{
 
     private void fromMsgLeftLayout(LeftViewHolder holder, ImMsgBean imMsgBean, int position) {
         holder.mLeftUsername.setText(imMsgBean.getName());
-       // holder.mLeftContext.setText(imMsgBean.getContent());
         holder.mLeftContext.setText(imMsgBean.getContent());
-        if(imMsgBean.getImageUrl()!=null){
-            Glide.with(holder.mLeftImg.getContext()).load(imMsgBean.getImageUrl()).apply(RequestOptions.bitmapTransform(new CircleCrop()))
+        /*if(imMsgBean.getImageUrl()!=null){
+            Picasso.get().load(imMsgBean.getImageUrl())
+                    .error(R.drawable.default_photo)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
                     .into(holder.mLeftImg);
         }else {
-            Glide.with(holder.mLeftImg.getContext()).load(R.drawable.default_photo).apply(RequestOptions.bitmapTransform(new CircleCrop()))
+            Picasso.get().load(R.drawable.default_photo)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
                     .into(holder.mLeftImg);
-        }
+        }*/
 
         if (position != 0) {
             String showTime = TimeUtil.getTime(imMsgBean.getTime(), mData.get(position - 1)
                     .getTime());
-            LOG.info(" showTime : "+showTime);
             if (showTime != null) {
                 String timeShowString = TimeUtil.getTimeShowString(imMsgBean.getTime(), false);
                 holder.mLeftTime.setText(timeShowString);

@@ -8,8 +8,5 @@ public class SystemStateAdapter implements SystemStateChangeCallback{
     public void onMessageReciveData(EmMessageBody messageBody) {}
 
     @Override
-    public void onGroupAmount(String number) {}
-
-    @Override
     public void onGroupMemberInfo() {}
 }

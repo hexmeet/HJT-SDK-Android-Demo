@@ -42,6 +42,7 @@ public class ConversationController implements View.OnClickListener{
     private final TextView handUp;
     private final ViewGroup shareBtn;
     private final TextView updateUserName;
+    private final ImageView encryptedImg;
 
     public interface IController{
         void updateCellsAsLayoutModeChanged();
@@ -79,7 +80,7 @@ public class ConversationController implements View.OnClickListener{
         handUp = (TextView) rootView.findViewById(R.id.hand_up);
         updateUserName = (TextView) rootView.findViewById(R.id.update_user_name);
         shareBtn = (ViewGroup) rootView.findViewById(R.id.toolbar_layout_share);
-        shareBtn.setVisibility(SystemCache.getInstance().isVisibilitySharedScreen() ? View.VISIBLE : View.GONE );
+        encryptedImg = (ImageView) rootView.findViewById(R.id.icon_encrypted_btn);
 
         adjustBottomButtons();
         adjustHangUp();
@@ -163,6 +164,17 @@ public class ConversationController implements View.OnClickListener{
     private void adjustHangUp() {
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) hangUpBtn.getLayoutParams();
         hangUpBtn.setLayoutParams(lp);
+    }
+
+    public void setChatShow() {
+        LOG.info("setChatShow");
+        layoutChatBtn.setVisibility(SystemCache.getInstance().getFeatureSupport().isChatInConference()? View.VISIBLE : View.GONE);
+    }
+
+    public void setEncryptedImg(){
+        LOG.info("setEncryptedImg()");
+        encryptedImg.setVisibility(View.VISIBLE);
+        HjtApp.getInstance().getAppService().stopMediaStaticsLoop();
     }
 
 
@@ -335,8 +347,6 @@ public class ConversationController implements View.OnClickListener{
                 iController.onClickShareScreen();
             }
             shareBtn.setVisibility(View.GONE );
-        }else {
-            shareBtn.setVisibility(SystemCache.getInstance().isVisibilitySharedScreen() ? View.VISIBLE : View.GONE );
         }
 
     }

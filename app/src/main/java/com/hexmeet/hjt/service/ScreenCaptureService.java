@@ -18,7 +18,6 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.WindowManager;
@@ -29,7 +28,6 @@ import com.hexmeet.hjt.BuildConfig;
 import com.hexmeet.hjt.CallState;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
-import com.hexmeet.hjt.RegisterState;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.call.Conversation;
 import com.hexmeet.hjt.event.CallEvent;
@@ -88,15 +86,17 @@ public class ScreenCaptureService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         LOG.info("onStartCommand()");
-
-        int mResultCode = intent.getIntExtra("code", -1);
-        Intent mResultData = intent.getParcelableExtra("data");
-
-        MediaProjectionManager mProjectionManager = (MediaProjectionManager) getSystemService(
-                Context.MEDIA_PROJECTION_SERVICE);
-        mediaProjection = mProjectionManager.getMediaProjection(mResultCode, Objects.requireNonNull(mResultData));
-        onScreenCapturer(mediaProjection);
-
+        if(intent != null) {
+            String mResultCode = intent.getStringExtra("code");
+            Intent mResultData = intent.getParcelableExtra("data");
+            if((mResultCode!=null && !mResultCode.equals("")) && mResultData!=null){
+                MediaProjectionManager mProjectionManager = (MediaProjectionManager) getSystemService(
+                        Context.MEDIA_PROJECTION_SERVICE);
+                mediaProjection = mProjectionManager.getMediaProjection(Integer.parseInt(mResultCode), Objects.requireNonNull(mResultData));
+                onScreenCapturer(mediaProjection);
+                return START_STICKY;
+            }
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -245,7 +245,7 @@ public class ScreenCaptureService extends Service {
         i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
         HjtApp.getInstance().getAppService().stopShare();
-        EventBus.getDefault().post(RegisterState.STOPSCREENSHARE);
+        EventBus.getDefault().post(SharedState.STOPSCREENSHARE);
         stopSelf();
     }
 
@@ -257,4 +257,13 @@ public class ScreenCaptureService extends Service {
             stopSelf();
         }
     }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void SharedStateEvent(SharedState event) {
+        LOG.info("ContentDeclinedEvent :" + event);
+        if (event==SharedState.NOPERMISSION) {
+            SystemCache.getInstance().setSharedPermission(true);
+            closeService();
+        }
+    }
+
 }

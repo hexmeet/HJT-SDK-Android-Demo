@@ -25,7 +25,7 @@ public class PasswordDialog extends Dialog {
         super(context);
     }
     public PasswordDialog(Context context, int theme) {
-        super(context, theme);
+        super(context , theme);
     }
     private static EditText inputBox;
 
@@ -192,6 +192,8 @@ public class PasswordDialog extends Dialog {
         inputBox.setText(userName);
     }
     public void clean(){
-        inputBox = null;
+        if(inputBox!=null){
+            inputBox = null;
+        }
     }
 }

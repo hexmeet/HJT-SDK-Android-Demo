@@ -3,6 +3,7 @@ package com.hexmeet.hjt.sdk;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.hexmeet.hjt.CallState;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.cache.EmMessageCache;
 import com.hexmeet.hjt.event.EmLoginSuccessEvent;
@@ -32,7 +33,8 @@ public class EmSdkManagerImpl implements EmSdkManager{
         engine.setLog("EasyMessage", path, "emsdk", 1024 * 1024 * 20);
         engine.enableLog(true);
         engine.initialize(path, "em_config");
-        engine.setRootCA(path);
+        engine.setRootCA(CopyAssets.getInstance().mRootCaFile);
+        engine.enableSecure(true);
         emListenr = new EMListenr();
         engine.addIMEventListener(emListenr);
 
@@ -103,6 +105,7 @@ public class EmSdkManagerImpl implements EmSdkManager{
         @Override
         public void onError(EMEngine.EMError err) {
             LOG.info("onError : "+err.toString());
+            EventBus.getDefault().post(CallState.EMERROR);
         }
 
         @Override
@@ -126,6 +129,7 @@ public class EmSdkManagerImpl implements EmSdkManager{
                 emMessageBody.setContent(messageBody.content);
                 emMessageBody.setFrom(messageBody.from);
                 emMessageBody.setTime(messageBody.time);
+                emMessageBody.setMe(false);
                 EventBus.getDefault().post(emMessageBody);
 
         }

@@ -214,6 +214,7 @@
     <string name="call_error_1001">Invalid meeting ID.</string>
     <string name="call_error_2005">Invalid meeting ID or meeting has not started yet, please double check.</string>
     <string name="call_error_2001">The called cloud platform is not activated.</string>
+    <string name="call_error_2003">No meeting port resources available.</string>
     <string name="call_error_2007">Call timeout, please retry.</string>
     <string name="call_error_2009">There is no meeting room bound to the called group.</string>
     <string name="call_error_2011">Meeting room expired.</string>
@@ -304,4 +305,5 @@
     <string name="end_of_meeting">Meeting ended or terminated by meeting host.</string>
     <string name="leave_meeting">Are you sure to leave the meeting?</string>
     <string name="username_character">The username can not contain %1$s</string>
+    <string name="content_permission">The request for sending conent is denied due to lack of permission.</string>
 </resources>

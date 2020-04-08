@@ -27,6 +27,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hexmeet.hjt.AppCons;
 import com.hexmeet.hjt.BaseActivity;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
@@ -36,6 +37,7 @@ import com.hexmeet.hjt.event.AvatarUploadEvent;
 import com.hexmeet.hjt.event.RenameEvent;
 import com.hexmeet.hjt.event.UserInfoEvent;
 import com.hexmeet.hjt.login.Login;
+import com.hexmeet.hjt.login.LoginSettings;
 import com.hexmeet.hjt.model.RestLoginResp;
 import com.hexmeet.hjt.utils.Utils;
 import com.hexmeet.hjt.widget.MenuItem;
@@ -85,7 +87,7 @@ public class MeDetailActivity extends BaseActivity {
         if (savedInstanceState != null && savedInstanceState.getSerializable("filePath") != null) {
             avatarTempCaptureFile = new File((String) savedInstanceState.getSerializable("filePath"));
         }
-        HjtApp.getInstance().getAppService().getUserInfo();
+
         username = (TextView) findViewById(R.id.account);
         displayName = (TextView) findViewById(R.id.display_name);
         cellphone = (TextView) findViewById(R.id.phone);
@@ -125,6 +127,7 @@ public class MeDetailActivity extends BaseActivity {
             public void onItemClick(MenuItem item, int position) {
                 if (position == 0) {
                     setResult(13);
+                    LoginSettings.getInstance().setLoginState(LoginSettings.LOGIN_STATE_IDLE, false);
                     HjtApp.getInstance().getAppService().logout();
                     LOG.info("android sdk : "+Build.VERSION.SDK_INT);
                     if(Build.VERSION.SDK_INT<=19){
@@ -165,6 +168,7 @@ public class MeDetailActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+        HjtApp.getInstance().getAppService().getUserInfo();
     }
 
     @Override
@@ -294,7 +298,7 @@ public class MeDetailActivity extends BaseActivity {
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             uri = Uri.fromFile(file);
         } else {
-            uri = FileProvider.getUriForFile(MeDetailActivity.this, "com.hexmeet.hjt.fileprovider", file);
+            uri = FileProvider.getUriForFile(MeDetailActivity.this, AppCons.APP_FILE_PROVIDER_AUTH, file);
         }
         return uri;
     }

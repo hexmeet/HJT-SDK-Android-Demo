@@ -41,6 +41,7 @@ import com.hexmeet.hjt.login.LoginSettings;
 import com.hexmeet.hjt.model.FeatureSupport;
 import com.hexmeet.hjt.model.LoginParams;
 import com.hexmeet.hjt.model.RestLoginResp;
+import com.hexmeet.hjt.service.SharedState;
 import com.hexmeet.hjt.utils.NetworkUtil;
 import com.hexmeet.hjt.utils.ResourceUtils;
 import com.hexmeet.hjt.utils.Utils;
@@ -96,11 +97,10 @@ public class SdkManagerImpl implements SdkManager {
 
         engine = EVFactory.createEngine();
         LOG.info("init engine ->" + engine.toString());
-        CopyAssets.getInstance().createAndStart(appContext);
         String path = appContext.getFilesDir().getAbsolutePath();
         engine.setLog("EasyVideo", path, "evsdk", 1024 * 1024 * 20);
         engine.enableLog(true);
-        engine.setRootCA(path);
+        engine.setRootCA(CopyAssets.getInstance().mRootCaFile);
         engine.initialize(appContext,path, "config");
         engine.setUserAgent("HexMeet", Utils.getVersion());
         engine.setMaxRecvVideo(AppCons.MAX_RECEIVE_STREAM);
@@ -136,7 +136,7 @@ public class SdkManagerImpl implements SdkManager {
         if (!TextUtils.isEmpty(port)) {
             loginPort = Integer.parseInt(port);
         }
-        LOG.info("login : " + params.getServerAddress()+", loginPort : "+loginPort+", User_name: "+ params.getUser_name());
+        LOG.info("login :" + params.getServerAddress()+", loginPort :"+loginPort+", User_name:"+ params.getUser_name()+",https :" + https);
        engine.loginWithLocation(params.getServerAddress(), loginPort, params.getUser_name(), password);
     }
 
@@ -389,7 +389,6 @@ public class SdkManagerImpl implements SdkManager {
         SystemCache.getInstance().resetLoginCache();
 
         NetworkUtil.shutdown();
-        updateVideoUserImage(null);
     }
 
     @Override
@@ -636,7 +635,7 @@ public class SdkManagerImpl implements SdkManager {
         channelStatList.media_statistics = media;
         channelStatList.signal_statistics = signalStat;
 
-
+        LOG.info("statistics");
         return channelStatList;
     }
 
@@ -936,11 +935,11 @@ public class SdkManagerImpl implements SdkManager {
                    LOG.info("isMuteFromMru  sdk ");
                    EventBus.getDefault().post(new RemoteMuteEvent(site.remoteMuted));
                }
-               EventBus.getDefault().post(new RemoteNameUpdateEvent(site.window,site.name,String.valueOf(site.deviceId),true));
+               EventBus.getDefault().post(new ParticipantsMicMuteEvent(site.remoteMuted ? site.remoteMuted :site.micMuted ,String.valueOf(site.deviceId)));
             } else {
                EventBus.getDefault().post(new ParticipantsMicMuteEvent(site.micMuted,String.valueOf(site.deviceId)));
-               EventBus.getDefault().post(new RemoteNameUpdateEvent(site.window,site.name,String.valueOf(site.deviceId),false));
-            }
+           }
+            EventBus.getDefault().post(new RemoteNameUpdateEvent(site.window,site.name,String.valueOf(site.deviceId),site.isLocal));
 
         }
 
@@ -959,6 +958,9 @@ public class SdkManagerImpl implements SdkManager {
             if(info.dir== EVCommon.StreamDir.Download){
                 SystemCache.getInstance().setWithContent(info.enabled);
                 EventBus.getDefault().post(new ContentEvent(info.enabled));
+            }
+            if(info.status == EVCommon.EvCallStatus.Declined){
+                EventBus.getDefault().post(SharedState.NOPERMISSION);
             }
         }
 
