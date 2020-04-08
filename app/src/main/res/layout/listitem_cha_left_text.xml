@@ -22,17 +22,17 @@
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="7dp"
         >
         <LinearLayout
+            android:visibility="gone"
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-            <ImageView
+            <com.hexmeet.hjt.utils.MLRoundedImageView
                 android:id="@+id/left_img"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
-                android:src="@drawable/icon_contact"
+                android:src="@drawable/default_photo"
                 android:layout_gravity="center"
                 />
 
@@ -50,19 +50,20 @@
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:layout_marginBottom="5dp"
-               android:layout_marginLeft="10dp"
-               android:text="浅草more"
-               android:textSize="8sp"
+               android:text=""
+               android:textSize="@dimen/groupchat_text_size"
+               android:textColor="@color/Blue"
                />
            <TextView
                android:id="@+id/left_context"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:background="@drawable/chat_other"
-               android:text="123"
-               android:layout_gravity="center"
+               android:text=""
+               android:gravity="center_vertical"
                android:textSize="15sp"
-               android:textColor="@color/title_bar"
+               android:textColor="@color/White"
+               android:includeFontPadding="false"
                />
        </LinearLayout>
 

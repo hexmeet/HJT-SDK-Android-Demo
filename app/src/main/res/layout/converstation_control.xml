@@ -31,13 +31,24 @@
             android:scaleType="fitCenter"
             android:src="@drawable/image_signal5" />
 
+        <ImageView
+            android:id="@+id/icon_encrypted_btn"
+            android:visibility="gone"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/call_statistics_btn"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon_encrypted" />
+
         <Chronometer
             android:id="@+id/timer_chronometer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@id/call_statistics_btn"
+            android:layout_toRightOf="@id/icon_encrypted_btn"
             android:textColor="@color/White"
             android:textSize="15sp" />
 

@@ -104,4 +104,5 @@
     <dimen name="me_icon_wh">20dp</dimen>
     <dimen name="text_size" >16sp</dimen>
     <dimen name="feedback_font_size">18sp</dimen>
+    <dimen name="groupchat_text_size" >14sp</dimen>
 </resources>

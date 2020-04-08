@@ -27,6 +27,7 @@ public class ResourceUtils {
     public static final int CALL_ERROR_1001 = 1001;
     public static final int CALL_ERROR_1 = 1;
     public static final int CALL_ERROR_2001 = 2001;
+    public static final int CALL_ERROR_2003 = 2003;
     public static final int CALL_ERROR_2007 = 2007;
     public static final int CALL_ERROR_2009 = 2009;
     public static final int CALL_ERROR_2011 = 2011;
@@ -119,6 +120,8 @@ public class ResourceUtils {
             return HjtApp.getInstance().getString(R.string.call_error_2005);
         } else if(code == CALL_ERROR_2001) {
             return HjtApp.getInstance().getString(R.string.call_error_2001);
+        } else if(code == CALL_ERROR_2003) {
+            return HjtApp.getInstance().getString(R.string.call_error_2003);
         } else if(code == CALL_ERROR_2007) {
             return HjtApp.getInstance().getString(R.string.call_error_2007);
         } else if(code == CALL_ERROR_2009) {

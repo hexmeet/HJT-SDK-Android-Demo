@@ -31,7 +31,7 @@ public class SplashActivity extends BaseActivity {
             finish();
             return;
         }
-        if ((HjtApp.isCnVersion() && BuildConfig.SHOW_PRIVACY_WINDOW) && (!LoginSettings.getInstance().getPrivacyPolicy() && !SystemCache.getInstance().isInviteMakeCall())){
+        if ((HjtApp.isCnVersion() && !BuildConfig.HIDE_USER_LICENSE) && (!LoginSettings.getInstance().getPrivacyPolicy() && !SystemCache.getInstance().isInviteMakeCall())){
             dialog = new PrivacyPolicyDialogUtil.Builder(SplashActivity.this)
                     .setPositiveButton(new View.OnClickListener() {
                         @Override
@@ -106,9 +106,12 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         LOG.info(" onDestroy()");
+        if(dialog != null) {
+            dialog.dismiss();
+        }
         autoLoginHandler.removeCallbacksAndMessages(null);
+        super.onDestroy();
     }
 
 

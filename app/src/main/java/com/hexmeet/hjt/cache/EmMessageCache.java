@@ -1,5 +1,6 @@
 package com.hexmeet.hjt.cache;
 
+import com.hexmeet.hjt.CallState;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.event.EmLoginSuccessEvent;
 import com.hexmeet.hjt.event.EmMessageBody;
@@ -70,44 +71,54 @@ public class EmMessageCache {
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.POSTING)
     public void onEmMessageBodyEvent(EmMessageBody body) {
         if(body != null) {
-            LOG.info("add EM message body");
-            emMessageBodies.add(body);
-            for (SystemStateChangeCallback callback : callbacks) {
-                callback.onMessageReciveData(body);
+           if(emMessageBodies.size()!=0){
+               boolean contains = emMessageBodies.contains(body);
+               LOG.info("Is there a duplicate message ： "+contains);
+               if(!contains){
+                   emMessageBodies.add(body);
+                   addMessage(body);
+               }
+           }else {
+                LOG.info("add message listview ");
+                emMessageBodies.add(body);
+                addMessage(body);
             }
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPeopleNumber(PeopleNumberEvent numberEvent) {
-        LOG.info("peopleNumber : "+numberEvent.getNumber());
+    private void addMessage(EmMessageBody body) {
         for (SystemStateChangeCallback callback : callbacks) {
-            callback.onGroupAmount(numberEvent.getNumber());
+            callback.onMessageReciveData(body);
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.POSTING)
     public void onEmLoginSuccessEvent(EmLoginSuccessEvent event) {
         LOG.info("onEmLoginSuccessEvent : "+event.isLoginSucceed());
         setIMSuccess(event.isLoginSucceed());
         HjtApp.getInstance().getAppService().joinGroupChat();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.POSTING)
     public void onEMGroupMemberInfo(GroupMemberInfo event) {
         if(event!=null){
             EVEngine.ContactInfo info = HjtApp.getInstance().getAppService().getImageUrl(event.getEvUserId());
                 IMGroupContactInfo contactInfo = new IMGroupContactInfo();
                 if(info!=null){
+                    LOG.info("info : "+info.toString());
                     contactInfo.setId(String.valueOf(info.id));
                     contactInfo.setDisplayName(info.displayName);
                     contactInfo.setImageUrl(info.imageUrl);
+                }else {
+                    String groupMemberName = HjtApp.getInstance().getAppService().getGroupMemberName(event.getEmUserId(), getGroupId());
+                    LOG.info("groupMemberName : " + groupMemberName);
+                    contactInfo.setDisplayName(groupMemberName);
                 }
-                contactInfo.setEmUserId(event.emUserId);
-                contactInfo.setEvUserId(event.evUserId);
+                contactInfo.setEmUserId(event.getEmUserId());
+                contactInfo.setEvUserId(event.getEvUserId());
                 contactInfos.add(contactInfo);
                 for (SystemStateChangeCallback callback : callbacks) {
                     callback.onGroupMemberInfo();
@@ -115,6 +126,14 @@ public class EmMessageCache {
 
         }
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.POSTING)
+    public void onEmError(CallState state) {
+       LOG.info("onEmError() : " + state.toString());
+       if(state==CallState.EMERROR){
+           HjtApp.getInstance().getAppService().anonymousLoginIM();
+       }
     }
 
 

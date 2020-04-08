@@ -32,6 +32,7 @@ import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.call.CallIncomingActivity;
 import com.hexmeet.hjt.call.ConnectActivity;
 import com.hexmeet.hjt.call.Conversation;
+import com.hexmeet.hjt.sdk.CopyAssets;
 import com.hexmeet.hjt.service.AppService;
 import com.hexmeet.hjt.service.MeetingWindowService;
 import com.hexmeet.hjt.utils.ConfigureLog4J;
@@ -203,6 +204,7 @@ public class HjtApp extends Application {
         LOG.info("APP Process Name is " + this.getProcessName());
         if(isAppProcess()){
             LOG.info("Start bindAppService");
+            CopyAssets.getInstance().createAndStart(getContext());
             bindAppService();
         }
         SystemCache.getInstance().setNetworkConnected(NetworkUtil.isNetConnected(getContext()));

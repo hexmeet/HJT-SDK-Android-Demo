@@ -1,11 +1,15 @@
 package com.hexmeet.hjt.groupchat;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.icu.util.Calendar;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.Parcelable;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -15,6 +19,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hexmeet.hjt.AppCons;
 import com.hexmeet.hjt.BaseActivity;
 import com.hexmeet.hjt.CallState;
 import com.hexmeet.hjt.HjtApp;
@@ -36,6 +41,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,11 +50,14 @@ import em.common.EMEngine;
 
 public class GroupChatActivity extends BaseActivity implements ChattingFooter.OnChattingFooterListener{
     private Logger LOG = Logger.getLogger(this.getClass());
+    private final static int CHAT_MESSAGE_BODY = 1001;
+    private final static int CHAT_GROUP_MEMBER_INFO= 1003;
     private ChattingFooter mChattingFooter;
     private View mRoot;
     private RecyclerView rlvMessage;
     private GroupAdapter messageAdapter;
     private GestureDetector detector;
+    private boolean isDestroying = false;
 
     private GestureDetector.SimpleOnGestureListener simpleOnGestureListener = new GestureDetector.SimpleOnGestureListener() {
         @Override
@@ -69,7 +78,6 @@ public class GroupChatActivity extends BaseActivity implements ChattingFooter.On
             return super.onFling(e1, e2, velocityX, velocityY);
         }
     };
-    private TextView number;
     private ImageView mChatBack;
 
 
@@ -105,7 +113,6 @@ public class GroupChatActivity extends BaseActivity implements ChattingFooter.On
 
     private void initView() {
         mRoot = findViewById(R.id.ll_root);
-        number = (TextView) findViewById(R.id.group_number);
         mChatBack = (ImageView) findViewById(R.id.chat_back_btn);
         mChattingFooter = (ChattingFooter) findViewById(R.id.chatting_footer);
         mChattingFooter.isShowMore(true);
@@ -113,8 +120,7 @@ public class GroupChatActivity extends BaseActivity implements ChattingFooter.On
         mChattingFooter.setActivity(this, mRoot);
         rlvMessage = (RecyclerView) findViewById(R.id.rlv_message);
         rlvMessage.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        rlvMessage.setLayoutManager(llm);
+        rlvMessage.setLayoutManager(new WrapContentLinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         messageAdapter = new GroupAdapter(this);
         rlvMessage.setAdapter(messageAdapter);
         rlvMessage.setOverScrollMode(View.OVER_SCROLL_NEVER);
@@ -126,7 +132,6 @@ public class GroupChatActivity extends BaseActivity implements ChattingFooter.On
                 return false;
             }
         });
-        number.setText(getString(R.string.chat)+"("+SystemCache.getInstance().getParticipant()+")");
 
         mChatBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,15 +146,21 @@ public class GroupChatActivity extends BaseActivity implements ChattingFooter.On
     @Override
     public void OnSendTextMessageRequest(final CharSequence text) {
         if(EmMessageCache.getInstance().isIMSuccess()){
-            EMEngine.UserInfo isSelf = HjtApp.getInstance().getAppService().getImUserInfo();
-            if(isSelf!=null){
+            EMEngine.UserInfo info = HjtApp.getInstance().getAppService().getImUserInfo();
+            if(info!=null){
+                LOG.info("getImUserInfo : " + info.toString());
                 EmMessageBody body = new EmMessageBody();
-                body.setGroupId(isSelf.userid);
+                body.setGroupId(info.userid);
                 body.setContent(text.toString());
                 body.setTime(TimeUtil.currentTime(Calendar.getInstance().getTimeInMillis()));
-                body.setFrom(isSelf.userid);
+                body.setFrom(info.userid);
+                body.setMe(true);
                 //发送到适配器
-                addNewsAdapter(body);
+                if(SystemCache.getInstance().getLoginResponse().getUserId()!=0){
+                    addNewsAdapter(body);
+                }else {
+                    receriveMsgTextMe(body,HjtApp.getInstance().getAppService().getDisplayName(),null);
+                }
                 //保存当前信息
                 EmMessageCache.getInstance().addMessageBody(body);
                 //发送到sdk
@@ -200,8 +211,9 @@ public class GroupChatActivity extends BaseActivity implements ChattingFooter.On
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        chatHandler.removeCallbacksAndMessages(null);
         EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
     /**
      * hide inputMethod
@@ -234,22 +246,21 @@ public class GroupChatActivity extends BaseActivity implements ChattingFooter.On
         public void onMessageReciveData(final EmMessageBody messageBody) {
             LOG.info("new message data");
             if(messageBody!=null){
-                addNewsAdapter(messageBody);
+                chatHandler.removeMessages(CHAT_MESSAGE_BODY);
+                Message msg = Message.obtain();
+                msg.what = CHAT_MESSAGE_BODY;
+                msg.getData().putParcelable(AppCons.BundleKeys.CHAT_EXTRA_MESSAGE, messageBody);
+                chatHandler.sendMessage(msg);
             }
 
-        }
-
-        @Override
-        public void onGroupAmount(String num) {
-            LOG.info("GroupAmount : "+num);
-            number.setText(getString(R.string.group_chat)+"("+num+")");
         }
 
         @Override
         public void onGroupMemberInfo() {
             LOG.info("onGroupMemberInfo() : ");
             messageAdapter.clearList();
-            initImMessageBody();
+            chatHandler.removeMessages(CHAT_GROUP_MEMBER_INFO);
+            chatHandler.sendEmptyMessage(CHAT_GROUP_MEMBER_INFO);
         }
     };
     //获取新消息
@@ -259,8 +270,8 @@ public class GroupChatActivity extends BaseActivity implements ChattingFooter.On
         LOG.info("contactInfo ： "+contactInfo.size());
         for (int i=0;i < contactInfo.size();i ++){
             if(messageBody.getFrom().equals(contactInfo.get(i).getEmUserId())){
-                if(userId.equals(contactInfo.get(i).getEvUserId())){
-                    LOG.info("userId : "+userId+";evuserid : "+contactInfo.get(i).getEvUserId());
+                LOG.info("userId : "+userId+";evuserid : "+contactInfo.get(i).getEvUserId());
+                if(messageBody.isMe || (!userId.equals("0") && userId.equals(contactInfo.get(i).getEvUserId()))){
                     receriveMsgTextMe(messageBody, contactInfo.get(i).getDisplayName(),contactInfo.get(i).getImageUrl());
                 }else {
                     receriveMsgText(messageBody,contactInfo.get(i).getDisplayName(),contactInfo.get(i).getImageUrl());
@@ -296,9 +307,34 @@ public class GroupChatActivity extends BaseActivity implements ChattingFooter.On
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCallStateEvent(CallEvent event) {
         if (event.getCallState() == CallState.IDLE) {
+            if(messageAdapter!=null){
+                messageAdapter.clearList();
+            }
+            isDestroying = true;
             finish();
         }
     }
+
+    @SuppressLint("HandlerLeak")
+    private Handler chatHandler = new Handler() {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            if (!isDestroying) {
+                switch (msg.what) {
+                    case CHAT_MESSAGE_BODY:
+                        EmMessageBody messageBody = msg.getData().getParcelable(AppCons.BundleKeys.CHAT_EXTRA_MESSAGE);
+                        addNewsAdapter(messageBody);
+                        break;
+                    case CHAT_GROUP_MEMBER_INFO:
+                        initImMessageBody();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    };
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

@@ -7,5 +7,6 @@ public enum CallState {
     RING,
     CONNECTED,
     PEERCONNECTED,
-    P2PRING
+    P2PRING,
+    EMERROR
 }

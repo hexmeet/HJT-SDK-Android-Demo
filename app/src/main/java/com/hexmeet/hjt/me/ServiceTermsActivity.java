@@ -7,6 +7,7 @@ import android.view.View.OnClickListener;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 
 import com.hexmeet.hjt.AppCons;
 import com.hexmeet.hjt.BaseActivity;
@@ -15,6 +16,7 @@ import com.hexmeet.hjt.R;
 
 public class ServiceTermsActivity extends BaseActivity {
     private WebView webView;
+    private TextView title;
 
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -22,7 +24,10 @@ public class ServiceTermsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.service_terms);
-
+        boolean booleanExtra = getIntent().getBooleanExtra(AppCons.ISTERMSOFSERVICE, false);
+        LOG.info("type : "+booleanExtra);
+        title = (TextView)findViewById(R.id.service_title);
+        title.setText(booleanExtra ? getString(R.string.license_and_service) : getString(R.string.privacy_policy));
         webView = (WebView) findViewById(R.id.webView);
         WebSettings setting = webView.getSettings();
         setting.setJavaScriptEnabled(true);
@@ -35,8 +40,6 @@ public class ServiceTermsActivity extends BaseActivity {
             }
         });
 
-        boolean booleanExtra = getIntent().getBooleanExtra(AppCons.ISTERMSOFSERVICE, false);
-        LOG.info("type : "+booleanExtra);
         if(booleanExtra){
             String htmlUrl = "file:///android_asset/license.html";
             webView.loadUrl(htmlUrl);

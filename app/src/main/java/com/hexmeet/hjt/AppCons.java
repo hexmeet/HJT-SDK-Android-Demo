@@ -28,6 +28,7 @@ public interface AppCons {
     interface  BundleKeys {
         String EXTRA_DATA = "com.hexmeet.hjt.Keys.DATA";
         String EXTRA_MESSAGE = "com.hexmeet.hjt.Keys.MESSAGE";
+        String CHAT_EXTRA_MESSAGE = "com.hexmeet.hjt.Keys.CHAT.MESSAGE";
     }
 
     interface LoginType {

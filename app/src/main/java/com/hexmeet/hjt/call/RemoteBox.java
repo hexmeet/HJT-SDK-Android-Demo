@@ -47,6 +47,7 @@ public class RemoteBox extends RelativeLayout {
     private boolean showContent = true;
     private AtomicInteger surfaceReadyCount = new AtomicInteger(0);
     int textSize = 14;
+    private boolean isWindowService;
 
     public interface SvcSurfaceListener {
         void onAllSurfaceReady();
@@ -55,7 +56,8 @@ public class RemoteBox extends RelativeLayout {
     public RemoteBox(Context context,boolean isWindowService) {
         super(context);
         LOG.info("INIT isWindowService ： "+isWindowService);
-        init(context,isWindowService);
+        this.isWindowService = isWindowService;
+        init(context);
     }
 
     @Override
@@ -89,7 +91,7 @@ public class RemoteBox extends RelativeLayout {
         this.listener = listener;
     }
 
-    private void init(final Context context, final boolean isWindowService) {
+    private void init(final Context context) {
         if(isWindowService){
             textSize = 8 ;
         }
@@ -270,6 +272,9 @@ public class RemoteBox extends RelativeLayout {
     }
 
     private void layoutEndpointName(int cellIndex, int indexInArray, int textSize, int iconRes) {
+        if(isWindowService){
+            return;
+        }
         boolean muted = false;
         String remoteDeviceName = null;
         if(indexInArray < svcLayoutInfo.getSvcDeviceIds().size()) {

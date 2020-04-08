@@ -106,6 +106,7 @@
 -keep class com.hexmeet.hjt.whiteboard.* {*;}
 -keep class com.hexmeet.hjt.widget.* {*;}
 -keep class com.hexmeet.hjt.wxapi.* {*;}
+-keep class com.hexmeet.hjt.groupchat.* {*;}
 
 
 -dontwarn org.apache.log4j.chainsaw.*

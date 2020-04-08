@@ -215,7 +215,6 @@ public class ContactsFrag extends Fragment {
         public void clearCache(){
             LOG.info("JavaScript: clearCache() ");
             clearWebview();
-            loadConference();
         }
 
         @JavascriptInterface
@@ -280,8 +279,14 @@ public class ContactsFrag extends Fragment {
 
     private void clearWebview() {
         if(mContactsWeb!=null) {
-            mContactsWeb.clearHistory();
-            mContactsWeb.clearCache(true);
+            mContactsWeb.post(new Runnable() {
+                @Override
+                public void run() {
+                    mContactsWeb.clearHistory();
+                    mContactsWeb.clearCache(true);
+                    loadConference();
+                }
+            });
         }
     }
 

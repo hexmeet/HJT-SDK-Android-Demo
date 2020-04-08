@@ -214,7 +214,6 @@ public class ConferenceListFrag extends Fragment {
         public void clearCache(){
             LOG.info("JavaScript: clearCache() ");
             clearWebview();
-            loadConference();
         }
 
         @JavascriptInterface
@@ -226,8 +225,14 @@ public class ConferenceListFrag extends Fragment {
 
     private void clearWebview() {
         if(webView!=null) {
-            webView.clearHistory();
-            webView.clearCache(true);
+            webView.post(new Runnable() {
+                @Override
+                public void run() {
+                    webView.clearHistory();
+                    webView.clearCache(true);
+                    loadConference();
+                }
+            });
         }
     }
 

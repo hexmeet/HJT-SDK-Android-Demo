@@ -336,7 +336,7 @@ public class TimeUtil {
                 long hour = (l / (60 * 60 * 1000) - day * 24);
                 long min = ((l / (60 * 1000)) - day * 24 * 60 - hour * 60);
                 Log.i("TimeUtil : ","min : "+min);
-                if (min >= 10) {
+                if (min >= 1) {
                     show_time = time.substring(11);
                 }
             } catch (Exception e) {

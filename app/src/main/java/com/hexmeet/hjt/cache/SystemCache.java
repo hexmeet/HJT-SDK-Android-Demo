@@ -83,7 +83,8 @@ public class SystemCache {
     private boolean isCamera = true;
     private boolean showRemind = false;
     private boolean showVersionDialog = true;
-    private boolean visibilitySharedScreen= false;
+    private boolean isMuteMic = false;
+    private boolean isSharedPermission = false;
 
 
     private Map<String, String> remoteNameUpdateState = new HashMap<>();
@@ -186,7 +187,6 @@ public class SystemCache {
         isUserMuteVideo = false;
         downloadUserImage = null;
         department=null;
-        visibilitySharedScreen= false;
         EmMessageCache.getInstance().resetIMCache();
     }
 
@@ -497,19 +497,27 @@ public class SystemCache {
         this.showVersionDialog = showVersionDialog;
     }
 
-    public boolean isVisibilitySharedScreen() {
-        return visibilitySharedScreen;
-    }
-
-    public void setVisibilitySharedScreen(boolean visibilitySharedScreen) {
-        this.visibilitySharedScreen = visibilitySharedScreen;
-    }
-
     public FeatureSupport getFeatureSupport() {
         return featureSupport;
     }
 
     public void setFeatureSupport(FeatureSupport featureSupport) {
         this.featureSupport = featureSupport;
+    }
+
+    public boolean isMuteMic() {
+        return isMuteMic;
+    }
+
+    public void setMuteMic(boolean muteMic) {
+        isMuteMic = muteMic;
+    }
+
+    public boolean isSharedPermission() {
+        return isSharedPermission;
+    }
+
+    public void setSharedPermission(boolean sharedPermission) {
+        isSharedPermission = sharedPermission;
     }
 }

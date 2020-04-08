@@ -27,7 +27,7 @@ public class CopyAssets {
     public   String mBackgroundCallingFile;
     public   String mUserFile;
     private  String mErrorToneFile;
-    private  String mRootCaFile;
+    public  String mRootCaFile;
     private Resources mR;
     private String basePath;
     private static CopyAssets instance ;

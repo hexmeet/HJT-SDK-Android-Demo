@@ -258,6 +258,10 @@ public class LoginFragment extends Fragment {
         String port = null;
         boolean https = BuildConfig.CLOUD_SERVER_PROTOCOL_HTTPS;
 
+        if(!BuildConfig.CLOUD_SERVER_PORT.equals("")){
+            port = BuildConfig.CLOUD_SERVER_PORT;
+        }
+
         if(loginType == LOGIN_TYPE_PRIVATE) {
             https = LoginSettings.getInstance().useHttps();
             port = LoginSettings.getInstance().getPrivatePort();
@@ -276,7 +280,6 @@ public class LoginFragment extends Fragment {
                     setLoginBtnEnable(true);
                 }else {
                     setAnonymousConfig();
-                    callback.dialOut();
                 }
             }else {
                 callback.doLogin(params, https, port);
@@ -301,6 +304,11 @@ public class LoginFragment extends Fragment {
         if(TextUtils.isEmpty(displayName)) {
             displayName = Build.MODEL;
             input_conf_name.setText(displayName);
+        }
+        if(!Utils.regExTest(displayName)){
+            Utils.showToast(getActivity(), getString(R.string.username_character,"”,<,>."));
+            setLoginBtnEnable(true);
+            return;
         }
 
         SystemCache.getInstance().getJoinMeetingParam().setConferenceNumber(numberWithoutPassword);
@@ -330,6 +338,7 @@ public class LoginFragment extends Fragment {
             LoginSettings.getInstance().setPrivateMuteMic(closeMic.isChecked());
         }
         setLoginBtnEnable(true);
+        callback.dialOut();
     }
 
 
