@@ -42,7 +42,6 @@ public class ParametersActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         //ScreenUtil.initStatusBar(this);
         setContentView(R.layout.parameters_layout);
-        EventBus.getDefault().register(this);
 
         findViewById(R.id.back_btn).setOnClickListener(new OnClickListener() {
             @Override
@@ -55,8 +54,7 @@ public class ParametersActivity extends BaseActivity {
         findViewById(R.id.feedback_diagnose).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                HjtApp.getInstance().getAppService().obtainLogPath();
-               // reportProblem();
+                reportProblem();
             }
         });
 
@@ -97,14 +95,7 @@ public class ParametersActivity extends BaseActivity {
 
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onLogEvent(LogPathEvent event) {
-        if(event != null){
-            reportProblem(event.getPath());
-        }
-    }
-
-    private void reportProblem(String sdkPath) {
+    private void reportProblem() {
         LOG.info("ParametersActivity, start sent diagnosis logs");
         String[] email = {"appsupport@cninnovatel.com"};
         Uri uri = Uri.parse("mailto:");
@@ -125,6 +116,7 @@ public class ParametersActivity extends BaseActivity {
                 + "/hjt_app.log");
 
         // add sdk logs
+        String sdkPath = HjtApp.getInstance().getAppService().obtainLogPath();
         File fileSDK = new File(sdkPath);
         String emSdkLog = HjtApp.getInstance().getAppService().getEmSdkLog();
         File fileEmSDK = new File(emSdkLog);
@@ -198,6 +190,5 @@ public class ParametersActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 }

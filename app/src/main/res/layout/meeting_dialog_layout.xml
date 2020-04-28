@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+   android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/invite_border_shadow"
+        >
+        <TextView
+            android:id="@+id/meeting_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/apply_permission"
+            android:textSize="16sp"
+            android:padding="10dp"
+            android:textColor="@color/sub_title_bar"
+            android:background="@drawable/invite_border_shadow_top"
+            android:visibility="gone"
+            />
+
+        <LinearLayout
+            android:id="@+id/permission_dialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <TextView
+                android:textSize="16sp"
+                android:padding="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/title_bar"
+                android:text="@string/apply_permission_ok"
+                />
+            <TextView
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/title_bar"
+                android:padding="10dp"
+                android:text="@string/apply_permission_1"
+                />
+            <TextView
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/title_bar"
+                android:padding="10dp"
+                android:text="@string/apply_permission_2"
+                />
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/update_username"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/new_username"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/dialog_update_name_color"
+            android:textSize="18dp"
+            android:padding="15dp"
+            android:maxLength="32"
+            android:imeOptions="flagNoExtractUi"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/mute_and_leavemeeting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/leave_meeting"
+            android:textSize="15sp"
+            android:textColor="@color/title_bar"
+            android:layout_gravity="center"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:layout_marginTop="@dimen/group_padding"
+            android:layout_marginBottom="@dimen/group_padding"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/meeting_cancel"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_select_cancel"
+                android:gravity="center"
+                android:text="@string/cancel"
+                android:textAllCaps="false"
+                android:textColor="@drawable/popup_key_label"
+                android:textSize="16sp"
+
+                />
+
+            <Button
+                android:id="@+id/meeting_ok"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_private_login"
+                android:gravity="center"
+                android:text="@string/ok"
+                android:textAllCaps="false"
+                android:textColor="@drawable/color_text_join"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/meeting_callend"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_private_login"
+                android:gravity="center"
+                android:text="@string/leave_meeting_text"
+                android:textAllCaps="false"
+                android:textColor="@drawable/color_text_join"
+                android:textSize="16sp"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

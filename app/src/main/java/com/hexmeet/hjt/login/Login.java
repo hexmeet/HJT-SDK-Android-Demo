@@ -16,7 +16,7 @@ import com.hexmeet.hjt.PermissionWrapper;
 import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.call.AnonymousJoinMeetActivity;
-import com.hexmeet.hjt.call.PasswordDialog;
+import com.hexmeet.hjt.utils.PasswordDialog;
 import com.hexmeet.hjt.event.CallEvent;
 import com.hexmeet.hjt.event.LoginResultEvent;
 import com.hexmeet.hjt.model.LoginParams;
@@ -216,6 +216,7 @@ public class Login extends BaseActivity implements LoginFragmentCallback{
     public void dialOut() {
         progress.dismiss();
         if(PermissionWrapper.getInstance().checkMeetingPermission(Login.this)) {
+            LOG.info("gotoAnonymousMeeting()");
             AnonymousJoinMeetActivity.gotoAnonymousMeeting(Login.this);
         }
     }

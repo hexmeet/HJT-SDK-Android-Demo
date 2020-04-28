@@ -276,6 +276,7 @@ public class Utils {
                     fs.write(buffer, 0, byteread);
                 }
                 inStream.close();
+                fs.close();
             }
         } catch (Exception e) {
             log.error("copyFile: " + e.getMessage(), e);

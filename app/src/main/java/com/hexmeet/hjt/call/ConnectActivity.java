@@ -21,6 +21,7 @@ import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.RegisterState;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.event.CallEvent;
+import com.hexmeet.hjt.utils.PasswordDialog;
 import com.hexmeet.hjt.utils.ResourceUtils;
 import com.hexmeet.hjt.utils.Utils;
 import com.hexmeet.hjt.widget.PulseView;

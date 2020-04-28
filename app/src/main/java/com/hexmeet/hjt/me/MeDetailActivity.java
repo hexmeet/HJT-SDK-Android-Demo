@@ -32,7 +32,7 @@ import com.hexmeet.hjt.BaseActivity;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.cache.SystemCache;
-import com.hexmeet.hjt.call.PasswordDialog;
+import com.hexmeet.hjt.utils.PasswordDialog;
 import com.hexmeet.hjt.event.AvatarUploadEvent;
 import com.hexmeet.hjt.event.RenameEvent;
 import com.hexmeet.hjt.event.UserInfoEvent;

@@ -177,7 +177,6 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:visibility="gone"
         android:layout_marginTop="10dp"
         android:id="@+id/feedback_view"
         android:layout_width="match_parent"
@@ -197,7 +196,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:text="@string/diagnosis"
+            android:text="@string/feedback_title"
             android:textColor="@drawable/popup_key_label"
             android:textSize="16sp" />
 

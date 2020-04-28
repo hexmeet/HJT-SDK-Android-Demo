@@ -49,6 +49,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.List;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import em.common.EMEngine;
@@ -132,7 +134,7 @@ public class AppService extends Service {
         if(event.getCallState() == CallState.IDLE){
             //cancelFloatIndicator();
             uninitAudioMode(true);
-            if(SystemCache.getInstance().getFeatureSupport().isChatInConference()){
+            if(SystemCache.getInstance().getFeatureSupport()!=null && SystemCache.getInstance().getFeatureSupport().isChatInConference()){
                 logoutIm();
                 EmMessageCache.getInstance().resetIMCache();
             }
@@ -308,7 +310,7 @@ public class AppService extends Service {
 
     public void endCall() {
         LOG.info("endCall()");
-        mSdkHandler.sendEmptyMessage(SdkHandler.HANDLER_SDK_DROP_CALL);
+       mSdkHandler.sendEmptyMessage(SdkHandler.HANDLER_SDK_DROP_CALL);
     }
     public void switchCamera() {
         mSdkHandler.sendEmptyMessage(SdkHandler.HANDLER_SDK_SWITCH_CAMERA);
@@ -405,6 +407,10 @@ public class AppService extends Service {
         }
     }
 
+    public boolean isStatsEncrypted(){
+        return sdkManager.isStatsEncrypted();
+    }
+
     public void startMediaStaticsLoop() {
         stopMediaStaticsLoop();
         mSdkHandler.sendEmptyMessage(SdkHandler.HANDLER_SDK_GET_STATISTICS);
@@ -496,10 +502,8 @@ public class AppService extends Service {
         mSdkHandler.sendMessage(msg);
     }
 
-    public void obtainLogPath(){
-        Message msg = Message.obtain(mSdkHandler);
-        msg.what = SdkHandler.HANDLER_USER_LOGPATH;
-        msg.sendToTarget();
+    public String obtainLogPath(){
+        return sdkManager.getObtainLogPath();
     }
 
     public void networkQuality(){
@@ -520,6 +524,14 @@ public class AppService extends Service {
         msg.what = SdkHandler.HANDLER_SDK_REFUSE_P2P_MAKE_CALL;
         msg.obj = number;
         msg.sendToTarget();
+    }
+
+    public boolean isMeetingHost(){
+        return sdkManager.isMeetingHost();
+    }
+
+    public void onTerminateMeeting() {
+        mSdkHandler.sendEmptyMessage(SdkHandler.HANDLER_SDK_TERMINATE_MEETING);
     }
 
     public boolean isCalling(){
@@ -640,11 +652,19 @@ public class AppService extends Service {
 
     public void anonymousLoginIM(){
         String imAddress = sdkManager.getIMAddress();//   address  ws://172.24.0.63:6060
+        LOG.info("imAddress : "+imAddress);
         if(imAddress!=null && !imAddress.equals("")){
             String server = null ;
             String port = null;
+
             String[] split = imAddress.split("//");
             for (int i = 0; i < split.length; i++){
+                LOG.info("WS : "+split[0]);
+                if(split[0].equals("ws:")){
+                    setEnableSecure(false);
+                }else {
+                    setEnableSecure(true);
+                }
                 server = split[1];
             }
             String[] site = server.split(":");
@@ -725,6 +745,17 @@ public class AppService extends Service {
 
     public String getEmSdkLog(){
         return emSdkMeanager.emSdkLog();
+    }
+
+    public void feedbackFiles(List<String> path, String contact, String description){
+        sdkManager.uploadFeedbackFiles(path,contact,description);
+    }
+
+    public void setEnableSecure(boolean enable){
+        Message message = Message.obtain();
+        message.what = EmSdkHandler.HANDLER_SDK_ENABLE_SECURE;
+        message.arg1 = enable ? 1 : 0;
+        emSdkHandler.sendMessage(message);
     }
 
 }

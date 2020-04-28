@@ -223,7 +223,9 @@ public class CopyAssets {
         //BluetoothManager.getInstance().disableBluetoothSCO();
         if(isUsingBluetooth())
             disconnectBluetooth();
-
+        if(speakerOn){
+            mAudioManager.setMode(AudioManager.MODE_NORMAL);
+        }
         mAudioManager.setSpeakerphoneOn(speakerOn);//是否外放
 
     }

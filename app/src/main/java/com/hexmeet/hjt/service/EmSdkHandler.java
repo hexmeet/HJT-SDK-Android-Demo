@@ -19,6 +19,7 @@ public class EmSdkHandler  extends BaseSafelyHandler<EmSdkManager> {
     final static int HANDLER_EMSDK_JOINGROUPCHAT = 10005;
     final static int HANDLER_EMSDK_RELEASEEMSDK = 10006;
     final static int HANDLER_EMSDK_LOGAUT = 10007;
+    final static int HANDLER_SDK_ENABLE_SECURE = 10008;
     EmSdkHandler(HandlerThread thread, EmSdkManager ref) {
         super(thread.getLooper(), ref);
     }
@@ -53,6 +54,9 @@ public class EmSdkHandler  extends BaseSafelyHandler<EmSdkManager> {
                 break;
             case HANDLER_EMSDK_LOGAUT:
                 ref.logout();
+                break;
+            case HANDLER_SDK_ENABLE_SECURE:
+                ref.enableSecure(msg.arg1 == 1);
                 break;
             default:
                 break;

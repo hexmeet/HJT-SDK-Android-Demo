@@ -179,7 +179,7 @@ public class StateUtil {
 
     public static void setStateBarUtil(Activity activity){
         if(Build.MANUFACTURER.equalsIgnoreCase(MANUFACTURER_XIAOMI) || Build.MANUFACTURER.equalsIgnoreCase(MANUFACTURER_MEIZU)){
-            StateUtil.setStatusBar(activity,true,false);
+           // StateUtil.setStatusBar(activity,true,false);
             StateUtil.setStatusTextColor(true,activity);
         }else {
           //  StateAppBar.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.white));

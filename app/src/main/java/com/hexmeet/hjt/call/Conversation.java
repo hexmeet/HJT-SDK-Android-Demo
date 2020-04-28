@@ -17,7 +17,9 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Message;
 import android.provider.Settings;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
@@ -158,7 +160,7 @@ public class Conversation extends FullscreenActivity {
         recordView.setVisibility(SystemCache.getInstance().isRecordingOn() ? View.VISIBLE : View.GONE);
         recordView.setText(SystemCache.getInstance().isRecording() ? getText(R.string.live) :getText(R.string.record));
         controller = new ConversationController(findViewById(R.id.control_layout), iController, getScreenWidth());
-        HjtApp.getInstance().getAppService().startMediaStaticsLoop();
+
         initGesture();
         controller.startTime(startTime);
         if(SystemCache.getInstance().getPeer()!=null){
@@ -377,7 +379,7 @@ public class Conversation extends FullscreenActivity {
             boolean ok = Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(HjtApp.getInstance().getContext());
             if(!ok){
                 if(!isDestroyed()){
-                    floatWindowPermissionDialog();
+                    meetingDialog(MeetingDialog.MEETING_PERMISSION);
                 }
             }else {
                 GroupChatActivity.actionStart(Conversation.this);
@@ -388,7 +390,7 @@ public class Conversation extends FullscreenActivity {
         @Override
         public void changeUserName() {
             LOG.info("changeUserName()");
-            updateUserNameWindow();
+            meetingDialog(MeetingDialog.MEETING_UPDATE_NAME);
         }
 
         @Override
@@ -413,7 +415,12 @@ public class Conversation extends FullscreenActivity {
 
         @Override
         public void onHangUp() {
-            unmuteAudioDialog(false);
+            LOG.info("meeting host "+HjtApp.getInstance().getAppService().isMeetingHost());
+            if(HjtApp.getInstance().getAppService().isMeetingHost()){
+                meetingDialog(MeetingDialog.MEETING_END);
+            }else {
+                meetingDialog(MeetingDialog.MEETING_LEAVE);
+            }
         }
     };
 
@@ -552,6 +559,9 @@ public class Conversation extends FullscreenActivity {
             orientationListener.disable();
             orientationListener = null;
         }
+        if(dialog != null) {
+            dialog.dismiss();
+        }
 
         handlerThread.quit();
         if (EventBus.getDefault().isRegistered(this)){
@@ -604,14 +614,7 @@ public class Conversation extends FullscreenActivity {
             } else {
                 startService(intents);
             }
-
-            //改变UI状态
-            EventBus.getDefault().post(new ContentEvent(false));
-            controller.shareScreen(true);
-            SystemCache.getInstance().setSharedScreen(true);
-            moveTaskToBack(true);//退到home页面
         }
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -643,7 +646,8 @@ public class Conversation extends FullscreenActivity {
             svcHandler.sendMessageDelayed(msg, 2000);
             return;
         }else if(event.getCode()==NetworkEvent.EV_WARN_UNMUTE_AUDIO_INDICATION) {
-            unmuteAudioDialog(true);
+            //unmuteAudioDialog(true);
+            meetingDialog(MeetingDialog.MEETING_UNMUTE);
             return;
         }
         networkConditionToast.setVisibility(View.VISIBLE);
@@ -754,13 +758,6 @@ public class Conversation extends FullscreenActivity {
         if(callStaticsWindow != null) {
             callStaticsWindow.updateMediaStatistics(channelStatList);
         }
-        if(controller!=null){
-            if (channelStatList != null && channelStatList.signal_statistics != null) {
-                if(channelStatList.signal_statistics.encryption){
-                   controller.setEncryptedImg();
-                }
-            }
-        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -793,6 +790,7 @@ public class Conversation extends FullscreenActivity {
 
     private void clearResource() {
         if(callStaticsWindow != null) {
+            callStaticsWindow.dismiss();
             callStaticsWindow.clean();
             callStaticsWindow = null;
         }
@@ -895,6 +893,7 @@ public class Conversation extends FullscreenActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void SharedState(SharedState state) {
+        LOG.info("SharedState : "+state);
         if(state==SharedState.STOPSCREENSHARE){
             controller.shareScreen(false);
         }else if(state==SharedState.NOPERMISSION){
@@ -904,6 +903,12 @@ public class Conversation extends FullscreenActivity {
             Message msg = Message.obtain();
             msg.what = ON_SVC_MICROPHONEMUTED;
             svcHandler.sendMessageDelayed(msg, 3000);
+            stopScreenCaptureService();
+        }else {
+            //改变UI状态
+            controller.shareScreen(true);
+            SystemCache.getInstance().setSharedScreen(true);
+            moveTaskToBack(true);//退到home页面
         }
     }
 
@@ -1158,117 +1163,73 @@ public class Conversation extends FullscreenActivity {
             LOG.info("AudioManager "+focusChange);
         }
     };*/
-    //悬浮窗dialog
-    private  void  floatWindowPermissionDialog(){
 
-        final AlertDialog dialog = new AlertDialog.Builder(this).create();
-        dialog.setCancelable(false);
-        dialog.show();
-
-        Window window = dialog.getWindow();
-        window.setContentView(R.layout.alertdialog_flotwindow);
-        window.getDecorView().setBackgroundColor(Color.TRANSPARENT);
-
-        Button cancel = (Button) window.findViewById(R.id.cancel_flotwindow);
-        Button ok = (Button) window.findViewById(R.id.ok_flotwindow);
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PermissionUtil.GoToSetting(Conversation.this);
-                dialog.cancel();
-            }
-        });
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-            }
-        });
-    }
-    //主持人正在解除静音，是否同意解除静音dialog
-
-    private  void unmuteAudioDialog(boolean isUnMuteAudio){
-        LOG.info("isUnMuteAudio : "+isUnMuteAudio);
-        final AlertDialog muteAudioDialog = new AlertDialog.Builder(this).create();
-        muteAudioDialog.setCancelable(false);
-        muteAudioDialog.show();
-
-        Window window = muteAudioDialog.getWindow();
-        window.setContentView(R.layout.alertdialog_audio_indication);
-        window.getDecorView().setBackgroundColor(Color.TRANSPARENT);
-        TextView title =(TextView) window.findViewById(R.id.title_context);
-        if(isUnMuteAudio){
-            title.setText(getString(R.string.audio_indication));
-        }else {
-            title.setText(getString(R.string.leave_meeting));
-        }
-
-        Button cancel = (Button) window.findViewById(R.id.cancel_audio);
-        Button ok = (Button) window.findViewById(R.id.ok_audio);
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(isUnMuteAudio){
-                    HjtApp.getInstance().getAppService().muteMic(false);
-                    if(controller != null) {
-                        controller.muteMic(false);
+    MeetingDialog  dialog;
+    private String name;
+    private void meetingDialog(int type){
+          dialog = new MeetingDialog.Builder(Conversation.this).dialogType(type)
+                .setCancelButton(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
                     }
-                }else {
-                    HjtApp.getInstance().getAppService().endCall();
-                }
-                muteAudioDialog.cancel();
-            }
-        });
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                muteAudioDialog.cancel();
-            }
-        });
+                }).setInputWatcher(new TextWatcher() {
+                      @Override
+                      public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                      @Override
+                      public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                      @Override
+                      public void afterTextChanged(Editable s) {
+                          name = s.toString();
+                      }
+                  }).setOKButton(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialogOkType(type);
+                        dialog.dismiss();
+                    }
+                }).setEndButton(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        HjtApp.getInstance().getAppService().onTerminateMeeting();
+                        dialog.dismiss();
+                    }
+                }).createTwoButtonDialog();
+        dialog.show();
     }
-    //修改会中名字dialog
-    private  void  updateUserNameWindow(){
-        AlertDialog updateUserNameDialog = new AlertDialog.Builder(this).create();
-        updateUserNameDialog.setCancelable(false);
-        updateUserNameDialog.show();
-        updateUserNameDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        Window window = updateUserNameDialog.getWindow();
 
-        window.setContentView(R.layout.alertdialog_update_name);
-        window.getDecorView().setBackgroundColor(Color.TRANSPARENT);
-
-        final EditText  mNewUsername = (EditText) window.findViewById(R.id.new_username);
-        Button  mUpdateNameCancel = (Button) window.findViewById(R.id.update_name_cancel);
-        Button mUpdateNameOk = (Button) window.findViewById(R.id.update_name_ok);
-        mNewUsername.setText(HjtApp.getInstance().getAppService().getDisplayName());
-        mNewUsername.setFocusable(true);
-        mNewUsername.setFocusableInTouchMode(true);
-        mNewUsername.requestFocus();
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-
-        mUpdateNameOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String displayName = mNewUsername.getText().toString().trim();
+    private void dialogOkType(int type) {
+        switch (type){
+            case MeetingDialog.MEETING_UPDATE_NAME:
+                String displayName = name;
                 if(!displayName.equals("") && Utils.regExTest(displayName)){
                     LOG.info(" new displayName : "+displayName);
                     HjtApp.getInstance().getAppService().setConfDisplayName(displayName);
                     videoBoxGroup.updateLocalName(displayName);
-                    updateUserNameDialog.cancel();
                 }else {
                     Utils.showToastWithCustomLayout(Conversation.this, getString(R.string.username_character,"”,<,>."));
                 }
+                break;
+            case MeetingDialog.MEETING_UNMUTE:
+                HjtApp.getInstance().getAppService().muteMic(false);
+                if(controller != null) {
+                    controller.muteMic(false);
+                 }
+                break;
+            case MeetingDialog.MEETING_LEAVE:
+                HjtApp.getInstance().getAppService().endCall();
+                break;
+            case MeetingDialog.MEETING_END:
+                HjtApp.getInstance().getAppService().endCall();
+                break;
+            case MeetingDialog.MEETING_PERMISSION:
+                PermissionUtil.GoToSetting(Conversation.this);
+                break;
 
-            }
-        });
-        mUpdateNameCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateUserNameDialog.cancel();
-            }
-        });
+            default:
+                break;
+        }
     }
-
 
 
     public void floatWindowService(){

@@ -347,7 +347,7 @@
 
     <LinearLayout
         android:id="@+id/video_content_switch"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
@@ -356,29 +356,30 @@
 
         <TextView
             android:id="@+id/switch_content"
-            android:layout_width="wrap_content"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_content_switch_left"
-            android:paddingBottom="6dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="6dp"
             android:text="@string/content"
             android:textColor="@drawable/color_content_video_switch"
             android:textSize="14sp" />
 
         <TextView
             android:id="@+id/switch_video"
-            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_content_switch_right"
-            android:paddingBottom="6dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
             android:paddingTop="6dp"
+            android:paddingBottom="6dp"
             android:text="@string/video"
             android:textColor="@drawable/color_content_video_switch"
             android:textSize="14sp" />
+
     </LinearLayout>
 
 </RelativeLayout>

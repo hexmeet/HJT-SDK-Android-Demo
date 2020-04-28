@@ -304,4 +304,14 @@
     <string name="leave_meeting">您确定离开该会议？</string>
     <string name="username_character">会议中显示的用户名不能包含 %1$s</string>
     <string name="content_permission">由于没有权限，发送内容被拒绝</string>
+    <string name="feedback_process">正在上传，请稍候</string>
+    <string name="feedback_successful">上传成功</string>
+    <string name="feedback_fail">上传失败</string>
+    <string name="apply_permission">申请权限</string>
+    <string name="apply_permission_ok">视频悬浮窗和来电提醒等功能，需要开启以下权限。点击确定，前往开启</string>
+    <string name="apply_permission_1">1. 显示悬浮窗 (允许显示在其他应用上层)</string>
+    <string name="apply_permission_2">2. 后台弹出界面 (允许应用在后台弹出界面)</string>
+    <string name="leave_meeting_text">结束会议</string>
+    <string name="end_meeting">离开会议</string>
+    <string name="call_end_meeting">如果您不想结束会议,请在离开前制定新的主持人</string>
 </resources>

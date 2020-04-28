@@ -33,8 +33,6 @@ public class EmSdkManagerImpl implements EmSdkManager{
         engine.setLog("EasyMessage", path, "emsdk", 1024 * 1024 * 20);
         engine.enableLog(true);
         engine.initialize(path, "em_config");
-        engine.setRootCA(CopyAssets.getInstance().mRootCaFile);
-        engine.enableSecure(true);
         emListenr = new EMListenr();
         engine.addIMEventListener(emListenr);
 
@@ -97,6 +95,16 @@ public class EmSdkManagerImpl implements EmSdkManager{
     @Override
     public String emSdkLog() {
         return engine.compressLog();
+    }
+
+    @Override
+    public void enableSecure(boolean enable) {
+        LOG.info("enableSecure :" + enable);
+        engine.enableSecure(enable);
+        if(enable){
+            engine.setRootCA(CopyAssets.getInstance().mRootCaFile);
+        }
+
     }
 
 
