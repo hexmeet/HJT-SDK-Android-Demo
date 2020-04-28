@@ -127,7 +127,7 @@ public class ConfManageWindow {
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                //progressLayout.setVisibility(View.GONE);
+                progressLayout.setVisibility(View.GONE);
                 isWebLoadComplete = true;
             }
 
@@ -286,19 +286,6 @@ public class ConfManageWindow {
         public void tokenExpired(){
             LOG.info("JavaScript: tokenExpired");
             HjtApp.getInstance().getAppService().getUserInfo();
-        }
-
-        @JavascriptInterface
-        public void PageCreated(){
-            LOG.info("JavaScript: PageCreated");
-            if(conversation != null) {
-                conversation.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressLayout.setVisibility(View.GONE);
-                    }
-                });
-            }
         }
 
         @JavascriptInterface

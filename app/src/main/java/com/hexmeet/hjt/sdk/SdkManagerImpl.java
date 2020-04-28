@@ -18,6 +18,7 @@ import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.event.AvatarUploadEvent;
 import com.hexmeet.hjt.event.CallEvent;
 import com.hexmeet.hjt.event.ContentEvent;
+import com.hexmeet.hjt.event.FeedbackEvent;
 import com.hexmeet.hjt.event.FileMessageEvent;
 import com.hexmeet.hjt.event.LiveEvent;
 import com.hexmeet.hjt.event.LogPathEvent;
@@ -174,17 +175,16 @@ public class SdkManagerImpl implements SdkManager {
     }
 
     @Override
-    public void getObtainLogPath() {
-        String path = engine.compressLog();
-        EventBus.getDefault().post(new LogPathEvent(path));
+    public String getObtainLogPath() {
+        return engine.compressLog();
     }
 
     @Override
     public void getUserInfo() {
         UserInfo user = engine.getUserInfo();
         if(user!=null){
-        LOG.info("getUserInfoList : "+user.toString());
-        getUserInfoList(user,true);
+            LOG.info("getUserInfoList : "+user.toString());
+            getUserInfoList(user,true);
         }
     }
 
@@ -321,6 +321,38 @@ public class SdkManagerImpl implements SdkManager {
     public void setScreenDirection(boolean direction) {
         LOG.info("setScreenDirection() : "+direction);
         engine.setLandscape(direction);
+    }
+
+    @Override
+    public boolean isStatsEncrypted() {
+        LOG.info("isStatsEncrypted()");
+        ArrayList<StreamStats> stats = engine.getStats();
+        if(stats!=null){
+            for (StreamStats streamStats :stats) {
+                return  streamStats.isEncrypted;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void uploadFeedbackFiles(List<String> path, String contact, String description) {
+        LOG.info("uploadFeedbackFiles :" + contact+",description :" + description);
+        for (int i = 0; i< path.size(); i++){
+            LOG.info("paths :" + path.get(i));
+        }
+        engine.uploadFeedbackFiles(path,description,contact);
+    }
+
+    @Override
+    public boolean isMeetingHost() {
+        return engine.isConferenceHoster();
+    }
+
+    @Override
+    public void onTerminateMeeting() {
+        LOG.info("leave the Meeting");
+        engine.terminateConference();
     }
 
     @SuppressLint("StringFormatInvalid")
@@ -961,6 +993,8 @@ public class SdkManagerImpl implements SdkManager {
             }
             if(info.status == EVCommon.EvCallStatus.Declined){
                 EventBus.getDefault().post(SharedState.NOPERMISSION);
+            }else {
+                EventBus.getDefault().post(SharedState.START);
             }
         }
 
@@ -1063,6 +1097,12 @@ public class SdkManagerImpl implements SdkManager {
                 SystemCache.getInstance().getPeer().setImageUrl(imageUrl);
                 EventBus.getDefault().post(new FileMessageEvent(true,imageUrl));
             }
+        }
+
+        @Override
+        public void onUploadFeedback(int number) {
+            LOG.info("onUploadFeedback :" + number);
+            EventBus.getDefault().post(new FeedbackEvent(number));
         }
     }
 }

@@ -64,6 +64,7 @@
                android:textSize="15sp"
                android:textColor="@color/White"
                android:includeFontPadding="false"
+               android:textIsSelectable="true"
                />
        </LinearLayout>
 

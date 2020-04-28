@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     android:background="@color/hexmeet_bg"
     android:fitsSystemWindows="true"
-    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,6 +9,7 @@
     tools:context=".me.FeedbackActivity">
 
     <RelativeLayout
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/White"
@@ -31,6 +31,8 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/problem_layout"
+        android:layout_below="@id/title"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:paddingLeft="10dp"
@@ -59,6 +61,8 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/photo_layout"
+        android:layout_below="@id/problem_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/White"
@@ -102,6 +106,8 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/info_layout"
+        android:layout_below="@id/photo_layout"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:paddingLeft="10dp"
@@ -119,35 +125,41 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/mobile_layout"
+        android:layout_below="@id/info_layout"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:background="@color/White"
         >
 
         <com.andreabaccega.widget.FormEditText
-            android:id="@+id/login_server"
+            android:id="@+id/mobile"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:background="@drawable/feedback_text_bg"
             android:hint="@string/feedback_mobile_number"
             android:padding="10dp"
             android:textColor="@color/font_color_313131"
             android:textColorHint="@color/hexmeet_light_gray"
-            android:textSize="18sp"
+            android:gravity="center_vertical"
+            android:textSize="11sp"
             android:ellipsize="start"
             android:singleLine="true" />
 
     </RelativeLayout>
 
     <Button
-        android:layout_marginTop="30dp"
+        android:id="@+id/feedback_submit"
+        android:layout_below="@id/mobile_layout"
+        android:layout_marginTop="25dp"
         android:layout_width="350dp"
         android:layout_height="45dp"
         android:background="@drawable/btn_private_login"
-        android:layout_gravity="center"
-        android:text="提交"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:text="@string/submit"
         android:textAllCaps="false"
         android:textColor="@drawable/color_text_join"
         android:textSize="16sp" />
 
-</LinearLayout>
+</RelativeLayout>

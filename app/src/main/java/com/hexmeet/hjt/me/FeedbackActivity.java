@@ -13,19 +13,29 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.andreabaccega.widget.FormEditText;
 import com.hexmeet.hjt.BaseActivity;
+import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
+import com.hexmeet.hjt.event.CallEvent;
+import com.hexmeet.hjt.event.FeedbackEvent;
+import com.hexmeet.hjt.event.LogPathEvent;
 import com.hexmeet.hjt.me.SelectPicturesUtils.FullyGridLayoutManager;
 import com.hexmeet.hjt.me.SelectPicturesUtils.GlideEngine;
 import com.hexmeet.hjt.me.SelectPicturesUtils.GridImageAdapter;
 import com.hexmeet.hjt.me.SelectPicturesUtils.OnItemClickListener;
+import com.hexmeet.hjt.utils.NetworkUtil;
+import com.hexmeet.hjt.utils.ProgressUtil;
+import com.hexmeet.hjt.utils.Utils;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -39,12 +49,20 @@ import com.luck.picture.lib.tools.PictureFileUtils;
 import com.luck.picture.lib.tools.ScreenUtils;
 
 import org.apache.log4j.Logger;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
-public class FeedbackActivity extends BaseActivity {
+public class FeedbackActivity extends BaseActivity implements View.OnClickListener {
 
     private Logger LOG = Logger.getLogger(FeedbackActivity.class);
+    private FormEditText mobile;
+    private Button submit;
+    ProgressUtil  progressUtil;
 
     public static void actionStart(Context context) {
         Intent intent = new Intent(context, FeedbackActivity.class);
@@ -61,10 +79,12 @@ public class FeedbackActivity extends BaseActivity {
     private int maxSelectNum = 5;
     private PictureParameterStyle mPictureParameterStyle;
     private TextView mTextPhoto;
+    List<String> filePath = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         if (savedInstanceState == null) {
             clearCache();
         }
@@ -74,6 +94,10 @@ public class FeedbackActivity extends BaseActivity {
         mEtContent = (EditText) findViewById(R.id.et_content);
         mRecycler = (RecyclerView) findViewById(R.id.recycler);
         mTextPhoto = (TextView)findViewById(R.id.photo_text);
+        submit = (Button)findViewById(R.id.feedback_submit);
+        mobile = (FormEditText) findViewById(R.id.mobile);
+        mobile.setTextSize(HjtApp.isCnVersion() ? 15 : 11);
+
         mEtContent.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -91,12 +115,25 @@ public class FeedbackActivity extends BaseActivity {
             }
         });
 
-        mFeedbackBtn.setOnClickListener(new View.OnClickListener() {
+        mobile.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View v) {
-                onBackPressed();
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mTextCount.setText((MAX_COUNT - s.length()+"/"+MAX_COUNT));
             }
         });
+
+        mFeedbackBtn.setOnClickListener(this);
+        submit.setOnClickListener(this);
 
         initPhoto();
     }
@@ -171,8 +208,14 @@ public class FeedbackActivity extends BaseActivity {
                         .forResult(new OnResultCallbackListener() {
                             @Override
                             public void onResult(List<LocalMedia> result) {
-
                                 LOG.info("localmedia : "+result.size());
+                                for (LocalMedia media : result) {
+                                    if(media.getAndroidQToPath()!= null){
+                                        filePath.add(media.getAndroidQToPath());
+                                    }else {
+                                        filePath.add(media.getCompressPath());
+                                    }
+                                }
                                 if(result.size()>0){
                                     mTextPhoto.setVisibility(View.GONE);
                                 }
@@ -262,4 +305,111 @@ public class FeedbackActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onClick(View v) {
+        if(v.getId()==R.id.feedback_btn){
+            onBackPressed();
+        }else if(v.getId()==R.id.feedback_submit){
+            boolean isNetworkOk = NetworkUtil.isNetConnected(this);
+            if(!isNetworkOk){
+                Utils.showToast(this, R.string.network_unconnected);
+            }else {
+                setLoading();
+                logFile();
+            }
+        }
+    }
+    private void setLoading() {
+        progressUtil = new ProgressUtil(this, 60000, new Runnable() {
+            @Override
+            public void run() {
+                Utils.showToast(HjtApp.getInstance().getContext(), R.string.feedback_fail);
+                progressUtil.dismiss();
+            }
+        }, getString(R.string.feedback_process));
+        progressUtil.show();
+    }
+
+    private void logFile() {
+        // 附件
+        File file1 = new File(Environment.getExternalStorageDirectory().toString() + "/crash"
+                + "/hjt_crash.log");
+        File file2 = new File(Environment.getExternalStorageDirectory().toString() + "/crash"
+                + "/hjt_crash.log1");
+        File uilog = new File(Environment.getExternalStorageDirectory().toString() + "/crash"
+                + "/hjt_app.log");
+        // add sdk logs
+        String sdkPath = HjtApp.getInstance().getAppService().obtainLogPath();
+        File fileSDK = new File(sdkPath);
+        String emSdkLog = HjtApp.getInstance().getAppService().getEmSdkLog();
+        File fileEmSDK = new File(emSdkLog);
+
+        if (file1.exists()) {
+            filePath.add(String.valueOf(file1));
+        }
+        if (file2.exists()) {
+            filePath.add(String.valueOf(file2));
+        }
+        if (uilog.exists()) {
+            filePath.add(String.valueOf(uilog));
+        }
+        if (fileSDK.exists()) {
+            // create sdk log file if not existed.
+            File crashdir = new File(Environment.getExternalStorageDirectory().toString() + "/crash");
+            if (!crashdir.exists()) {
+                crashdir.mkdirs();
+            }
+            // move to external directory
+            File fileSDKTemp = new File(Environment.getExternalStorageDirectory().toString() + "/crash"
+                    + "/hjt_sdk.gz");
+            if (Utils.copyFile(fileSDK, fileSDKTemp)) {
+                LOG.info("re_diagnosis onClick, move " + fileSDK.getPath() + " to " + fileSDKTemp.getPath()
+                        + " succeed.");
+                filePath.add(String.valueOf(fileSDKTemp));
+            } else {
+                LOG.warn("re_diagnosis onClick, move " + fileSDK.getPath() + " to " + fileSDKTemp.getPath()
+                        + " failed.");
+            }
+        }
+
+        if (fileEmSDK.exists()) {
+            File crashdir = new File(Environment.getExternalStorageDirectory().toString() + "/crash");
+            if (!crashdir.exists()) {
+                crashdir.mkdirs();
+            }
+
+            File fileEmSDKTemp = new File(Environment.getExternalStorageDirectory().toString() + "/crash"
+                    + "/hjt_emsdk.gz");
+            if (Utils.copyFile(fileEmSDK, fileEmSDKTemp)) {
+                LOG.info("re_diagnosis onClick, move " + fileSDK.getPath() + " to " + fileEmSDKTemp.getPath()
+                        + " succeed.");
+                filePath.add(String.valueOf(fileEmSDKTemp));
+            } else {
+                LOG.warn("re_diagnosis onClick, move " + fileSDK.getPath() + " to " + fileEmSDKTemp.getPath()
+                        + " failed.");
+            }
+        }
+
+        for (int i = 0; i< filePath.size(); i++){
+            LOG.info("FILEPAHT :" + filePath.get(i));
+        }
+
+        HjtApp.getInstance().getAppService().feedbackFiles(filePath, mEtContent.getText().toString(),mobile.getText().toString());
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onFeedbackEvent(FeedbackEvent event) {
+        if(event!=null && event.getNumber()==100){
+            Utils.showToast(HjtApp.getInstance().getContext(), R.string.feedback_successful);
+            progressUtil.dismiss();
+            onBackPressed();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
 }

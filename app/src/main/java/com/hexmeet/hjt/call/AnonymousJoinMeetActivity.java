@@ -23,6 +23,7 @@ import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.event.CallEvent;
 import com.hexmeet.hjt.login.JoinMeetingParam;
 import com.hexmeet.hjt.login.LoginService;
+import com.hexmeet.hjt.utils.PasswordDialog;
 import com.hexmeet.hjt.utils.ResourceUtils;
 import com.hexmeet.hjt.utils.Utils;
 import com.hexmeet.hjt.widget.PulseView;
@@ -139,7 +140,7 @@ public class AnonymousJoinMeetActivity extends FullscreenActivity {
     }
 
     protected void endCall() {
-        handler.removeMessages(0);
+    //    handler.removeMessages(0);
         HjtApp.getInstance().getAppService().endCall();
         LOG.debug("hang up call successful");
         if(SystemCache.getInstance().isInviteMakeCall()){

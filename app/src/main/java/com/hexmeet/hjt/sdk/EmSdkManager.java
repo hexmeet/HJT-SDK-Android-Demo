@@ -25,4 +25,6 @@ public interface EmSdkManager {
     void logout();
 
     String emSdkLog();
+
+    void enableSecure(boolean enable);
 }

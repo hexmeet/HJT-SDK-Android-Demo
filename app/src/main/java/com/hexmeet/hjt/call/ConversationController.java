@@ -123,7 +123,7 @@ public class ConversationController implements View.OnClickListener{
             }
         };
         signalLevel.setOnClickListener(callStatisticsClick);
-
+        setEncryptedImg();
         showLocalCamera(SystemCache.getInstance().isUserShowLocalCamera());
         //是否支持会话、音频模式
         FeatureSupport featureSupport = SystemCache.getInstance().getFeatureSupport();
@@ -172,9 +172,8 @@ public class ConversationController implements View.OnClickListener{
     }
 
     public void setEncryptedImg(){
-        LOG.info("setEncryptedImg()");
-        encryptedImg.setVisibility(View.VISIBLE);
-        HjtApp.getInstance().getAppService().stopMediaStaticsLoop();
+        LOG.info("setEncryptedImg() : " + HjtApp.getInstance().getAppService().isStatsEncrypted());
+        encryptedImg.setVisibility(HjtApp.getInstance().getAppService().isStatsEncrypted() ? View.VISIBLE : View.GONE);
     }
 
 
@@ -347,6 +346,8 @@ public class ConversationController implements View.OnClickListener{
                 iController.onClickShareScreen();
             }
             shareBtn.setVisibility(View.GONE );
+        }else {
+            shareBtn.setVisibility(View.VISIBLE);
         }
 
     }

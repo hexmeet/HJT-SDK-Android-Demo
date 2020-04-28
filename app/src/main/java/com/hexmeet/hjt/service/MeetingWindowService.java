@@ -415,6 +415,7 @@ public class MeetingWindowService extends Service {
         LOG.info("event : "+event.getCallState());
         if (event.getCallState() == CallState.IDLE) {
             AppSettings.getInstance().setSpeakerMode(false);
+            SystemCache.getInstance().setUserVideoMode(true);
             stopSelf();
         }
     }

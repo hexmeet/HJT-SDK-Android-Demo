@@ -45,6 +45,7 @@ class SdkHandler extends BaseSafelyHandler<SdkManager> {
     final static int HANDLER_SDK_CONFDISPLAYNAME = 10032;
     final static int HANDLER_SDK_STOP_SCREENSHARE = 10033;
     final static int HANDLER_SDK_SCREEN_DIRECTION = 10034;
+    final static int HANDLER_SDK_TERMINATE_MEETING= 10035;
 
     final static int HANDLER_LOGIN = 20001;
     final static int HANDLER_LOGOUT = 20002;
@@ -211,6 +212,9 @@ class SdkHandler extends BaseSafelyHandler<SdkManager> {
                     break;
                 case HANDLER_SDK_SCREEN_DIRECTION:
                     ref.setScreenDirection(msg.arg1 == 1);
+                    break;
+                case HANDLER_SDK_TERMINATE_MEETING:
+                    ref.onTerminateMeeting();
                     break;
                 default:
                     break;

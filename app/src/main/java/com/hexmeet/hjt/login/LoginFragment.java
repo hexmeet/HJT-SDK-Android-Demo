@@ -338,7 +338,11 @@ public class LoginFragment extends Fragment {
             LoginSettings.getInstance().setPrivateMuteMic(closeMic.isChecked());
         }
         setLoginBtnEnable(true);
-        callback.dialOut();
+        if(callback!=null){
+            LOG.info("dialOut");
+            callback.dialOut();
+        }
+
     }
 
 

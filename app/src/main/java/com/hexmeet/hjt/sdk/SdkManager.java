@@ -10,6 +10,7 @@ import android.view.SurfaceView;
 import com.hexmeet.hjt.model.LoginParams;
 
 import java.io.File;
+import java.util.List;
 
 import ev.common.EVEngine;
 
@@ -67,7 +68,7 @@ public interface  SdkManager {
 
     void setDeviceRotation(int deviceRotation);
 
-    void getObtainLogPath();
+    String getObtainLogPath();
 
     void getUserInfo();
 
@@ -106,4 +107,12 @@ public interface  SdkManager {
     void stopScreenShare();
 
     void setScreenDirection(boolean direction);
+
+    boolean  isStatsEncrypted();
+
+    void uploadFeedbackFiles(List<String> path, String contact, String description);
+
+    boolean isMeetingHost();
+
+    void onTerminateMeeting();
 }
