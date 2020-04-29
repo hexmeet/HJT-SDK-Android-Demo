@@ -313,5 +313,5 @@
     <string name="apply_permission_2">2. 后台弹出界面 (允许应用在后台弹出界面)</string>
     <string name="leave_meeting_text">结束会议</string>
     <string name="end_meeting">离开会议</string>
-    <string name="call_end_meeting">如果您不想结束会议,请在离开前制定新的主持人</string>
+    <string name="call_end_meeting">如果您不想结束会议，请在离开前指定新的主持人</string>
 </resources>

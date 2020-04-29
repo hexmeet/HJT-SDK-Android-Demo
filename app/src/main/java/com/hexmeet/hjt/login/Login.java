@@ -98,6 +98,7 @@ public class Login extends BaseActivity implements LoginFragmentCallback{
     }
 
     private void turnPage() {
+        LOG.info("cannotAutoLogin :" + LoginSettings.getInstance().cannotAutoLogin());
         if (LoginSettings.getInstance().cannotAutoLogin()) {
             progress.dismiss();
             gotoLoginPage();

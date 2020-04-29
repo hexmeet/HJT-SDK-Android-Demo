@@ -195,6 +195,10 @@ public class ConversationController implements View.OnClickListener{
         title.setText(mute ? R.string.enable_video : R.string.stop_video);
     }
 
+    public boolean getMuteVideo(){
+        return localVideoBtn.getChildAt(0).isSelected();
+    }
+
     public void toggleLayoutMode() {
         LOG.info("toggleLayoutMode isSpeaker : "+AppSettings.getInstance().isSpeakerMode());
         setLayoutMode(!AppSettings.getInstance().isSpeakerMode());
@@ -331,8 +335,9 @@ public class ConversationController implements View.OnClickListener{
         //是否隐藏转换摄像头
         cameraSwitchBtn.setVisibility(isVideoMode ? View.VISIBLE :View.GONE);
         //视频模式下 判断是否启用本地视频
-        if(SystemCache.getInstance().isUserMuteVideo() &&  localVideoBtn.getVisibility()==View.VISIBLE){
-            HjtApp.getInstance().getAppService().enableVideo(false);
+        LOG.info("isUserMuteVideo : "+SystemCache.getInstance().isUserMuteVideo());
+        if(isVideoMode && SystemCache.getInstance().isUserMuteVideo() &&  localVideoBtn.getVisibility()==View.VISIBLE){
+            HjtApp.getInstance().getAppService().enableVideo(true);
         }
         //判断申请发言是否开启，如果没开启隐藏 ，开启则显示
         if(!isVideoMode && handUp.getVisibility()==View.GONE && updateUserName.getVisibility()==View.GONE){
