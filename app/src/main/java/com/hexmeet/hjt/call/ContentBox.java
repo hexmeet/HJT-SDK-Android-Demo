@@ -39,7 +39,9 @@ public class ContentBox {
 
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
-                HjtApp.getInstance().getAppService().setContentViewToSdk(null);
+                if(surfaceView!=null){
+                    HjtApp.getInstance().getAppService().setContentViewToSdk(null);
+                }
                 LOG.info("mContentView display surface destroyed");
             }
         });

@@ -990,12 +990,14 @@ public class SdkManagerImpl implements SdkManager {
             if(info.dir== EVCommon.StreamDir.Download){
                 SystemCache.getInstance().setWithContent(info.enabled);
                 EventBus.getDefault().post(new ContentEvent(info.enabled));
-            }
-            if(info.status == EVCommon.EvCallStatus.Declined){
-                EventBus.getDefault().post(SharedState.NOPERMISSION);
             }else {
-                EventBus.getDefault().post(SharedState.START);
+                if(info.status == EVCommon.EvCallStatus.Declined){
+                    EventBus.getDefault().post(SharedState.NOPERMISSION);
+                }else {
+                    EventBus.getDefault().post(SharedState.START);
+                }
             }
+
         }
 
         @Override

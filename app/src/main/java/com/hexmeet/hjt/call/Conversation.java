@@ -2,6 +2,7 @@ package com.hexmeet.hjt.call;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.KeyguardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -220,6 +222,9 @@ public class Conversation extends FullscreenActivity {
                 public void surfaceDestroyed(SurfaceHolder holder) {
                     LOG.info("mDummyPreviewView display surface destroyed");
                     HjtApp.getInstance().getAppService().setPreviewToSdk(null);
+                    if (isVideoCall && HjtApp.getInstance().getAppService().isCalling() && !SystemCache.getInstance().isSharedScreen()) {
+                        startFloat();
+                    }
                 }
             });
         } else {
@@ -367,7 +372,7 @@ public class Conversation extends FullscreenActivity {
             //切换为语音状态下 显示SpeakName
             if(SystemCache.getInstance().getSpeakName()!=null && !SystemCache.getInstance().getSpeakName().equals("")){
                 audioSpeakName.setText(SystemCache.getInstance().getSpeakName()+"  "+getString(R.string.speaking));
-                audioSpeakName.setVisibility(SystemCache.getInstance().isUserVideoMode() ? View.GONE : View.VISIBLE );
+                audioSpeakName.setVisibility(isVoiceMode ? View.GONE : View.VISIBLE );
             }
 
 
@@ -497,28 +502,37 @@ public class Conversation extends FullscreenActivity {
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onStop() {
-        LOG.info("onStop isCalling ? "+HjtApp.getInstance().getAppService().isCalling());//false 手动挂断
-        if (isVideoCall && HjtApp.getInstance().getAppService().isCalling() && !SystemCache.getInstance().isSharedScreen()) {
-            closeLocalVideo();
-            if(floatService!=null){
-                LOG.info("show float windows");
-                showFloatWindow = true;
-                floatService.svcHandler.sendEmptyMessage(ON_SVC_FLOAT_WINDOW); //floatService.createFloatView();
+       PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        boolean isScreenOn = pm.isScreenOn();//是否是亮屏状态
+        LOG.info("isScreenOn : "+isScreenOn);
+        if(isScreenOn){
+            LOG.info("onStop isCalling ? "+HjtApp.getInstance().getAppService().isCalling());//false 手动挂断
+            if (isVideoCall && HjtApp.getInstance().getAppService().isCalling() && !SystemCache.getInstance().isSharedScreen()) {
+                startFloat();
+            }
+            if(SystemCache.getInstance().isSharedScreen()){
+                closeLocalVideo();
                 HjtApp.getInstance().getAppService().enableVideo(false);
             }
-        }
-        if(SystemCache.getInstance().isSharedScreen()){
-            closeLocalVideo();
-            HjtApp.getInstance().getAppService().enableVideo(false);
         }
         isCheckResumeEvent = false;
         super.onStop();
     }
 
+    private void startFloat(){
+        closeLocalVideo();
+        if(floatService!=null){
+            LOG.info("show float windows");
+            showFloatWindow = true;
+            floatService.svcHandler.sendEmptyMessage(ON_SVC_FLOAT_WINDOW); //floatService.createFloatView();
+            HjtApp.getInstance().getAppService().enableVideo(false);
+        }
+    }
+
     public void closeLocalVideo(){
-        controller.muteVideo(true);
-        SystemCache.getInstance().setUserMuteVideo(false);
         SystemCache.getInstance().setCamera(EVFactory.createEngine().cameraEnabled());
+        controller.muteVideo(true);
+        SystemCache.getInstance().setUserMuteVideo(controller.getMuteVideo());
     }
 
     @Override
