@@ -10,6 +10,7 @@ import android.view.WindowManager;
 
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
+import com.hexmeet.hjt.model.RemoteWH;
 
 import org.apache.log4j.Logger;
 
@@ -19,6 +20,9 @@ public class ResourceUtils {
     private Logger LOG = Logger.getLogger(this.getClass());
     public static int screenWidth = 0, screenHeight = 0, horizontalMargin = 0
             , verticalMargin = 0, originScreenWidth = 0, originScreenHeight = 0;
+
+    public static int screenWidths = 0, screenHeights = 0, horizontalMargins = 0
+            , verticalMargins = 0, originScreenWidths = 0, originScreenHeights = 0;
 
     private static ResourceUtils instance = null;
     public static final int CALL_ERROR = 0;
@@ -91,6 +95,57 @@ public class ResourceUtils {
             verticalMargin = 0;
         }
         LOG.info("screenWidth : ["+screenWidth+"], screenHeight: ["+screenHeight+"], horizontalMargin: ["+horizontalMargin+"], verticalMargin: ["+verticalMargin+"]");
+        initScreenSizeRemote();
+    }
+
+
+    public void initScreenSizeRemote() {
+        WindowManager windowManager =
+                (WindowManager) HjtApp.getInstance().getSystemService(Context.WINDOW_SERVICE);
+        final Display display = windowManager.getDefaultDisplay();
+        Point outPoint = new Point();
+        if (Build.VERSION.SDK_INT >= 19) {
+            display.getRealSize(outPoint);
+        } else {
+            display.getSize(outPoint);
+        }
+        originScreenWidths = Math.max(outPoint.x, outPoint.y);
+        originScreenHeights = Math.min(outPoint.x, outPoint.y);
+
+        LOG.info("originScreenWidth s : ["+originScreenWidths+"], originScreenHeight s: ["+originScreenHeights+"]");
+
+        if((18 * originScreenWidths) > (48 * originScreenHeights)) {
+            screenWidths = (originScreenHeights * 48) / 18;
+            screenHeights = originScreenHeights;
+            horizontalMargins = (originScreenWidths - screenWidths)/2;
+            verticalMargins = 0;
+        } else if((18 * originScreenWidths) < (48 * originScreenHeights)){
+            screenHeights = ((originScreenWidths * 18) / 48);
+            screenWidths = originScreenWidths;
+            horizontalMargins = 0;
+            verticalMargins = (originScreenHeights - screenHeights)/2;
+        } else {
+            screenWidths = originScreenWidths;
+            screenHeights = originScreenHeights;
+            horizontalMargins = 0;
+            verticalMargins = 0;
+        }
+        LOG.info("screenWidth s : ["+screenWidths+"], screenHeight s : ["+screenHeights+"], horizontalMargin s : ["+horizontalMargins+"], verticalMargin s: ["+verticalMargins+"]");
+    }
+
+    public RemoteWH getRemoteWH(int width,int height){
+        RemoteWH remoteWH = new RemoteWH();
+        if((18 * width) > (48 * height)) {
+            remoteWH.setWidths((height * 48) / 18);
+            remoteWH.setHeights(height);
+        } else if((18 * width) < (48 * height)){
+            remoteWH.setHeights(((width * 18) / 48));
+            remoteWH.setWidths(width);
+        } else {
+            remoteWH.setWidths(width);
+            remoteWH.setHeights(height);
+        }
+        return remoteWH;
     }
 
     private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);

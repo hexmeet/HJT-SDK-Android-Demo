@@ -11,14 +11,14 @@ import com.hexmeet.hjt.login.LoginService;
 import com.hexmeet.hjt.model.LoginParams;
 import com.hexmeet.hjt.sdk.ChannelStatList;
 import com.hexmeet.hjt.sdk.MakeCallParam;
-import com.hexmeet.hjt.sdk.SdkManager;
+import com.hexmeet.hjt.sdk.EvSdkManager;
 
 import org.apache.log4j.Logger;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 
-class SdkHandler extends BaseSafelyHandler<SdkManager> {
+class SdkHandler extends BaseSafelyHandler<EvSdkManager> {
     private Logger LOG = Logger.getLogger(SdkHandler.class);
 
     final static int HANDLER_SDK_INIT = 10001;
@@ -46,6 +46,8 @@ class SdkHandler extends BaseSafelyHandler<SdkManager> {
     final static int HANDLER_SDK_STOP_SCREENSHARE = 10033;
     final static int HANDLER_SDK_SCREEN_DIRECTION = 10034;
     final static int HANDLER_SDK_TERMINATE_MEETING= 10035;
+    final static int HANDLER_SDK_SET_IM_USERID= 10036;
+    final static int HANDLER_SDK_SET_MAX_VIDEO = 10037;
 
     final static int HANDLER_LOGIN = 20001;
     final static int HANDLER_LOGOUT = 20002;
@@ -62,12 +64,12 @@ class SdkHandler extends BaseSafelyHandler<SdkManager> {
     final static int HANDLER_USER_MESSAGE = 200010;
     final static int HANDLER_NETWORK_STATUS = 20011;
 
-    SdkHandler(HandlerThread thread, SdkManager ref) {
+    SdkHandler(HandlerThread thread, EvSdkManager ref) {
         super(thread.getLooper(), ref);
     }
 
     @Override
-    public void handleMessage(SdkManager ref,Message msg) {
+    public void handleMessage(EvSdkManager ref, Message msg) {
         try {
             LOG.info("Handle SDK message: (msg.what) = " + msg.what);
             switch (msg.what) {
@@ -152,11 +154,11 @@ class SdkHandler extends BaseSafelyHandler<SdkManager> {
                     }
                     break;
                 case HANDLER_ANONYMOUS_MAKECALL:
+                    LOG.info("isAnonymousMakeCall : "+SystemCache.getInstance().isAnonymousMakeCall());
                     if(SystemCache.getInstance().isAnonymousMakeCall()) {
                         ref.anonymousMakeCall();
                     }
                     break;
-
                 case HANDLER_UPLOAD_AVATAR:
                     String paths = (String) msg.obj;
                     if(paths != null) {
@@ -215,6 +217,12 @@ class SdkHandler extends BaseSafelyHandler<SdkManager> {
                     break;
                 case HANDLER_SDK_TERMINATE_MEETING:
                     ref.onTerminateMeeting();
+                    break;
+                case HANDLER_SDK_SET_IM_USERID:
+                    ref.setImUserId((String) msg.obj);
+                    break;
+                case HANDLER_SDK_SET_MAX_VIDEO:
+                    ref.setMaxRecvVideo(msg.arg1 == 1);
                     break;
                 default:
                     break;

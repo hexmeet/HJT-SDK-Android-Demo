@@ -27,4 +27,6 @@ public interface EmSdkManager {
     String emSdkLog();
 
     void enableSecure(boolean enable);
+
+    void updateUserName(String name);
 }

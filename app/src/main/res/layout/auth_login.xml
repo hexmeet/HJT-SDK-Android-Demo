@@ -44,7 +44,7 @@
         android:paddingLeft="40dp"
         android:paddingRight="40dp">
 
-        <com.andreabaccega.widget.FormEditText
+        <com.hexmeet.hjt.login.EditTextWithDel
             android:id="@+id/login_server"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
             whatever:testErrorString="@string/error_form"
             whatever:testType="webUrl" />
 
-        <com.andreabaccega.widget.FormEditText
+        <com.hexmeet.hjt.login.EditTextWithDel
             android:id="@+id/login_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -78,7 +78,7 @@
             whatever:emptyErrorString="@string/error_empty"
             whatever:testErrorString="@string/error_form" />
 
-        <com.andreabaccega.widget.FormEditText
+        <com.hexmeet.hjt.login.EditTextWithDel
             android:id="@+id/login_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -119,7 +119,7 @@
                 android:drawableRight="@drawable/select_drop_down"
                 whatever:emptyErrorString="@string/error_empty" />
 
-            <com.andreabaccega.widget.FormEditText
+            <com.hexmeet.hjt.login.EditTextWithDel
                 android:id="@+id/login_conf_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

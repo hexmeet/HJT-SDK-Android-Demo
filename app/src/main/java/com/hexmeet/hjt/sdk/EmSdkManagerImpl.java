@@ -107,6 +107,12 @@ public class EmSdkManagerImpl implements EmSdkManager{
 
     }
 
+    @Override
+    public void updateUserName(String name) {
+        LOG.info("updateUserName :" + name);
+        engine.changeUserFnName(name);
+    }
+
 
     class EMListenr extends EMEventListener {
 
@@ -131,14 +137,7 @@ public class EmSdkManagerImpl implements EmSdkManager{
         @Override
         public void onMessageReciveData(EMEngine.EMMessageBody messageBody) {
             LOG.info("onMessageReciveData : "+messageBody.toString());
-                EmMessageBody  emMessageBody = new EmMessageBody();
-                emMessageBody.setGroupId(messageBody.groupId);
-                emMessageBody.setSeq(messageBody.seq);
-                emMessageBody.setContent(messageBody.content);
-                emMessageBody.setFrom(messageBody.from);
-                emMessageBody.setTime(messageBody.time);
-                emMessageBody.setMe(false);
-                EventBus.getDefault().post(emMessageBody);
+            EventBus.getDefault().post(messageBody);
 
         }
 

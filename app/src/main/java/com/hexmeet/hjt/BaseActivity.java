@@ -189,9 +189,9 @@ public class BaseActivity extends FragmentActivity {
                                     final String version = (String) jsonObject.get("VERSION");
                                     final String download_url = (String) jsonObject.get("DOWNLOAD_URL");
                                     if(platform!=null && platform.equals("android")){
-                                        LOG.info("APP version : "+Utils.getVersion()+",verstion : "+version);
+                                        LOG.info("APP version : "+Utils.getVersion()+",API response verstion : "+version+",compareVersion :"+Utils.compareVersion(version, Utils.getVersion())==1+"");
 
-                                        if (Utils.getVersion().compareTo(version) < 0) {
+                                        if (Utils.compareVersion(version, Utils.getVersion())==1) {
                                             Message msg = Message.obtain();
                                             msg.what = HANDLER_UPDATED_VERSION;
                                             Bundle bundle = new Bundle();

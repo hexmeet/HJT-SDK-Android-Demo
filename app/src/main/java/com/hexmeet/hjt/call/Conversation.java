@@ -1,13 +1,10 @@
 package com.hexmeet.hjt.call;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.KeyguardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.projection.MediaProjectionManager;
 import android.net.Uri;
@@ -31,10 +28,6 @@ import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -67,6 +60,7 @@ import com.hexmeet.hjt.event.SvcSpeakerEvent;
 import com.hexmeet.hjt.event.UserInfoEvent;
 import com.hexmeet.hjt.groupchat.GroupChatActivity;
 import com.hexmeet.hjt.sdk.ChannelStatList;
+import com.hexmeet.hjt.sdk.CopyAssets;
 import com.hexmeet.hjt.sdk.MessageOverlayInfo;
 import com.hexmeet.hjt.sdk.SvcLayoutInfo;
 import com.hexmeet.hjt.service.MeetingWindowService;
@@ -125,7 +119,7 @@ public class Conversation extends FullscreenActivity {
     private MediaProjectionManager mProjectionManager;
     private boolean isCheckResumeEvent = false;//检测是否有双流
     private boolean isBind = false; //是否绑定服务
-    private boolean showFloatWindow = false; //是否绑定服务
+    private boolean showFloatWindow = false;
 
     @SuppressLint("ResourceType")
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -152,7 +146,6 @@ public class Conversation extends FullscreenActivity {
         recordView = (TextView)findViewById(R.id.record_view);
         networkConditionToast = (TextView)findViewById(R.id.network_condition_toast);
         microphoneMuted = (TextView) findViewById(R.id.mute_speaking);
-
 
         audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
@@ -308,6 +301,11 @@ public class Conversation extends FullscreenActivity {
             LOG.info("resumeEvent OverlayMessage");
             onMessageOverlayEvent(SystemCache.getInstance().getOverlayMessage());
         }
+
+        if(SystemCache.getInstance().getRemoteNameEvent()!=null){
+            LOG.info("resumeEvent RemoteName");
+            onRemoteNameEvent(SystemCache.getInstance().getRemoteNameEvent());
+        }
     }
 
 
@@ -362,6 +360,7 @@ public class Conversation extends FullscreenActivity {
 
         @Override
         public void switchVoiceMode(boolean isVoiceMode) {
+            LOG.info("switchVoiceMode : "+isVoiceMode);
             SystemCache.getInstance().setUserVideoMode(isVoiceMode);
             HjtApp.getInstance().getAppService().setVideoMode(isVoiceMode);
             //开启或隐藏audio按钮
@@ -420,7 +419,7 @@ public class Conversation extends FullscreenActivity {
 
         @Override
         public void onHangUp() {
-            LOG.info("meeting host "+HjtApp.getInstance().getAppService().isMeetingHost());
+            LOG.info("meeting host : "+HjtApp.getInstance().getAppService().isMeetingHost());
             if(HjtApp.getInstance().getAppService().isMeetingHost()){
                 meetingDialog(MeetingDialog.MEETING_END);
             }else {
@@ -451,16 +450,17 @@ public class Conversation extends FullscreenActivity {
     protected void onStart() {
         LOG.info("onStart");
         super.onStart();
+        if(floatService!=null){
+            showFloatWindow = false;
+            floatService.stopFloatWindow();
+        }
+
         if(!isCheckResumeEvent){
             LOG.info("onStart isCheckResumeEvent()");
             isCheckResumeEvent = true;
             resumeEvent();
         }
 
-        if(floatService!=null){
-            showFloatWindow = false;
-            floatService.stopFloatWindow();
-        }
         if(SystemCache.getInstance().isSharedScreen()){
             controller.shareScreen(true);
          }else {
@@ -473,7 +473,7 @@ public class Conversation extends FullscreenActivity {
         }
 
 
-        if (isVideoCall && SystemCache.getInstance().isUserVideoMode()) {
+        if (isVideoCall) {
             LOG.info("isLocalCamera : "+SystemCache.getInstance().isCamera());
             if(SystemCache.getInstance().isCamera() && HjtApp.getInstance().getAppService()!=null){
                 HjtApp.getInstance().getAppService().muteVideo(true);
@@ -482,7 +482,7 @@ public class Conversation extends FullscreenActivity {
             controller.muteVideo(!isLocalVideoMuted);
         }
         if(HjtApp.getInstance().getAppService()!=null){ 
-            HjtApp.getInstance().getAppService().startAudioMode(true);
+           // HjtApp.getInstance().getAppService().startAudioMode(true);
 
             if(SystemCache.getInstance().isMuteMic()) {//判断来电前是否是非静音状态
                 HjtApp.getInstance().getAppService().muteMic(false);
@@ -520,19 +520,20 @@ public class Conversation extends FullscreenActivity {
     }
 
     private void startFloat(){
-        closeLocalVideo();
-        if(floatService!=null){
-            LOG.info("show float windows");
-            showFloatWindow = true;
-            floatService.svcHandler.sendEmptyMessage(ON_SVC_FLOAT_WINDOW); //floatService.createFloatView();
-            HjtApp.getInstance().getAppService().enableVideo(false);
+        if(!showFloatWindow){
+            closeLocalVideo();
+            if(floatService!=null){
+                LOG.info("show float windows");
+                showFloatWindow = true;
+                floatService.svcHandler.sendEmptyMessage(ON_SVC_FLOAT_WINDOW); //floatService.createFloatView();
+                HjtApp.getInstance().getAppService().enableVideo(false);
+            }
         }
     }
 
     public void closeLocalVideo(){
         SystemCache.getInstance().setCamera(EVFactory.createEngine().cameraEnabled());
-        controller.muteVideo(true);
-        SystemCache.getInstance().setUserMuteVideo(controller.getMuteVideo());
+        SystemCache.getInstance().setUserMuteVideo(false);
     }
 
     @Override
@@ -779,6 +780,7 @@ public class Conversation extends FullscreenActivity {
         LOG.info("event : "+event.getCallState());
         if (event.getCallState() == CallState.IDLE) {
             AppSettings.getInstance().setSpeakerMode(false);
+            CopyAssets.getInstance().unRegisterAudio();
             svcHandler.removeCallbacks(buildTask);
             clearResource();
             isDestroying = true;
@@ -911,6 +913,7 @@ public class Conversation extends FullscreenActivity {
         if(state==SharedState.STOPSCREENSHARE){
             controller.shareScreen(false);
         }else if(state==SharedState.NOPERMISSION){
+            SystemCache.getInstance().setSharedScreen(true);
             svcHandler.removeMessages(ON_SVC_MICROPHONEMUTED);
             microphoneMuted.setText(R.string.content_permission);
             microphoneMuted.setVisibility(View.VISIBLE);
@@ -1269,6 +1272,7 @@ public class Conversation extends FullscreenActivity {
 
     private void stopScreenCaptureService() {
         if(SystemCache.getInstance().isSharedScreen()){
+            SystemCache.getInstance().setSharedScreen(false);
             Intent intent = new Intent(Conversation.this, ScreenCaptureService.class);
             stopService(intent);
         }

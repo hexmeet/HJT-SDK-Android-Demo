@@ -284,7 +284,7 @@ public class ConversationController implements View.OnClickListener{
                 break;
             case R.id.toolbar_local_camera:
                 boolean muteVideo = !((ViewGroup)v).getChildAt(0).isSelected();
-                SystemCache.getInstance().setUserMuteVideo(muteVideo);
+                SystemCache.getInstance().setUserMuteVideo(!muteVideo);
                 muteVideo(muteVideo);
                 HjtApp.getInstance().getAppService().enableVideo(!muteVideo);
                 break;

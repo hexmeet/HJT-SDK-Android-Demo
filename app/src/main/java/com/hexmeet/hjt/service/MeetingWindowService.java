@@ -160,7 +160,7 @@ public class MeetingWindowService extends Service {
         wmParams.height = 80;*/
        touchSlop = ViewConfiguration.get(getApplicationContext()).getScaledTouchSlop();
        fullScreenLayoutPara = new RelativeLayout.LayoutParams(ResourceUtils.screenWidth, ResourceUtils.screenHeight);
-       fullScreenLayoutPara.addRule(RelativeLayout.CENTER_IN_PARENT);
+       fullScreenLayoutPara.addRule(RelativeLayout.CENTER_VERTICAL);
        inflater = LayoutInflater.from(getApplication());
        //获取浮动窗口视图所在布局
        mFloatLayout = (LinearLayout) inflater.inflate(R.layout.float_layout, null);
@@ -183,7 +183,7 @@ public class MeetingWindowService extends Service {
             isRegisterEventBus = true;
             EventBus.getDefault().register(this);
         }
-        LOG.info("createFloatView()");
+        LOG.info("createFloatView() isUserVideoMode : "+SystemCache.getInstance().isUserVideoMode());
 
         mFloatLayout.setVisibility(View.VISIBLE);
         if(SystemCache.getInstance().isUserVideoMode()){//true 视频 false 音频
@@ -217,6 +217,7 @@ public class MeetingWindowService extends Service {
         height = mFloatLayout.getMeasuredHeight() / 2;
         isLoadComplete = true;
         onClick();
+        LOG.info("float layout visible");
     }
 
     private void onClick() {

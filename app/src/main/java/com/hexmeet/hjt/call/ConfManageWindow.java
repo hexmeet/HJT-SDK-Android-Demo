@@ -151,7 +151,7 @@ public class ConfManageWindow {
                 super.onProgressChanged(view, newProgress);
                 LOG.info("newProgress : "+newProgress);
                 if (newProgress == 100) {
-                    progressBar.setProgress(99);
+                    progressLayout.setVisibility(View.GONE);
                 } else {
                     progressBar.setProgress(newProgress);
                 }

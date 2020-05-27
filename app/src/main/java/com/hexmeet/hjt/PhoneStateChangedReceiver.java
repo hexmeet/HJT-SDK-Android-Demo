@@ -24,6 +24,7 @@ public class PhoneStateChangedReceiver extends BroadcastReceiver {
         LOG.info("hexmeet PhoneStateChangedReceiver : "+extraState);
         //来电或者电话中
         if (TelephonyManager.EXTRA_STATE_RINGING.equals(extraState) || TelephonyManager.EXTRA_STATE_OFFHOOK.equals(extraState)) {
+
             HjtApp.setGSMCalling(true);
             if (!CopyAssets.isInstanciated()) {
                 LOG.info("GSM call state changed but manager not instantiated");
@@ -31,6 +32,7 @@ public class PhoneStateChangedReceiver extends BroadcastReceiver {
             }
             LOG.info("audioInterruption 1");
             if(HjtApp.getInstance().getAppService()!=null){
+                HjtApp.getInstance().getAppService().uninitAudioMode(false);
                 HjtApp.getInstance().getAppService().enableSpeaker(false);
                 LOG.info("call recevied. mute video");
                 HjtApp.getInstance().getAppService().phoneStateChange(true);
@@ -38,13 +40,17 @@ public class PhoneStateChangedReceiver extends BroadcastReceiver {
                 if(TelephonyManager.EXTRA_STATE_RINGING.equals(extraState)){
                     SystemCache.getInstance().setMuteMic(HjtApp.getInstance().getAppService().micEnabled());
                     HjtApp.getInstance().getAppService().muteMic(true);
+                }else {
+
                 }
             }
             //电话空闲
         } else if (TelephonyManager.EXTRA_STATE_IDLE.equals(extraState)) {
             LOG.info("resume GSM");
+
             HjtApp.setGSMCalling(false);
             if(HjtApp.getInstance().getAppService()!=null){
+                HjtApp.getInstance().getAppService().initAudioMode(true);
                 LOG.info("call hunged. App.IsUserMuteVideo: " + SystemCache.getInstance().isMuteMic());
                 if(SystemCache.getInstance().isMuteMic()) {
                     HjtApp.getInstance().getAppService().muteMic(false);
@@ -69,15 +75,17 @@ public class PhoneStateChangedReceiver extends BroadcastReceiver {
                     }, 500);
                 }
                 else {
-                    AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-                    if(am.isWiredHeadsetOn()){
+                    CopyAssets.getInstance().routeAudioToSpeaker();
+                    /*   if(am.isWiredHeadsetOn()){
                         //earphone
                         LOG.info("hexmeet PhoneStateChang edReceiver   route to receiver-earphone");
                         CopyAssets.getInstance().routeAudioToReceiver();
+                      //  HjtApp.getInstance().getAppService().initAudioMode(true);
                     } else {
                         LOG.info("hexmeet PhoneStateChangedReceiver   route to speaker");
                         CopyAssets.getInstance().routeAudioToSpeaker();
-                    }
+                        HjtApp.getInstance().getAppService().startAudioMode(true);
+                    }*/
                 }
 
         }

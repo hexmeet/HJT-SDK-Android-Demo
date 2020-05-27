@@ -57,7 +57,6 @@ public class DialingFrag extends Fragment {
         closeCameraView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SystemCache.getInstance().setUserMuteVideo(isChecked);
             }
         });
 

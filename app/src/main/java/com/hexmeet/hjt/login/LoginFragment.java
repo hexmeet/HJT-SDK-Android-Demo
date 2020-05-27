@@ -315,6 +315,8 @@ public class LoginFragment extends Fragment {
         SystemCache.getInstance().getJoinMeetingParam().setPassword(password);
         SystemCache.getInstance().getJoinMeetingParam().setDisplayName(displayName);
         SystemCache.getInstance().getJoinMeetingParam().setCloud(loginType == LOGIN_TYPE_CLOUD_ANONYMOUS);
+        SystemCache.getInstance().getJoinMeetingParam().setPort(LoginSettings.getInstance().getPrivateJoinMeetingPort());
+        SystemCache.getInstance().getJoinMeetingParam().setUseHttps(LoginSettings.getInstance().getJoinMeetingHttps());
 
         SystemCache.getInstance().setCamera(!closeCamera.isChecked());
         HjtApp.getInstance().getAppService().setVideoMode(true);

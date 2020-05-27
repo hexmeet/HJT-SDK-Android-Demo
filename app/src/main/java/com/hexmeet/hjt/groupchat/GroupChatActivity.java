@@ -43,6 +43,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import em.common.EMEngine;
@@ -124,6 +125,7 @@ public class GroupChatActivity extends BaseActivity implements ChattingFooter.On
         messageAdapter = new GroupAdapter(this);
         rlvMessage.setAdapter(messageAdapter);
         rlvMessage.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        rlvMessage.setItemAnimator(null);
         mChattingFooter.setOnChattingFooterListener(this);
         rlvMessage.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -154,6 +156,9 @@ public class GroupChatActivity extends BaseActivity implements ChattingFooter.On
                 body.setContent(text.toString());
                 body.setTime(TimeUtil.currentTime(Calendar.getInstance().getTimeInMillis()));
                 body.setFrom(info.userid);
+                int size = EmMessageCache.getInstance().getMessageBody().size()+1;
+                body.setSeq(size);
+                LOG.info("Me seq size :" + size);
                 body.setMe(true);
                 //发送到适配器
                 if(SystemCache.getInstance().getLoginResponse().getUserId()!=0){
@@ -328,6 +333,7 @@ public class GroupChatActivity extends BaseActivity implements ChattingFooter.On
                         break;
                     case CHAT_GROUP_MEMBER_INFO:
                         initImMessageBody();
+                       // messageAdapter.item();
                         break;
                     default:
                         break;

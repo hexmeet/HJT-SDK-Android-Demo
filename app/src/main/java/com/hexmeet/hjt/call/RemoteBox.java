@@ -18,6 +18,7 @@ import com.hexmeet.hjt.AppSettings;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.cache.SystemCache;
+import com.hexmeet.hjt.model.RemoteWH;
 import com.hexmeet.hjt.sdk.SvcLayoutInfo;
 import com.hexmeet.hjt.utils.ResourceUtils;
 
@@ -35,9 +36,9 @@ public class RemoteBox extends RelativeLayout {
     private static final int INDEX_INFO_LOCAL_MUTE = 0;
 
     private SvcSurfaceListener listener;
-    private SurfaceView[] surfaceViews = new SurfaceView[AppCons.MAX_RECEIVE_STREAM];
-    private LinearLayout[] msgInfo = new LinearLayout[AppCons.MAX_RECEIVE_STREAM];
-    private boolean[] surfaceViewValid = new boolean[AppCons.MAX_RECEIVE_STREAM];
+    private SurfaceView[] surfaceViews = new SurfaceView[AppSettings.getInstance().isHardwareDecoding() ? AppCons.MAX_RECEIVE_STREAM : AppCons.MAX_RECEIVE_STREAM_FOUR];
+    private LinearLayout[] msgInfo = new LinearLayout[AppSettings.getInstance().isHardwareDecoding() ? AppCons.MAX_RECEIVE_STREAM : AppCons.MAX_RECEIVE_STREAM_FOUR];
+    private boolean[] surfaceViewValid = new boolean[AppSettings.getInstance().isHardwareDecoding() ? AppCons.MAX_RECEIVE_STREAM : AppCons.MAX_RECEIVE_STREAM_FOUR];
     private View borderView;
     private LayoutParams hideParam, emptyParam;
     private LinearLayout.LayoutParams infoCellParam, cellEmptyParam;
@@ -48,6 +49,7 @@ public class RemoteBox extends RelativeLayout {
     private AtomicInteger surfaceReadyCount = new AtomicInteger(0);
     int textSize = 14;
     private boolean isWindowService;
+    private int maxVideo = AppSettings.getInstance().isHardwareDecoding() ? AppCons.MAX_RECEIVE_STREAM : AppCons.MAX_RECEIVE_STREAM_FOUR;
 
     public interface SvcSurfaceListener {
         void onAllSurfaceReady();
@@ -68,15 +70,6 @@ public class RemoteBox extends RelativeLayout {
     }
 
     public void refreshLayout() {
-       /* if (svcLayoutInfo != null) {
-            postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    updateLayout(svcLayoutInfo);
-                }
-            }, 500);
-        }*/
-
         if (SystemCache.getInstance().getSvcLayoutInfo() != null) {
             postDelayed(new Runnable() {
                 @Override
@@ -105,7 +98,7 @@ public class RemoteBox extends RelativeLayout {
         infoCellParam.leftMargin = 5;
 
         surfaceReadyCount.set(0);
-        for (int i = 0; i < AppCons.MAX_RECEIVE_STREAM; i++) {
+        for (int i = 0; i < maxVideo; i++) {
             SurfaceView surfaceView = EVFactory.createWindow(this.getContext(), EVEngine.WindowType.RemoteVideoWindow);
             surfaceView.setId(ResourceUtils.generateViewId());
             final int pos = i;
@@ -118,7 +111,7 @@ public class RemoteBox extends RelativeLayout {
                     if(pos == 0) {
                         surfaceReadyCount.set(0);
                     }
-                    if (surfaceReadyCount.incrementAndGet() == AppCons.MAX_RECEIVE_STREAM && listener != null) {
+                    if (surfaceReadyCount.incrementAndGet() == maxVideo && listener != null) {
                         listener.onAllSurfaceReady();
                     }
                 }
@@ -144,7 +137,7 @@ public class RemoteBox extends RelativeLayout {
             surfaceViews[i] = surfaceView;
         }
 
-        for (int i = 0; i < AppCons.MAX_RECEIVE_STREAM; i++) {
+        for (int i = 0; i < maxVideo; i++) {
             LinearLayout infoContainer = new LinearLayout(context);
             infoContainer.setBackgroundResource(R.drawable.bg_svc_suit_text);
             infoContainer.setGravity(Gravity.CENTER_VERTICAL);
@@ -170,8 +163,8 @@ public class RemoteBox extends RelativeLayout {
     }
 
     public Object[] getAllSurfaces() {
-        Object[] array = new Object[AppCons.MAX_RECEIVE_STREAM];
-        for (int i = 0; i < AppCons.MAX_RECEIVE_STREAM; i++) {
+        Object[] array = new Object[maxVideo];
+        for (int i = 0; i < maxVideo; i++) {
             if (surfaceViewValid[i] && surfaceViews[i] != null && surfaceViews[i].getHolder() != null && surfaceViews[i].getHolder().getSurface() != null) {
                 array[i] = surfaceViews[i];
             } else {
@@ -186,7 +179,7 @@ public class RemoteBox extends RelativeLayout {
         if(svcLayoutInfo==null){
             return;
         }
-        if (!svcLayoutInfo.checkSize(AppCons.MAX_RECEIVE_STREAM)) {
+        if (!svcLayoutInfo.checkSize(maxVideo)) {
             LOG.error("surface count != sitename count");
         }
         LOG.info("SvcLayoutInfo : "+svcLayoutInfo.toString());
@@ -241,29 +234,70 @@ public class RemoteBox extends RelativeLayout {
 
         int cellWidth = (width) / 2;
         int cellHeight = (height) / 2;
+        if(count == 3 || count == 4) {
+            cellIndex = svcLayoutInfo.getWindowIdx().get(0);
+            layoutSurface(cellIndex, cellWidth, cellHeight, 0, 0);
+            layoutEndpointName(cellIndex, 0, textSize, siteIcon);
 
-        cellIndex = svcLayoutInfo.getWindowIdx().get(0);
-        layoutSurface(cellIndex, cellWidth, cellHeight, 0, 0);
-        layoutEndpointName(cellIndex, 0, textSize, siteIcon);
+            cellIndex = svcLayoutInfo.getWindowIdx().get(1);
+            layoutSurface(cellIndex, cellWidth, cellHeight, cellWidth, 0);
+            layoutEndpointName(cellIndex, 1, textSize, siteIcon);
 
-        cellIndex = svcLayoutInfo.getWindowIdx().get(1);
-        layoutSurface(cellIndex, cellWidth, cellHeight, cellWidth, 0);
-        layoutEndpointName(cellIndex, 1, textSize, siteIcon);
+            cellIndex = svcLayoutInfo.getWindowIdx().get(2);
+            layoutSurface(cellIndex, cellWidth, cellHeight, 0, cellHeight);
+            layoutEndpointName(cellIndex, 2, textSize, siteIcon);
 
-        cellIndex = svcLayoutInfo.getWindowIdx().get(2);
-        layoutSurface(cellIndex, cellWidth, cellHeight, 0, cellHeight);
-        layoutEndpointName(cellIndex, 2, textSize, siteIcon);
+            if (count == 4) {
+                cellIndex = svcLayoutInfo.getWindowIdx().get(3);
+                layoutSurface(cellIndex, cellWidth, cellHeight, cellWidth, cellHeight);
+                layoutEndpointName(cellIndex, 3, textSize, siteIcon);
+            }
+        }
 
-        if (count == 4) {
+        if(count == 5 || count == 6){
+            RemoteWH remoteWH = ResourceUtils.getInstance().getRemoteWH(width, height);
+            int maraginTop = 0;
+
+            LOG.info("RemoteWH : "+remoteWH.getWidths()+",getHeights : "+remoteWH.getHeights());
+            int cellWidths = (remoteWH.getWidths()) / 3;
+            int cellHeights = (remoteWH.getHeights()) / 2;
+            LOG.info("width and cellWidth : "+cellWidths+",cellHeight : "+cellHeights+",width :"+width+",height :"+height);
+            if(isWindowService){
+                maraginTop = cellHeights/2;
+            }
+
+            cellIndex = svcLayoutInfo.getWindowIdx().get(0);
+            layoutSurface(cellIndex, cellWidths, cellHeights, 0, maraginTop);
+            layoutEndpointName(cellIndex, 0, textSize, siteIcon);
+
+            cellIndex = svcLayoutInfo.getWindowIdx().get(1);
+            layoutSurface(cellIndex, cellWidths, cellHeights, cellWidths, maraginTop);
+            layoutEndpointName(cellIndex, 1, textSize, siteIcon);
+
+            cellIndex = svcLayoutInfo.getWindowIdx().get(2);
+            layoutSurface(cellIndex, cellWidths, cellHeights, cellWidths*2, maraginTop);
+            layoutEndpointName(cellIndex, 2, textSize, siteIcon);
+
             cellIndex = svcLayoutInfo.getWindowIdx().get(3);
-            layoutSurface(cellIndex, cellWidth, cellHeight, cellWidth, cellHeight);
+            layoutSurface(cellIndex, cellWidths, cellHeights, 0, cellHeights+maraginTop);
             layoutEndpointName(cellIndex, 3, textSize, siteIcon);
+           // cellHeight1+cellHeight1 / 2
+            cellIndex = svcLayoutInfo.getWindowIdx().get(4);
+            layoutSurface(cellIndex, cellWidths, cellHeights, cellWidths, cellHeights+maraginTop);
+            layoutEndpointName(cellIndex, 4, textSize, siteIcon);
+
+            if(count == 6){
+                cellIndex = svcLayoutInfo.getWindowIdx().get(5);
+                layoutSurface(cellIndex, cellWidths, cellHeights, cellWidths*2, cellHeights+maraginTop);
+                layoutEndpointName(cellIndex, 5, textSize, siteIcon);
+            }
+
         }
         hideOtherCells(svcLayoutInfo.getWindowIdx());
     }
 
     private void hideOtherCells(List<Integer> indexList) {
-        for (int i = 0; i < AppCons.MAX_RECEIVE_STREAM; i++) {
+        for (int i = 0; i < maxVideo; i++) {
             if (!indexList.contains(i)) {
                 surfaceViews[i].setLayoutParams(hideParam);
                 msgInfo[i].setLayoutParams(emptyParam);
@@ -308,7 +342,6 @@ public class RemoteBox extends RelativeLayout {
     }
 
     private void layoutSurface(int index, int width, int height, int marginLeft, int marginTop) {
-        LOG.info("layoutSurface()");
         LayoutParams cellPara = new LayoutParams(width, height);
         cellPara.topMargin = marginTop;
         cellPara.leftMargin = marginLeft;
@@ -318,12 +351,13 @@ public class RemoteBox extends RelativeLayout {
             LayoutParams borderParam = new LayoutParams(width, height);
             borderParam.topMargin = marginTop;
             borderParam.leftMargin = marginLeft;
+
             borderView.setLayoutParams(borderParam);
         }
     }
 
     public void hideAll() {
-        for (int i = 0; i < AppCons.MAX_RECEIVE_STREAM; i++) {
+        for (int i = 0; i < maxVideo; i++) {
             surfaceViews[i].setLayoutParams(hideParam);
             msgInfo[i].setLayoutParams(emptyParam);
         }
@@ -367,6 +401,10 @@ public class RemoteBox extends RelativeLayout {
 
     public void setShowContent(boolean showContent) {
         this.showContent = showContent;
+    }
+
+    public boolean getShowContent() {
+        return showContent;
     }
 
     public void updateRemoteName(String deviceId,String name){

@@ -89,6 +89,7 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
             clearCache();
         }
         setContentView(R.layout.activity_feedback);
+        setLoading();
         mFeedbackBtn = (ImageView) findViewById(R.id.feedback_btn);
         mTextCount = (TextView) findViewById(R.id.text_count);
         mEtContent = (EditText) findViewById(R.id.et_content);
@@ -314,8 +315,8 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
             if(!isNetworkOk){
                 Utils.showToast(this, R.string.network_unconnected);
             }else {
-                setLoading();
                 logFile();
+                progressUtil.show();
             }
         }
     }
@@ -327,10 +328,15 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
                 progressUtil.dismiss();
             }
         }, getString(R.string.feedback_process));
-        progressUtil.show();
+        progressUtil.dismiss();
     }
 
     private void logFile() {
+        File log = new File(Environment.getExternalStorageDirectory().toString() + "/hjtlog");
+        if (!log.exists()) {
+            log.mkdirs();
+        }
+
         // 附件
         File file1 = new File(Environment.getExternalStorageDirectory().toString() + "/crash"
                 + "/hjt_crash.log");
@@ -345,27 +351,26 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
         File fileEmSDK = new File(emSdkLog);
 
         if (file1.exists()) {
-            filePath.add(String.valueOf(file1));
+            File fileSDKTemp = new File(Environment.getExternalStorageDirectory().toString() + "/hjtlog"
+                    + "/hjt_crash.log");
+            Utils.copyFile(file1, fileSDKTemp);
         }
         if (file2.exists()) {
-            filePath.add(String.valueOf(file2));
+            File fileSDKTemp = new File(Environment.getExternalStorageDirectory().toString() + "/hjtlog"
+                    + "/hjt_crash.log1");
+            Utils.copyFile(file2, fileSDKTemp);
         }
         if (uilog.exists()) {
-            filePath.add(String.valueOf(uilog));
+            File fileSDKTemp = new File(Environment.getExternalStorageDirectory().toString() + "/hjtlog"
+                    + "/hjt_app.log");
+            Utils.copyFile(uilog, fileSDKTemp);
         }
         if (fileSDK.exists()) {
-            // create sdk log file if not existed.
-            File crashdir = new File(Environment.getExternalStorageDirectory().toString() + "/crash");
-            if (!crashdir.exists()) {
-                crashdir.mkdirs();
-            }
-            // move to external directory
-            File fileSDKTemp = new File(Environment.getExternalStorageDirectory().toString() + "/crash"
+            File fileSDKTemp = new File(Environment.getExternalStorageDirectory().toString() + "/hjtlog"
                     + "/hjt_sdk.gz");
             if (Utils.copyFile(fileSDK, fileSDKTemp)) {
                 LOG.info("re_diagnosis onClick, move " + fileSDK.getPath() + " to " + fileSDKTemp.getPath()
                         + " succeed.");
-                filePath.add(String.valueOf(fileSDKTemp));
             } else {
                 LOG.warn("re_diagnosis onClick, move " + fileSDK.getPath() + " to " + fileSDKTemp.getPath()
                         + " failed.");
@@ -373,27 +378,26 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
         }
 
         if (fileEmSDK.exists()) {
-            File crashdir = new File(Environment.getExternalStorageDirectory().toString() + "/crash");
-            if (!crashdir.exists()) {
-                crashdir.mkdirs();
-            }
-
-            File fileEmSDKTemp = new File(Environment.getExternalStorageDirectory().toString() + "/crash"
+            File fileEmSDKTemp = new File(Environment.getExternalStorageDirectory().toString() + "/hjtlog"
                     + "/hjt_emsdk.gz");
             if (Utils.copyFile(fileEmSDK, fileEmSDKTemp)) {
-                LOG.info("re_diagnosis onClick, move " + fileSDK.getPath() + " to " + fileEmSDKTemp.getPath()
+                LOG.info("re_diagnosis onClick, move " + fileEmSDK.getPath() + " to " + fileEmSDKTemp.getPath()
                         + " succeed.");
-                filePath.add(String.valueOf(fileEmSDKTemp));
             } else {
-                LOG.warn("re_diagnosis onClick, move " + fileSDK.getPath() + " to " + fileEmSDKTemp.getPath()
+                LOG.warn("re_diagnosis onClick, move " + fileEmSDK.getPath() + " to " + fileEmSDKTemp.getPath()
                         + " failed.");
             }
         }
 
-        for (int i = 0; i< filePath.size(); i++){
-            LOG.info("FILEPAHT :" + filePath.get(i));
+        String srcFiles = Environment.getExternalStorageDirectory().toString() + "/hjtlog";
+        String zipFiles = Environment.getExternalStorageDirectory().toString() + "/crash/log.zip";
+        try {
+            Utils.ZipFolder(srcFiles,zipFiles);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
+        filePath.add(zipFiles);
         HjtApp.getInstance().getAppService().feedbackFiles(filePath, mEtContent.getText().toString(),mobile.getText().toString());
     }
 

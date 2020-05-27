@@ -20,6 +20,7 @@ public class EmSdkHandler  extends BaseSafelyHandler<EmSdkManager> {
     final static int HANDLER_EMSDK_RELEASEEMSDK = 10006;
     final static int HANDLER_EMSDK_LOGAUT = 10007;
     final static int HANDLER_SDK_ENABLE_SECURE = 10008;
+    final static int HANDLER_SDK_UPDATE_USER_NAME = 10009;
     EmSdkHandler(HandlerThread thread, EmSdkManager ref) {
         super(thread.getLooper(), ref);
     }
@@ -57,6 +58,12 @@ public class EmSdkHandler  extends BaseSafelyHandler<EmSdkManager> {
                 break;
             case HANDLER_SDK_ENABLE_SECURE:
                 ref.enableSecure(msg.arg1 == 1);
+                break;
+            case HANDLER_SDK_UPDATE_USER_NAME:
+                String name = (String) msg.obj;
+                if(name!=null){
+                    ref.updateUserName(name);
+                }
                 break;
             default:
                 break;
