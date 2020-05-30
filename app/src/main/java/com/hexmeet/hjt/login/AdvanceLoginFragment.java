@@ -91,6 +91,8 @@ public class AdvanceLoginFragment extends Fragment {
                     } else {
                         SystemCache.getInstance().getJoinMeetingParam().setPort(inputPort.getText().toString().trim());
                         SystemCache.getInstance().getJoinMeetingParam().setUseHttps(switchHttps.isChecked());
+                        LoginSettings.getInstance().setPrivateJoinMeetingPort(inputPort.getText().toString().trim());
+                        LoginSettings.getInstance().setJoinMeetingHttps(switchHttps.isChecked());
                     }
                     callback.onBackClick(AdvanceLoginFragment.class.getName());
                 }

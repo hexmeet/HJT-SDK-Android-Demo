@@ -54,8 +54,8 @@ public class ConferenceListFrag extends Fragment {
     private boolean isWebLoadComplete = false;
     private ViewGroup loadFailedInfo;
     private boolean tokenExpired = false;
-    private final String IP = "172.16.0.222:3000";
-    //private final String DEBUG_IP_ADDRESS = "http://"+IP+"/#/conferences?token=";
+/*    private final String IP = "192.168.132.215:4017";
+    private final String DEBUG_IP_ADDRESS = "http://"+IP+"/#/conferences?token=";*/
     private final String DEBUG_IP_ADDRESS = "";
 
     @SuppressLint({"JavascriptInterface", "SetJavaScriptEnabled"})
@@ -90,6 +90,7 @@ public class ConferenceListFrag extends Fragment {
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                LOG.info("onPageStarted");
                 progressLayout.setVisibility(View.VISIBLE);
                 progressBar.setProgress(0);
                 isWebLoadComplete = false;
@@ -97,6 +98,7 @@ public class ConferenceListFrag extends Fragment {
 
             @Override
             public void onPageFinished(WebView view, String url) {
+                LOG.info("onPageFinished");
                 progressLayout.setVisibility(View.GONE);
                 isWebLoadComplete = true;
             }

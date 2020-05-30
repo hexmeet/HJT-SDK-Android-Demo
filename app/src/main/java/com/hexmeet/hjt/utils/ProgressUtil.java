@@ -89,7 +89,7 @@ public class ProgressUtil
          }
       }
 
-      if (!activity.isDestroyed())
+      if (!activity.isFinishing())
       {
          Fragment frag = activity.getFragmentManager().findFragmentByTag(TAG);
          if (frag != null)

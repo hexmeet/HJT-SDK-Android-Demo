@@ -313,7 +313,7 @@
     <string name="apply_permission_ok">视频悬浮窗和来电提醒等功能，需要开启以下权限。点击确定，前往开启</string>
     <string name="apply_permission_1">1. 显示悬浮窗 (允许显示在其他应用上层)</string>
     <string name="apply_permission_2">2. 后台弹出界面 (允许应用在后台弹出界面)</string>
-    <string name="leave_meeting_text">结束会议</string>
+    <string name="leave_meeting_text">Terminate</string>
     <string name="end_meeting">Leave</string>
     <string name="call_end_meeting">To keep this meeting running, please assign a host before leaving.</string>
 </resources>

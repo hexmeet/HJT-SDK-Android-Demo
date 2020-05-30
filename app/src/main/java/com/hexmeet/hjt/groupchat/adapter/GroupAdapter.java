@@ -81,7 +81,7 @@ public class GroupAdapter extends RecyclerView.Adapter{
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ImMsgBean imMsgBean = mData.get(position);
+     /*   ImMsgBean imMsgBean = mData.get(position);
         int itemViewType = getItemViewType(position);
         switch (itemViewType) {
             case GROUPVIEW_TYPE_LEFT_TEXT:
@@ -90,7 +90,29 @@ public class GroupAdapter extends RecyclerView.Adapter{
             case GROUPVIEW_TYPE_RIGHT_TEXT:
                 fromImgRightLayout((RightViewHolder) holder, imMsgBean, position);
                 break;
+        }*/
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List payloads) {
+        if(payloads.isEmpty()){
+            LOG.info("onBindViewHolder");
+            ImMsgBean imMsgBean = mData.get(position);
+            int itemViewType = getItemViewType(position);
+            switch (itemViewType) {
+                case GROUPVIEW_TYPE_LEFT_TEXT:
+                    fromMsgLeftLayout((LeftViewHolder) holder, imMsgBean, position);
+                    break;
+                case GROUPVIEW_TYPE_RIGHT_TEXT:
+                    fromImgRightLayout((RightViewHolder) holder, imMsgBean, position);
+                    break;
+            }
+        }else {
+            int type =(int) payloads.get(position);
+            LOG.info("type : "+type);
         }
+
+
     }
 
     private void fromImgRightLayout(RightViewHolder holder, ImMsgBean imMsgBean, int position) {

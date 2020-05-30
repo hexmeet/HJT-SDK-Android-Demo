@@ -88,6 +88,7 @@ public class SystemCache {
 
 
     private Map<String, String> remoteNameUpdateState = new HashMap<>();
+    private RemoteNameEvent remoteName;
 
     private SystemCache() {
         EventBus.getDefault().register(this);
@@ -173,8 +174,8 @@ public class SystemCache {
         isAnonymousLogin = false;
         isInvite = false;
         participantNumber=null;
+        isUserMuteVideo = false;
         if(LoginSettings.getInstance().getLoginState(false) == LoginSettings.LOGIN_STATE_IDLE) {
-            isUserMuteVideo = false;
             loginResponse = null;
             featureSupport = null;
             isUserShowLocalCamera = true;
@@ -184,7 +185,6 @@ public class SystemCache {
         featureSupport = null;
         loginResponse = null;
         isAnonymousLogin = false;
-        isUserMuteVideo = false;
         downloadUserImage = null;
         department=null;
         EmMessageCache.getInstance().resetIMCache();
@@ -219,6 +219,8 @@ public class SystemCache {
                 repeatCount.set(0);
                 withContent = false;
                 isCamera = true;
+                remoteNameEvent = null;
+                remoteName = null;
                 if(this.callState == CallState.CONNECTED && peer != null) {
                     peer.setEndTime(SystemClock.elapsedRealtime());
                     setStartTime(SystemClock.elapsedRealtime());
@@ -384,6 +386,8 @@ public class SystemCache {
         return false;
     }
 
+    RemoteNameUpdateEvent remoteNameEvent;
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onRemoteNameUpdateEvent(RemoteNameUpdateEvent event) {
         LOG.info("RemoteNameUpdateEvent : "+event.isLocal());
@@ -392,7 +396,18 @@ public class SystemCache {
                 remoteNameUpdateState.put(event.getDeviceId(),event.getName());
             }
             EventBus.getDefault().post(new RemoteNameEvent(event.getDeviceId(),event.getName(),event.isLocal()));
+            this.remoteNameEvent = event;
         }
+    }
+
+    public RemoteNameEvent getRemoteNameEvent(){
+        remoteName = new RemoteNameEvent();
+        if(remoteNameEvent!=null){
+            remoteName.setLocal(remoteNameEvent.isLocal);
+            remoteName.setName(remoteNameEvent.getName());
+            remoteName.setDeviceId(remoteNameEvent.getDeviceId());
+        }
+        return remoteName;
     }
 
     public String getRemoteDeviceName(String deviceId) {

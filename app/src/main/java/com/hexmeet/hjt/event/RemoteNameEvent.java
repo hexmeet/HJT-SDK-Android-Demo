@@ -5,6 +5,9 @@ public class RemoteNameEvent {
     public String name;
     public boolean isLocal;
 
+    public RemoteNameEvent() {
+    }
+
     public RemoteNameEvent(String deviceId, String name, boolean isLocal) {
         this.deviceId = deviceId;
         this.name = name;
@@ -29,5 +32,9 @@ public class RemoteNameEvent {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setLocal(boolean local) {
+        isLocal = local;
     }
 }

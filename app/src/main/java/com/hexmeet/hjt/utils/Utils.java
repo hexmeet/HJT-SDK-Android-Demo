@@ -33,6 +33,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.channels.FileChannel;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -129,6 +131,39 @@ public class Utils {
 
             cancelHandler.postDelayed(cancelRunner, 3000);
             mToast.show();
+        }
+    }
+
+    public static void showToastCallMeeting(Context context, final String message) {
+        if (!HjtApp.isScreenLocked() && HjtApp.isForeground()) {
+            ConversationToast.showToast(context, message);
+        }
+    }
+
+    private static class ConversationToast {
+        private static Toast mToast;
+        private static Handler cancelHandler = new Handler();
+        private static Runnable cancelRunner = new Runnable() {
+            @Override
+            public void run() {
+                mToast.cancel();
+                mToast = null;
+            }
+        };
+
+        public static void showToast(Context context, String message) {
+            cancelHandler.removeCallbacks(cancelRunner);
+            View layout = LayoutInflater.from(context).inflate(R.layout.conversation_toast, null);
+            TextView text = (TextView) layout.findViewById(R.id.converation_message);
+            text.setText(message);
+            if (mToast == null) {
+                mToast = new Toast(context);
+            }
+            mToast.setDuration(Toast.LENGTH_SHORT);
+            mToast.setView(layout);
+            mToast.show();
+            cancelHandler.postDelayed(cancelRunner, 3000);
+
         }
     }
 
@@ -297,4 +332,104 @@ public class Utils {
         }
         return true;
     }
+
+    public static int compareVersion(String version1, String version2) {
+        if (version1.equals(version2)) {
+            return 0;
+        }
+        String[] version1Array = version1.split("\\.");
+        String[] version2Array = version2.split("\\.");
+        log.info("HomePageActivity version1Array=="+version1Array.length);
+        log.info("HomePageActivity version2Array=="+version2Array.length);
+        int index = 0;
+        // 获取最小长度值
+        int minLen = Math.min(version1Array.length, version2Array.length);
+        int diff = 0;
+        // 循环判断每位的大小
+        log.info("HomePageActivity verTag2=2222="+version1Array[index]);
+        while (index < minLen
+                && (diff = Integer.parseInt(version1Array[index])
+                - Integer.parseInt(version2Array[index])) == 0) {
+            index++;
+        }
+        if (diff == 0) {
+            // 如果位数不一致，比较多余位数
+            for (int i = index; i < version1Array.length; i++) {
+                if (Integer.parseInt(version1Array[i]) > 0) {
+                    return 1;
+                }
+            }
+
+            for (int i = index; i < version2Array.length; i++) {
+                if (Integer.parseInt(version2Array[i]) > 0) {
+                    return -1;
+                }
+            }
+            return 0;
+        } else {
+            return diff > 0 ? 1 : -1;
+        }
+    }
+
+    public static void ZipFolder(String srcFileString, String zipFileString) throws Exception {
+        //创建Zip包
+        java.util.zip.ZipOutputStream outZip = new java.util.zip.ZipOutputStream(new java.io.FileOutputStream(zipFileString));
+
+        //打开要输出的文件
+        java.io.File file = new java.io.File(srcFileString);
+
+        //压缩
+        ZipFiles(file.getParent() + java.io.File.separator, file.getName(), outZip);
+
+        //完成,关闭
+        outZip.finish();
+        outZip.close();
+    }
+
+    /**
+     * 压缩功能
+     */
+    private static void ZipFiles(String folderString, String fileString, java.util.zip.ZipOutputStream zipOutputSteam) throws Exception {
+
+        if (zipOutputSteam == null)
+            return;
+
+        java.io.File file = new java.io.File(folderString + fileString);
+
+        //判断是不是文件
+        if (file.isFile()) {
+
+            java.util.zip.ZipEntry zipEntry = new java.util.zip.ZipEntry(fileString);
+            java.io.FileInputStream inputStream = new java.io.FileInputStream(file);
+            zipOutputSteam.putNextEntry(zipEntry);
+
+            int len;
+            byte[] buffer = new byte[4096];
+
+            while ((len = inputStream.read(buffer)) != -1) {
+                zipOutputSteam.write(buffer, 0, len);
+            }
+            inputStream.close();
+            zipOutputSteam.closeEntry();
+        } else {
+
+            //文件夹的方式,获取文件夹下的子文件
+            String fileList[] = file.list();
+
+            //如果没有子文件, 则添加进去即可
+            if (fileList.length <= 0) {
+                java.util.zip.ZipEntry zipEntry = new java.util.zip.ZipEntry(fileString + java.io.File.separator);
+                zipOutputSteam.putNextEntry(zipEntry);
+                zipOutputSteam.closeEntry();
+            }
+
+            //如果有子文件, 遍历子文件
+            for (String aFileList : fileList) {
+                ZipFiles(folderString, fileString + File.separator + aFileList, zipOutputSteam);
+            }
+
+        }
+    }
+
+
 }

@@ -130,7 +130,7 @@
                 android:layout_height="45dp"
                 android:layout_marginLeft="20dp"
                 android:layout_weight="1"
-                android:background="@drawable/btn_private_login"
+                android:background="@drawable/btn_leave_meting"
                 android:gravity="center"
                 android:text="@string/leave_meeting_text"
                 android:textAllCaps="false"

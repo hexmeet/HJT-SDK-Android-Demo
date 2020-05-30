@@ -18,7 +18,6 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Message;
-import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceView;
 
@@ -32,6 +31,7 @@ import com.hexmeet.hjt.RegisterState;
 import com.hexmeet.hjt.cache.EmMessageCache;
 import com.hexmeet.hjt.cache.SystemCache;
 import com.hexmeet.hjt.event.CallEvent;
+import com.hexmeet.hjt.event.ChatAddrGrpidEvent;
 import com.hexmeet.hjt.event.LoginResultEvent;
 import com.hexmeet.hjt.event.LoginRetryEvent;
 import com.hexmeet.hjt.model.IMLoginParams;
@@ -40,8 +40,8 @@ import com.hexmeet.hjt.model.RestLoginResp;
 import com.hexmeet.hjt.sdk.CopyAssets;
 import com.hexmeet.hjt.sdk.EmSdkManagerImpl;
 import com.hexmeet.hjt.sdk.MakeCallParam;
-import com.hexmeet.hjt.sdk.SdkManager;
-import com.hexmeet.hjt.sdk.SdkManagerImpl;
+import com.hexmeet.hjt.sdk.EvSdkManager;
+import com.hexmeet.hjt.sdk.EvSdkManagerImpl;
 import com.hexmeet.hjt.utils.NetworkUtil;
 
 import org.apache.log4j.Logger;
@@ -62,7 +62,7 @@ public class AppService extends Service {
     private AppServiceBinder mBinder = new AppServiceBinder();
     private HeadsetPlugReceiver headsetPlugReceiver = new HeadsetPlugReceiver();
     private SdkHandler mSdkHandler;
-    private SdkManager sdkManager;
+    private EvSdkManager evSdkManager;
     private boolean userInLogin = false;
     private EmSdkHandler emSdkHandler;
     private EmSdkManagerImpl emSdkMeanager;
@@ -86,12 +86,12 @@ public class AppService extends Service {
         LOG.info("->AppService onCreate<-");
         EventBus.getDefault().register(this);
 
-        sdkManager = new SdkManagerImpl();
+        evSdkManager = new EvSdkManagerImpl();
         emSdkMeanager = new EmSdkManagerImpl();
 
         HandlerThread sdkThread = new HandlerThread("SdkHandlerThread");
         sdkThread.start();
-        mSdkHandler = new SdkHandler(sdkThread, sdkManager);
+        mSdkHandler = new SdkHandler(sdkThread, evSdkManager);
         mSdkHandler.sendEmptyMessageDelayed(SdkHandler.HANDLER_SDK_INIT, 200);
 
         HandlerThread restThread = new HandlerThread("SdkRestThread");
@@ -118,9 +118,6 @@ public class AppService extends Service {
         LOG.info("onCallStateEvent ："+event.getCallState());
         if(event.getCallState() == CallState.CONNECTED) {
             initAudioMode(true);
-            if(SystemCache.getInstance().getFeatureSupport().isChatInConference()){
-                anonymousLoginIM();
-            }
         }
 
         if(event.getCallState() == CallState.RING && !HjtApp.getInstance().isCalling()) {
@@ -182,7 +179,7 @@ public class AppService extends Service {
     }
 
     public void releaseSdk() {
-        sdkManager.release();
+        evSdkManager.release();
         emSdkMeanager.releaseEmSdk();
     }
 
@@ -211,6 +208,7 @@ public class AppService extends Service {
     }
 
     public void anonymousMakeCall(){
+        mSdkHandler.removeMessages(SdkHandler.HANDLER_ANONYMOUS_MAKECALL);
         Message msg = Message.obtain();
         msg.what = SdkHandler.HANDLER_ANONYMOUS_MAKECALL;
         mSdkHandler.sendMessage(msg);
@@ -275,11 +273,11 @@ public class AppService extends Service {
         message.what = SdkHandler.HANDLER_SDK_MIC_MUTE;
         message.arg1 = mute ? 1 : 0;
         mSdkHandler.sendMessage(message);*/
-        sdkManager.setMicMute(mute);
+        evSdkManager.setMicMute(mute);
     }
 
     public void muteVideo(boolean video) {
-        sdkManager.enableVideo(video);
+        evSdkManager.enableVideo(video);
     }
 
     //Speaker:2 ,Gallery:1
@@ -302,10 +300,11 @@ public class AppService extends Service {
         msg.what = SdkHandler.HANDLER_SDK_CONFDISPLAYNAME;
         msg.obj = displayName;
         msg.sendToTarget();
+        changUserName(displayName);
     }
 
     public String getDisplayName(){
-      return sdkManager.getDisplayName();
+      return evSdkManager.getDisplayName();
     }
 
     public void endCall() {
@@ -346,12 +345,12 @@ public class AppService extends Service {
             mSdkHandler.removeCallbacks(contentSurfaceTask);
         }
         if(surfaceView == null) {
-            sdkManager.setContentSurface(null);
+            evSdkManager.setContentSurface(null);
         } else {
             contentSurfaceTask = new SurfaceTask(surfaceView) {
                 @Override
                 protected void injectSurface(SurfaceView surfaceView) {
-                    sdkManager.setContentSurface(surfaceView);
+                    evSdkManager.setContentSurface(surfaceView);
                 }
             };
 
@@ -366,12 +365,12 @@ public class AppService extends Service {
             mSdkHandler.removeCallbacks(localSurfaceTask);
         }
         if(surfaceView == null) {
-            sdkManager.setLocalSurface(null);
+            evSdkManager.setLocalSurface(null);
         } else {
             localSurfaceTask = new SurfaceTask(surfaceView) {
                 @Override
                 protected void injectSurface(SurfaceView surfaceView) {
-                    sdkManager.setLocalSurface(surfaceView);
+                    evSdkManager.setLocalSurface(surfaceView);
                 }
             };
 
@@ -381,9 +380,9 @@ public class AppService extends Service {
 
     public void setRemoteViewToSdk(Object[] surfaceView) {
         if(surfaceView == null) {
-            sdkManager.setRemoteSurface(null);
+            evSdkManager.setRemoteSurface(null);
         } else {
-            sdkManager.setRemoteSurface(surfaceView);
+            evSdkManager.setRemoteSurface(surfaceView);
         }
     }
 
@@ -394,12 +393,12 @@ public class AppService extends Service {
             mSdkHandler.removeCallbacks(previewSurfaceTask);
         }
         if(surfaceView == null) {
-            sdkManager.setPreSurface(null);
+            evSdkManager.setPreSurface(null);
         } else {
             previewSurfaceTask = new SurfaceTask(surfaceView) {
                 @Override
                 protected void injectSurface(SurfaceView surfaceView) {
-                    sdkManager.setPreSurface(surfaceView);
+                    evSdkManager.setPreSurface(surfaceView);
                 }
             };
 
@@ -408,7 +407,7 @@ public class AppService extends Service {
     }
 
     public boolean isStatsEncrypted(){
-        return sdkManager.isStatsEncrypted();
+        return evSdkManager.isStatsEncrypted();
     }
 
     public void startMediaStaticsLoop() {
@@ -503,7 +502,7 @@ public class AppService extends Service {
     }
 
     public String obtainLogPath(){
-        return sdkManager.getObtainLogPath();
+        return evSdkManager.getObtainLogPath();
     }
 
     public void networkQuality(){
@@ -517,6 +516,7 @@ public class AppService extends Service {
         message.what = SdkHandler.HANDLER_SDK_HARD_DECODING;
         message.arg1 = isHardwareDecoding ? 1 : 0;
         mSdkHandler.sendMessage(message);
+        setMaxRecvVideo(isHardwareDecoding);
     }
 
     public void refuseP2PMetting(String number) {
@@ -526,8 +526,22 @@ public class AppService extends Service {
         msg.sendToTarget();
     }
 
+    public void setImUserId(String userId) {
+        Message msg = Message.obtain(mSdkHandler);
+        msg.what = SdkHandler.HANDLER_SDK_SET_IM_USERID;
+        msg.obj = userId;
+        msg.sendToTarget();
+    }
+
+    public void setMaxRecvVideo(boolean maxRecvVideo){
+        Message message = Message.obtain();
+        message.what = SdkHandler.HANDLER_SDK_SET_MAX_VIDEO;
+        message.arg1 = maxRecvVideo ? 1 : 0;
+        mSdkHandler.sendMessage(message);
+    }
+
     public boolean isMeetingHost(){
-        return sdkManager.isMeetingHost();
+        return evSdkManager.isMeetingHost();
     }
 
     public void onTerminateMeeting() {
@@ -535,19 +549,19 @@ public class AppService extends Service {
     }
 
     public boolean isCalling(){
-      return   sdkManager.isCalling();
+      return   evSdkManager.isCalling();
     }
 
     public void setVideoMode(boolean mode){
-        sdkManager.setVideoActive(mode);
+        evSdkManager.setVideoActive(mode);
     }
 
     public boolean micEnabled(){
-        return   sdkManager.micEnabled();
+        return   evSdkManager.micEnabled();
     }
 
     public void zoomVideoByStreamType(EVEngine.StreamType type,float factor,float cx,float cy){
-        sdkManager.zoomVideoByStreamType(type,factor,cx,cy);
+        evSdkManager.zoomVideoByStreamType(type,factor,cx,cy);
     }
     public void showFloatIndicator() {
         ((HjtApp)getApplication()).startFloatService();
@@ -634,9 +648,9 @@ public class AppService extends Service {
     public void uninitAudioMode(boolean isVideoCall) {
         if(isHeadsetBroadCastRegistered) {
             unregisterReceiver(headsetPlugReceiver);
-            /*CopyAssets.getInstance().processAudioRouteEvent(
+            CopyAssets.getInstance().processAudioRouteEvent(
                     isVideoCall ? CopyAssets.CONVERSATION_EVENT : CopyAssets.CONVERSATION_AUDIOONLY_EVENT,
-                    CopyAssets.EVENT_STOP);*/
+                    CopyAssets.EVENT_STOP);
             isHeadsetBroadCastRegistered = false;
         }
     }
@@ -650,8 +664,19 @@ public class AppService extends Service {
         emSdkMeanager.emLogin();
     }
 
-    public void anonymousLoginIM(){
-        String imAddress = sdkManager.getIMAddress();//   address  ws://172.24.0.63:6060
+    @Subscribe(threadMode = ThreadMode.POSTING)
+    public void ChatAddrGrpidEvent(ChatAddrGrpidEvent event) {
+        if(event!=null){
+            EmMessageCache.getInstance().setGroupId(event.getGroupId());
+            if(SystemCache.getInstance().getFeatureSupport().isChatInConference()){
+                anonymousLoginIM(event.getAddress());
+            }
+        }
+    }
+
+
+    public void anonymousLoginIM(String address){
+        String imAddress = address;//   address  ws://172.24.0.63:6060
         LOG.info("imAddress : "+imAddress);
         if(imAddress!=null && !imAddress.equals("")){
             String server = null ;
@@ -673,6 +698,7 @@ public class AppService extends Service {
                 port = site[1];
             }
         EmMessageCache.getInstance().setIMAddress(true);
+        EmMessageCache.getInstance().setiMAddress(server);
         RestLoginResp loginResponse = SystemCache.getInstance().getLoginResponse();
         IMLoginParams params = new IMLoginParams();
         params.setServer(server);
@@ -710,11 +736,13 @@ public class AppService extends Service {
     }
 
     public void joinGroupChat(){
-        EmMessageCache.getInstance().setGroupId(sdkManager.getIMGroupId());
-        Message msg = Message.obtain(emSdkHandler);
-        msg.what = EmSdkHandler.HANDLER_EMSDK_JOINGROUPCHAT;
-        msg.obj = sdkManager.getIMGroupId();
-        msg.sendToTarget();
+        if(EmMessageCache.getInstance().getGroupId()!=null){
+            Message msg = Message.obtain(emSdkHandler);
+            msg.what = EmSdkHandler.HANDLER_EMSDK_JOINGROUPCHAT;
+            msg.obj = EmMessageCache.getInstance().getGroupId();
+            msg.sendToTarget();
+        }
+
     }
 
     public void logoutIm(){
@@ -722,18 +750,18 @@ public class AppService extends Service {
     }
 
     public  EVEngine.ContactInfo getImageUrl(String userId){
-       return   sdkManager.getIMContactInfo(userId);
+       return   evSdkManager.getIMContactInfo(userId);
     }
 
     public void startScreenShare(Context context,MediaProjection smediaProjection, Display display, Handler mhandler) {
-       sdkManager.setScreenShare(context,smediaProjection,display,mhandler);
+       evSdkManager.setScreenShare(context,smediaProjection,display,mhandler);
     }
 
     public void stopShare(){
         /*Message msg = Message.obtain(mSdkHandler);
         msg.what = SdkHandler.HANDLER_SDK_STOP_SCREENSHARE;
         msg.sendToTarget();*/
-        sdkManager.stopScreenShare();
+        evSdkManager.stopScreenShare();
     }
 
     public void setDirection(boolean direction){
@@ -748,7 +776,7 @@ public class AppService extends Service {
     }
 
     public void feedbackFiles(List<String> path, String contact, String description){
-        sdkManager.uploadFeedbackFiles(path,contact,description);
+        evSdkManager.uploadFeedbackFiles(path,contact,description);
     }
 
     public void setEnableSecure(boolean enable){
@@ -756,6 +784,13 @@ public class AppService extends Service {
         message.what = EmSdkHandler.HANDLER_SDK_ENABLE_SECURE;
         message.arg1 = enable ? 1 : 0;
         emSdkHandler.sendMessage(message);
+    }
+
+    public void changUserName(String name){
+        Message msg = Message.obtain();
+        msg.what = EmSdkHandler.HANDLER_SDK_UPDATE_USER_NAME;
+        msg.obj = name;
+        emSdkHandler.sendMessage(msg);
     }
 
 }

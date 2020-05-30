@@ -1,7 +1,10 @@
 package com.hexmeet.hjt.call;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -124,6 +127,7 @@ public class MeetingDialog  extends Dialog {
                     break;
                 case MEETING_LEAVE:
                     mMuteAndLeavemeeting.setText(R.string.leave_meeting);
+                    mMeetingOk.setBackgroundResource(R.drawable.btn_private_login);
                     setMuteAndLeavemeeting(true);
                     setOk(true);
                     setCancel(true);
@@ -135,6 +139,8 @@ public class MeetingDialog  extends Dialog {
                     break;
                 case MEETING_END:
                     mMeetingOk.setText(R.string.end_meeting);
+                    mMeetingOk.setTextColor(Color.parseColor("#313131"));
+                    mMeetingOk.setBackgroundResource(R.drawable.btn_select_cancel);
                     mMuteAndLeavemeeting.setText(R.string.call_end_meeting);
                     setMuteAndLeavemeeting(true);
                     setOk(true);

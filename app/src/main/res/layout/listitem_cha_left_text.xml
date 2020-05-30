@@ -52,7 +52,7 @@
                android:layout_marginBottom="5dp"
                android:text=""
                android:textSize="@dimen/groupchat_text_size"
-               android:textColor="@color/Blue"
+               android:textColor="@color/sub_title_bar"
                />
            <TextView
                android:id="@+id/left_context"
@@ -62,7 +62,7 @@
                android:text=""
                android:gravity="center_vertical"
                android:textSize="15sp"
-               android:textColor="@color/White"
+               android:textColor="@color/title_bar"
                android:includeFontPadding="false"
                android:textIsSelectable="true"
                />

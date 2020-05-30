@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 
 public class CopyAssets {
     private Logger LOG = Logger.getLogger(CopyAssets.class);
@@ -124,7 +125,35 @@ public class CopyAssets {
         mUserFile = basePath + "/user.jpg";
 
         mAudioManager = ((AudioManager) c.getSystemService(Context.AUDIO_SERVICE));
+        mAudioManager.requestAudioFocus(afChangeListener,AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN);
     }
+
+    OnAudioFocusChangeListener afChangeListener = new OnAudioFocusChangeListener() {
+        public void onAudioFocusChange(int focusChange) {
+            LOG.info("OnAudioFocusChangeListener : " + focusChange);
+            if(focusChange == AudioManager.AUDIOFOCUS_GAIN){
+                if(mAudioManager.getMode() == mAudioManager.MODE_IN_CALL){
+                    mAudioManager.setMode(mAudioManager.MODE_NORMAL);
+                    mAudioManager.setSpeakerphoneOn(true);
+                    LOG.info("OnAudioFocusListener isSpeakerphoneOn : "+mAudioManager.isSpeakerphoneOn()
+                            +",mode : "+mAudioManager.getMode());
+                }else if(mAudioManager.getMode() == mAudioManager.MODE_IN_COMMUNICATION){
+                    LOG.info("OnAudioFocusListener isBluetoothScoOn : " + mAudioManager.isBluetoothScoOn());
+                    if(mAudioManager.isBluetoothScoOn() || mAudioManager.isBluetoothA2dpOn()){
+                        setBluetoothMonoState(true);
+                    }
+                }
+            }
+        }
+    };
+
+   public void unRegisterAudio(){
+       if (mAudioManager != null && afChangeListener != null) {
+           mAudioManager.abandonAudioFocus(afChangeListener);
+       }
+    }
+
 
     public String processAudioRouteEvent(String event, int value){
         LOG.info("hexmeet  processAudioRouteEvent - event="+event+", value="+value+",mode : "+mAudioManager.getMode());
@@ -216,17 +245,33 @@ public class CopyAssets {
     public void disconnectBluetooth(){
         setBluetoothMonoState(false);
     }
-
+    final static int FOR_MEDIA = 1;
+    final static int FORCE_SPEAKER = 1;
     private void routeAudioToSpeakerHelper(boolean speakerOn) {
         LOG.info("hexmeet Manager - routeAudioToSpeakerHelper  "+speakerOn +",bluetooth : "+isUsingBluetooth());
-        LOG.info("Routing audio to : "+speakerOn+ " ?  speaker ：earpiece" );
         //BluetoothManager.getInstance().disableBluetoothSCO();
-        if(isUsingBluetooth())
+        if(isUsingBluetooth()){
             disconnectBluetooth();
+        }
+
         if(speakerOn){
+            try {
+                Class audioSystemClass = Class.forName("android.media.AudioSystem");
+                Method setForceUse = audioSystemClass.getMethod("setForceUse", int.class, int.class);
+                setForceUse.invoke(null, FOR_MEDIA, FORCE_SPEAKER);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            mAudioManager.setSpeakerphoneOn(true);//是否外放
+        }else {
+            mAudioManager.setSpeakerphoneOn(false);//是否外放
+        }
+
+        if(!mAudioManager.isSpeakerphoneOn()){
             mAudioManager.setMode(AudioManager.MODE_NORMAL);
         }
-        mAudioManager.setSpeakerphoneOn(speakerOn);//是否外放
+        LOG.info("routeAudioToSpeakerHelper  ： "+speakerOn +",isSpeakerphoneOn : "+mAudioManager.isSpeakerphoneOn()
+                +",mode : "+mAudioManager.getMode());
 
     }
 
@@ -563,13 +608,6 @@ public class CopyAssets {
         }
         return mCurrentAudioRoute;
     }
-
-    OnAudioFocusChangeListener afChangeListener = new OnAudioFocusChangeListener() {
-        @Override
-        public void onAudioFocusChange(int focusChange) {
-            LOG.error("focusChange : "+focusChange);
-        }
-    };
 
 
 }

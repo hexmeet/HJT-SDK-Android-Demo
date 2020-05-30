@@ -15,7 +15,8 @@ public interface AppCons {
     int INTENT_VALUE_WEB_INVITE_DIAOUT = 10;
     int INTENT_VALUE_WEB_INVITE_ANONYMOUS = 11;
 
-    int MAX_RECEIVE_STREAM = 4;
+    int MAX_RECEIVE_STREAM = 6;
+    int MAX_RECEIVE_STREAM_FOUR = 4;
     int DEFAULT_BITRATE = 2048;
     int APP_ID = 9527;
 

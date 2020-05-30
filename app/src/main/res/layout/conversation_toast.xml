@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_gravity="center_horizontal"
+    android:layout_alignParentBottom="true"
+    android:layout_marginBottom="@dimen/invitees_avatar_width"
+    >
+
+
+    <TextView
+        android:id="@+id/converation_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/warntoast_bg"
+        android:layout_centerHorizontal="true"
+        android:padding="8dp"
+        android:text=""
+        android:textColor="#FFFFFF"
+        android:textSize="13dp"
+        />
+
+</RelativeLayout>

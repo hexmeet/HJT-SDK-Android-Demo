@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.hexmeet.hjt.AppCons;
 import com.hexmeet.hjt.HjtApp;
 import com.hexmeet.hjt.R;
 import com.hexmeet.hjt.cache.SystemCache;
@@ -40,6 +41,9 @@ public class VideoBoxGroup {
     private boolean isContentSurfaceShowing = false;
     private AudioMessage audioMessage;
     private RelativeLayout.LayoutParams audioViewPara;
+    private static final int SURFACE_SIZE = 5;
+    private boolean remoteLayout = false;
+
 
     public VideoBoxGroup(RelativeLayout rootView) {
         this.rootView = rootView;
@@ -129,7 +133,7 @@ public class VideoBoxGroup {
         nullPar.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
         nullPar.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 
-        fullScreenLayoutPara = new RelativeLayout.LayoutParams(ResourceUtils.screenWidth, ResourceUtils.screenHeight);
+        fullScreenLayoutPara = new RelativeLayout.LayoutParams(ResourceUtils.screenWidth,ResourceUtils.screenHeight);
         fullScreenLayoutPara.addRule(RelativeLayout.CENTER_IN_PARENT);
 
         localLayoutParaForSvc = new RelativeLayout.LayoutParams(ResourceUtils.screenWidth/5, ResourceUtils.screenHeight/5);
@@ -138,15 +142,25 @@ public class VideoBoxGroup {
         localLayoutParaForSvc.bottomMargin = ResourceUtils.screenHeight/35;
         localLayoutParaForSvc.rightMargin = (ResourceUtils.horizontalMargin + ResourceUtils.screenHeight/35);
 
-        messagePara = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         audioViewPara = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        messagePara = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
     }
 
     public boolean updateSvcLayout(SvcLayoutInfo info) {
 
         LOG.info("VideoBoxGrp: updateSvcLayout remoteCellReady? "+remoteCellReady );
         if(remoteBox != null && remoteCellReady) {
+            LOG.info("getShowContent ： "+remoteBox.getShowContent()+",size : "+info.getSvcSuit().size());
+            if(info.getSvcSuit().size()== SURFACE_SIZE || info.getSvcSuit().size()== AppCons.MAX_RECEIVE_STREAM){
+                remoteLayout = true;
+            }else {
+                remoteLayout = false;
+            }
+            updateRemoteLayout(remoteBox.getShowContent()? false : remoteLayout);
+            fullScreenLayoutPara.addRule(RelativeLayout.CENTER_VERTICAL);
+            remoteBox.setLayoutParams(fullScreenLayoutPara);
             remoteBox.updateLayout(info);
+
             return true;
         }
         return false;
@@ -187,12 +201,18 @@ public class VideoBoxGroup {
             remoteBox.setShowContent(true);
             remoteBox.setLayoutParams(nullPar);
             showLocalCamera(false);
+            fullScreenLayoutPara.width = ResourceUtils.screenWidth;
+            fullScreenLayoutPara.height = ResourceUtils.screenHeight;
             contentBox.getSurfaceView().setLayoutParams(fullScreenLayoutPara);
             pauseMessageOverlay();
         } else {
             remoteBox.setShowContent(false);
             contentBox.getSurfaceView().setLayoutParams(nullPar);
             showLocalCamera(SystemCache.getInstance().isUserShowLocalCamera());
+            LOG.info("remoteBox : "+remoteLayout);
+            fullScreenLayoutPara.width =remoteLayout ? ResourceUtils.screenWidths : ResourceUtils.screenWidth;
+            fullScreenLayoutPara.height = remoteLayout ? ResourceUtils.screenHeights : ResourceUtils.screenHeight;
+            fullScreenLayoutPara.addRule(RelativeLayout.CENTER_VERTICAL);
             remoteBox.setLayoutParams(fullScreenLayoutPara);
             resumeMessageOverlay();
         }
@@ -344,13 +364,34 @@ public class VideoBoxGroup {
 
     public void updateAudioView(boolean isAudioMode) {
         if(audioMessage!=null){
+            LOG.info("isAudioMode : "+isAudioMode);
             audioMessage.setVisibility(isAudioMode ? View.GONE :  View.VISIBLE );
             if(!isAudioMode){
+                fullScreenLayoutPara.width = 0;
+                fullScreenLayoutPara.height = 0;
                 remoteBox.hideAll();
                 remoteBox.setLayoutParams(nullPar);
             }else {
-                remoteBox.setLayoutParams(fullScreenLayoutPara);
+                showLocalCamera(true);
+                updateRemoteLayout(remoteLayout);
             }
         }
+    }
+
+    private void updateRemoteLayout(boolean enable){
+        if(audioMessage.getVisibility() == View.VISIBLE){
+            updateAudioView(false);
+            return;
+        }
+        LOG.info("updateRemoteLayout : "+enable);
+        if(enable){
+            fullScreenLayoutPara.width = ResourceUtils.screenWidths;
+            fullScreenLayoutPara.height = ResourceUtils.screenHeights;
+        }else {
+            fullScreenLayoutPara.width = ResourceUtils.screenWidth;
+            fullScreenLayoutPara.height = ResourceUtils.screenHeight;
+        }
+        fullScreenLayoutPara.addRule(RelativeLayout.CENTER_VERTICAL);
+        remoteBox.setLayoutParams(fullScreenLayoutPara);
     }
 }
