@@ -174,6 +174,7 @@ public class EvSdkManagerImpl implements EvSdkManager {
         }
 
         isFrontCamera();//判断是否是视频输入
+        updateVideoUserImage(null);
         LOG.info("anonymousLogin : "+params.getServer() +","+ loginPort+","+ params.getConferenceNumber()+","+params.getDisplayName());
         engine.joinConferenceWithLocation(params.getServer(),loginPort,params.getConferenceNumber(),params.getDisplayName(),params.getPassword());
 
@@ -183,11 +184,10 @@ public class EvSdkManagerImpl implements EvSdkManager {
         peer.setName(params.getConferenceNumber());
         peer.setPassword(params.getPassword());
         peer.setVideoCall(true);
+        SystemCache.getInstance().setCallNumber(params.getConferenceNumber());
         CallEvent event = new CallEvent(CallState.CONNECTING);
         event.setPeer(peer);
         EventBus.getDefault().post(event);
-
-        updateVideoUserImage(null);
 
     }
 
@@ -481,6 +481,7 @@ public class EvSdkManagerImpl implements EvSdkManager {
             peer.setPassword(param.password);
             peer.setVideoCall(param.callType == 1);
             peer.setP2P(param.isP2pCall);
+            SystemCache.getInstance().setCallNumber(param.uri);
             CallEvent event = new CallEvent(CallState.CONNECTING);
             event.setPeer(peer);
             EventBus.getDefault().post(event);
@@ -859,7 +860,7 @@ public class EvSdkManagerImpl implements EvSdkManager {
                     LOG.info("CallBack isCloud : "+SystemCache.getInstance().getJoinMeetingParam().isCloud());
                     LoginSettings.getInstance().setLoginState(SystemCache.getInstance().getJoinMeetingParam().isCloud() ? LoginSettings.LOGIN_CLOUD_SUCCESS : LoginSettings.LOGIN_PRIVATE_SUCCESS, true);
                    // EventBus.getDefault().post(new LoginResultEvent(LoginResultEvent.LOGIN_SUCCESS, "success", true));
-                    updateVideoUserImage(null);
+                   // updateVideoUserImage(null);
                 }else {
                     boolean isCloudLogin = SystemCache.getInstance().isCloudLogin();
                     LOG.info("CallBack isCloudLogin : "+isCloudLogin);
@@ -878,6 +879,7 @@ public class EvSdkManagerImpl implements EvSdkManager {
             peer.setPassword(info.password);
             peer.setFrom(info.peer);
             peer.setVideoCall(true);
+            SystemCache.getInstance().setCallNumber(info.conferenceNumber);
             if(info.type==EVEngine.CallType.SvcCallP2P){
                 peer.setName(info.peer);
                 peer.setCalled(true);
@@ -1110,7 +1112,7 @@ public class EvSdkManagerImpl implements EvSdkManager {
         @Override
         public void onCallPeerConnected(CallInfo info) {//p2p
             LOG.info("onCallPeerConnected: "+info.toString());
-            SystemCache.getInstance().getPeer().setNumber(info.conferenceNumber);
+            SystemCache.getInstance().setCallNumber(info.conferenceNumber);
             CallEvent event = new CallEvent(CallState.CONNECTED);
             EventBus.getDefault().post(event);
 

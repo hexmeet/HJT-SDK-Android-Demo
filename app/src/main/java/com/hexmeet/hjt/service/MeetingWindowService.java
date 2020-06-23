@@ -174,7 +174,8 @@ public class MeetingWindowService extends Service {
 
     @SuppressLint("ClickableViewAccessibility")
     public void createFloatView() {
-        if(!hasWindow){
+        boolean permissionOk = Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(HjtApp.getInstance().getContext());
+        if(!permissionOk) {
             Utils.showToast(HjtApp.getInstance().getContext(),getString(R.string.need_float_window_permission,getString(R.string.app_name)));
             return;
         }

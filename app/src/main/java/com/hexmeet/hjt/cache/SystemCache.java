@@ -85,6 +85,7 @@ public class SystemCache {
     private boolean showVersionDialog = true;
     private boolean isMuteMic = false;
     private boolean isSharedPermission = false;
+    private String callNumber;
 
 
     private Map<String, String> remoteNameUpdateState = new HashMap<>();
@@ -221,6 +222,7 @@ public class SystemCache {
                 isCamera = true;
                 remoteNameEvent = null;
                 remoteName = null;
+                callNumber = null;
                 if(this.callState == CallState.CONNECTED && peer != null) {
                     peer.setEndTime(SystemClock.elapsedRealtime());
                     setStartTime(SystemClock.elapsedRealtime());
@@ -534,5 +536,13 @@ public class SystemCache {
 
     public void setSharedPermission(boolean sharedPermission) {
         isSharedPermission = sharedPermission;
+    }
+
+    public String getCallNumber() {
+        return callNumber;
+    }
+
+    public void setCallNumber(String callNumber) {
+        this.callNumber = callNumber;
     }
 }

@@ -400,8 +400,15 @@ public class Conversation extends FullscreenActivity {
         @Override
         public void onClickShareScreen() {//共享屏幕
           if(!SystemCache.getInstance().isSharedScreen()){
-                startActivityForResult(mProjectionManager.createScreenCaptureIntent(),
-                        REQUEST_CODE);
+              boolean ok = Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(HjtApp.getInstance().getContext());
+              if(!ok){
+                  if(!isDestroyed()){
+                      meetingDialog(MeetingDialog.MEETING_PERMISSION);
+                  }
+              }else {
+                  startActivityForResult(mProjectionManager.createScreenCaptureIntent(),
+                          REQUEST_CODE);
+              }
             }else {
               stopScreenCapture();
             }
@@ -662,6 +669,9 @@ public class Conversation extends FullscreenActivity {
             return;
         }else if(event.getCode()==NetworkEvent.EV_WARN_UNMUTE_AUDIO_INDICATION) {
             //unmuteAudioDialog(true);
+            if(dialog!=null){
+                dialog.dismiss();
+            }
             meetingDialog(MeetingDialog.MEETING_UNMUTE);
             return;
         }

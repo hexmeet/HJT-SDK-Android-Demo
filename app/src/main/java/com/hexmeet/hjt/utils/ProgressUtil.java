@@ -3,6 +3,8 @@ package com.hexmeet.hjt.utils;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Handler;
 
 import com.hexmeet.hjt.widget.LoadingDialog;
@@ -53,7 +55,9 @@ public class ProgressUtil
             timeoutHandler.postDelayed(timeoutTask, timeoutInMillis <= 1000 ? 1000 : timeoutInMillis);
             if (!activity.isDestroyed())
             {
-               progressDialog.show(activity.getFragmentManager(), TAG);
+               FragmentManager fragmentManager = activity.getFragmentManager();
+               fragmentManager.beginTransaction().commitAllowingStateLoss();
+               progressDialog.show(fragmentManager, TAG);
             }
          }
       };

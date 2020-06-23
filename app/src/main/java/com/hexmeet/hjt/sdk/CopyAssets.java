@@ -120,8 +120,8 @@ public class CopyAssets {
         basePath = HjtApp.getInstance().getFilesDir().getAbsolutePath();
         mRootCaFile = basePath + "/rootca.pem";
         mErrorToneFile = basePath + "/error.wav";
-        mBackgroundFile = basePath + "/background.png";
-        mBackgroundCallingFile = basePath + "/background_calling.png";
+        mBackgroundFile = basePath + "/background.jpg";
+        mBackgroundCallingFile = basePath + "/background_calling.jpg";
         mUserFile = basePath + "/user.jpg";
 
         mAudioManager = ((AudioManager) c.getSystemService(Context.AUDIO_SERVICE));
@@ -133,15 +133,22 @@ public class CopyAssets {
         public void onAudioFocusChange(int focusChange) {
             LOG.info("OnAudioFocusChangeListener : " + focusChange);
             if(focusChange == AudioManager.AUDIOFOCUS_GAIN){
+                LOG.info("OnAudioFocusChangeListener 1111111 : " + mAudioManager.getMode());
                 if(mAudioManager.getMode() == mAudioManager.MODE_IN_CALL){
                     mAudioManager.setMode(mAudioManager.MODE_NORMAL);
                     mAudioManager.setSpeakerphoneOn(true);
-                    LOG.info("OnAudioFocusListener isSpeakerphoneOn : "+mAudioManager.isSpeakerphoneOn()
+                    LOG.info("OnAudioFocusChangeListener isSpeakerphoneOn : "+mAudioManager.isSpeakerphoneOn()
                             +",mode : "+mAudioManager.getMode());
                 }else if(mAudioManager.getMode() == mAudioManager.MODE_IN_COMMUNICATION){
-                    LOG.info("OnAudioFocusListener isBluetoothScoOn : " + mAudioManager.isBluetoothScoOn());
+                    LOG.info("OnAudioFocusChangeListener isBluetoothScoOn : " + mAudioManager.isBluetoothScoOn());
                     if(mAudioManager.isBluetoothScoOn() || mAudioManager.isBluetoothA2dpOn()){
                         setBluetoothMonoState(true);
+                    }else if(mAudioManager.isWiredHeadsetOn()){
+                        LOG.info("OnAudioFocusChangeListener  : WiredHeadsetOn" );
+                    }else {
+                        LOG.info("OnAudioFocusChangeListener  : NORMAL" );
+                        mAudioManager.setMode(mAudioManager.MODE_NORMAL);
+                        mAudioManager.setSpeakerphoneOn(true);
                     }
                 }
             }
