@@ -264,6 +264,7 @@ public class ContactsFrag extends Fragment {
                     peer.setImageUrl(meeting.getImageUrl());
                     peer.setP2P(true);
                     peer.setCalled(false);
+                    SystemCache.getInstance().setCallNumber(meeting.getUserId());
                     CallEvent event = new CallEvent(CallState.CONNECTING);
                     event.setPeer(peer);
                     EventBus.getDefault().post(event);

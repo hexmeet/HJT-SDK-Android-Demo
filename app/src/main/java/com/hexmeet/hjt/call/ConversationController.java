@@ -123,7 +123,6 @@ public class ConversationController implements View.OnClickListener{
             }
         };
         signalLevel.setOnClickListener(callStatisticsClick);
-        setEncryptedImg();
         showLocalCamera(SystemCache.getInstance().isUserShowLocalCamera());
         //是否支持会话、音频模式
         FeatureSupport featureSupport = SystemCache.getInstance().getFeatureSupport();
@@ -133,6 +132,7 @@ public class ConversationController implements View.OnClickListener{
             //((TextView)moreDetail.getChildAt(3)).setVisibility(featureSupport.isSitenameIsChangeable() ? View.VISIBLE : View.GONE);
             updateUserName.setVisibility(featureSupport.isSitenameIsChangeable() ? View.VISIBLE : View.GONE);
         }
+        setEncryptedImg();//会议是否加密
     }
 
     public float getTopBarHeight() {
@@ -172,8 +172,10 @@ public class ConversationController implements View.OnClickListener{
     }
 
     public void setEncryptedImg(){
-        LOG.info("setEncryptedImg() : " + HjtApp.getInstance().getAppService().isStatsEncrypted());
-        encryptedImg.setVisibility(HjtApp.getInstance().getAppService().isStatsEncrypted() ? View.VISIBLE : View.GONE);
+        if(HjtApp.getInstance().getAppService()!=null){
+            LOG.info("setEncryptedImg() : " + HjtApp.getInstance().getAppService().isStatsEncrypted());
+            encryptedImg.setVisibility(HjtApp.getInstance().getAppService().isStatsEncrypted() ? View.VISIBLE : View.GONE);
+        }
     }
 
 

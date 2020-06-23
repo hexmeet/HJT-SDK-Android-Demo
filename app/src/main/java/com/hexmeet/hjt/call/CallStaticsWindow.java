@@ -207,6 +207,10 @@ public class CallStaticsWindow {
         if(resolution == null) {
             return "-";
         }
+        if (resolution.equalsIgnoreCase("160x90")) {
+            return "90p";
+        }
+
         if (resolution.equalsIgnoreCase("320x180")) {
             return "180p";
         }

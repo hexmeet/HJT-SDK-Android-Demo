@@ -20,6 +20,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.hexmeet.hjt.HjtApp;
@@ -43,6 +44,7 @@ public class ConfManageWindow {
     private boolean isWebLoadComplete = false;
     private ViewGroup loadFailedInfo;
     public final static String SCRIPT_INTERFACE_NAME = "callbackObj";
+    public ImageView closeBtn;
 
     @RequiresApi(api = Build.VERSION_CODES.FROYO)
     public ConfManageWindow(Conversation activity) {
@@ -54,7 +56,7 @@ public class ConfManageWindow {
     private void initDialog(Conversation activity) {
         this.conversation = activity;
         rootView = (RelativeLayout) LayoutInflater.from(conversation).inflate(R.layout.conference_list, null);
-        View closeBtn = rootView.findViewById(R.id.close_window);
+        closeBtn = (ImageView)rootView.findViewById(R.id.close_window);
         closeBtn.setVisibility(View.VISIBLE);
         closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -224,7 +226,7 @@ public class ConfManageWindow {
             sb.append("/mobile/#/confControl?token=");
             sb.append(token);
             sb.append("&deviceId="+ SystemCache.getInstance().getLoginResponse().getDeviceId());
-            sb.append("&numericId="+ SystemCache.getInstance().getPeer().getNumber());
+            sb.append("&numericId="+ SystemCache.getInstance().getCallNumber());
             sb.append("&lang="+ (HjtApp.isCnVersion() ? "cn" : "en"));
             if(!TextUtils.isEmpty(version)) {
                 sb.append("&v="+version);
@@ -259,6 +261,16 @@ public class ConfManageWindow {
         @JavascriptInterface
         public void isShowNav(String json){
             LOG.info("JavaScript: isShowNav <"+json+">");
+           /* if(json!=null){
+                boolean aFalse = !json.equalsIgnoreCase("false");
+                LOG.info("JavaScript: isShowNav  11 <"+aFalse+">");
+                webView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        closeBtn.setVisibility(aFalse ? View.VISIBLE : View.GONE);
+                    }
+                });
+            }*/
         }
 
         @JavascriptInterface
