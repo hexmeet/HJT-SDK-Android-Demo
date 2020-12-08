@@ -1,5 +1,7 @@
 # 会捷通客户端 SDK (Android 版) Demo
 
+** 本项目已转移至 https://hexmeet.coding.net/public/evsdk-svc-android-demo/evsdk-svc-android-demo/git/files ** 
+
 [![Build Status](https://travis-ci.org/hexmeet/HJT-SDK-Android-Demo.svg?branch=master)](https://travis-ci.org/hexmeet/HJT-SDK-Android-Demo)
 
 ![android-sdk](./speaker-view.png)
